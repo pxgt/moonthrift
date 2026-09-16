@@ -24,3 +24,7 @@ keywords = [ "thrift", "serialization", "idl", "code-generation", "rpc" ]
 preferred_target = "wasm-gc"
 
 description = "Apache Thrift IDL tooling and binary protocol support for MoonBit"
+
+import {
+  "moonbitlang/x@0.5.5",
+}

@@ -148,11 +148,15 @@ fn render_record(
   fields : ArrayView[@moonthrift.Field],
 ) -> Unit {
   output.write_string("///|\n/// Generated from Thrift \{kind} `\{name}`.\n")
-  output.write_string("pub(all) struct \{type_name(name)} {\n")
-  for field in fields {
-    output.write_string(render_field(field))
+  if fields.length() == 0 {
+    output.write_string("pub(all) struct \{type_name(name)} {}\n\n")
+  } else {
+    output.write_string("pub(all) struct \{type_name(name)} {\n")
+    for field in fields {
+      output.write_string(render_field(field))
+    }
+    output.write_string("} derive(Debug, Eq)\n\n")
   }
-  output.write_string("} derive(Debug, Eq)\n\n")
 }
 
 ///|
