@@ -278,5 +278,9 @@ pub fn generate_moonbit(
   for definition in schema.definitions {
     render_definition(output, definition)
   }
-  { path, content: output.to_string(), }
+  let mut content = output.to_string()
+  while content.has_suffix("\n\n") {
+    content = content.unsafe_substring(start=0, end=content.length() - 1)
+  }
+  { path, content, }
 }
