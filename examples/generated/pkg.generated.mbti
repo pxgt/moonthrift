@@ -1,0 +1,50 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/examples/generated"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) enum Role {
+  USER
+  ADMIN
+} derive(Eq, @debug.Debug)
+pub fn Role::from_thrift_i32(Int) -> Self?
+pub fn Role::to_thrift_i32(Self) -> Int
+
+pub(all) struct User {
+  id : Int64
+  name : String
+  role : Role?
+} derive(Eq, @debug.Debug)
+
+pub(all) struct UserDirectoryGetUserArgs {
+  id : Int64
+} derive(Eq, @debug.Debug)
+
+pub(all) enum UserDirectoryGetUserResult {
+  Success(User)
+  Missing(UserNotFound)
+} derive(Eq, @debug.Debug)
+
+pub(all) struct UserDirectoryListUsersArgs {
+}
+
+pub(all) enum UserDirectoryListUsersResult {
+  Success(Array[User])
+} derive(Eq, @debug.Debug)
+
+pub(all) struct UserNotFound {
+  id : Int64
+  message : String
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+pub type UserId = Int64
+
+// Traits

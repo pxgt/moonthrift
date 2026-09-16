@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Record toolchain
+        run: moon version --all
+
+      - name: Update package registry
+        run: moon update
+
+      - name: Check formatting
+        run: moon fmt --check
+
+      - name: Generate and verify public interfaces
+        run: |
+          moon info --target all
+          git diff --exit-code
+
+      - name: Check every stable backend
+        run: moon check --target all --deny-warn --warn-list +73
+
+      - name: Build every stable backend
+        run: moon build --target all
+
+      - name: Test every stable backend
+        run: moon test --target all --deny-warn --warn-list +73
+
+      - name: Run CLI examples
+        run: |
+          moon run cmd/main --target native
+          moon run cmd/main --target native -- check examples/tutorial.thrift
+          moon run cmd/main --target native -- inspect examples/tutorial.thrift
+          moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift
+
+      - name: Verify generated MoonBit source
+        run: |
+          moon run cmd/main --target native -- generate examples/tutorial.thrift _build/tutorial.generated.mbt
+          cmp examples/generated/model.mbt _build/tutorial.generated.mbt
+
+      - name: Verify package artifact
+        run: moon package --frozen
+
+      - name: Reject generated or formatting drift
+        run: git diff --exit-code

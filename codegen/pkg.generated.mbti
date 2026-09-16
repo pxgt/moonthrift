@@ -1,0 +1,24 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/codegen"
+
+import {
+  "Xpeng/moonthrift",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn generate_moonbit(@moonthrift.Schema, path? : String) -> GeneratedFile
+
+pub fn render_type(@moonthrift.TypeRef) -> String
+
+// Errors
+
+// Types and methods
+pub(all) struct GeneratedFile {
+  path : String
+  content : String
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,181 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn check_schema(Schema) -> Array[Diagnostic]
+
+pub fn compare_schemas(Schema, Schema) -> Array[SchemaChange]
+
+pub fn compile_idl(String, source? : String) -> (Schema, Array[Diagnostic]) raise IdlError
+
+pub fn has_breaking_changes(ArrayView[SchemaChange]) -> Bool
+
+pub fn has_errors(ArrayView[Diagnostic]) -> Bool
+
+pub fn lex(String, source? : String) -> Array[Token] raise IdlError
+
+pub fn parse_idl(String, source? : String) -> Schema raise IdlError
+
+// Errors
+pub(all) suberror IdlError {
+  UnexpectedCharacter(Char, Span)
+  UnterminatedString(Span)
+  UnterminatedComment(Span)
+  InvalidEscape(Char, Span)
+  InvalidInteger(String, Span)
+  UnexpectedToken(String, Span)
+  UnexpectedEnd(Span)
+} derive(Eq, @debug.Debug)
+
+// Types and methods
+pub(all) struct Annotation {
+  key : String
+  value : String?
+} derive(Eq, @debug.Debug)
+
+pub(all) enum BaseType {
+  Bool
+  Byte
+  I16
+  I32
+  I64
+  Double
+  String
+  Binary
+  Void
+} derive(Eq, @debug.Debug)
+
+pub(all) enum ChangeKind {
+  Compatible
+  Warning
+  Breaking
+} derive(Eq, ToJson, @debug.Debug)
+
+pub(all) enum ConstValue {
+  BoolValue(Bool)
+  IntegerValue(Int64)
+  DoubleValue(Double)
+  StringValue(String)
+  IdentifierValue(String)
+  ListValue(Array[ConstValue])
+  MapValue(Array[(ConstValue, ConstValue)])
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Definition {
+  Const(name~ : String, ty~ : TypeRef, value~ : ConstValue, span~ : Span)
+  Typedef(name~ : String, target~ : TypeRef, annotations~ : Array[Annotation], span~ : Span)
+  Enum(name~ : String, members~ : Array[EnumMember], annotations~ : Array[Annotation], span~ : Span)
+  Struct(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
+  Union(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
+  Exception(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
+  Service(name~ : String, extends~ : String?, functions~ : Array[FunctionDef], annotations~ : Array[Annotation], span~ : Span)
+} derive(Eq, @debug.Debug)
+pub fn Definition::kind(Self) -> String
+pub fn Definition::name(Self) -> String
+
+pub(all) struct Diagnostic {
+  code : String
+  severity : Severity
+  message : String
+  span : Span
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Diagnostic::to_text(Self) -> String
+
+pub(all) struct EnumMember {
+  name : String
+  value : Int
+  annotations : Array[Annotation]
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Field {
+  id : Int
+  requiredness : Requiredness
+  ty : TypeRef
+  name : String
+  default_value : ConstValue?
+  annotations : Array[Annotation]
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) struct FunctionDef {
+  name : String
+  return_type : TypeRef
+  arguments : Array[Field]
+  throws : Array[Field]
+  oneway : Bool
+  annotations : Array[Annotation]
+  span : Span
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Header {
+  Include(path~ : String, span~ : Span)
+  Namespace(language~ : String, name~ : String, span~ : Span)
+  CppInclude(path~ : String, span~ : Span)
+} derive(Eq, @debug.Debug)
+
+pub(all) enum Requiredness {
+  Default
+  Required
+  Optional
+} derive(Eq, @debug.Debug)
+
+pub(all) struct Schema {
+  source : String
+  headers : Array[Header]
+  definitions : Array[Definition]
+} derive(Eq, @debug.Debug)
+pub fn Schema::to_outline(Self) -> String
+
+pub(all) struct SchemaChange {
+  code : String
+  kind : ChangeKind
+  path : String
+  message : String
+} derive(Eq, ToJson, @debug.Debug)
+pub fn SchemaChange::to_text(Self) -> String
+
+pub(all) enum Severity {
+  Error
+  Warning
+} derive(Eq, ToJson, @debug.Debug)
+
+pub(all) struct Span {
+  source : String
+  start : Int
+  end : Int
+  line : Int
+  column : Int
+} derive(Eq, ToJson, @debug.Debug)
+pub fn Span::synthetic(source? : String) -> Self
+
+pub(all) struct Token {
+  kind : TokenKind
+  span : Span
+} derive(Eq, @debug.Debug)
+pub fn Token::describe(Self) -> String
+
+pub(all) enum TokenKind {
+  Identifier(String)
+  StringLiteral(String)
+  IntegerLiteral(Int64)
+  FloatLiteral(Double)
+  Symbol(Char)
+  End
+} derive(Eq, @debug.Debug)
+
+pub(all) enum TypeRef {
+  Base(BaseType)
+  Named(String)
+  List(TypeRef)
+  Set(TypeRef)
+  Map(TypeRef, TypeRef)
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+
+// Traits
