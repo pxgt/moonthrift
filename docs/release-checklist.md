@@ -8,9 +8,9 @@
 - [x] Compatibility analyzer and CLI workflows
 - [x] Four-backend format/check/build/test gate
 - [x] Reproducible package artifact
-- [ ] Public GitHub CI green
-- [ ] Mooncakes build successful
-- [ ] Annotated tag and GitHub release created
+- [x] Public GitHub CI green
+- [x] Mooncakes build successful
+- [x] Annotated tag and GitHub release created
 
 The unchecked release steps are completed only after their corresponding
 public service reports success. Issue #1 tracks the online evidence; issue #2

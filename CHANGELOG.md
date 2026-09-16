@@ -5,6 +5,10 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+No changes yet.
+
+## [0.1.0] - 2026-09-16
+
 ### Added
 
 - Source-aware Thrift IDL lexer, parser, AST, and semantic checker.
