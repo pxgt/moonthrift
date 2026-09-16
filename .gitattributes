@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.mbt text eol=lf
+*.md text eol=lf
+*.thrift text eol=lf
+*.bin binary
