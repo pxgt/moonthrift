@@ -115,3 +115,33 @@ test "well-formed schemas pass semantic checking" {
   let (_, diagnostics) = @moonthrift.compile_idl(idl)
   assert_eq(diagnostics, [])
 }
+
+///|
+test "compatibility checker classifies field and enum evolution" {
+  let before = @moonthrift.parse_idl(
+    "enum Role { USER = 1, ADMIN = 2 } struct User { 1: required i64 id, 2: optional string name }",
+  )
+  let after = @moonthrift.parse_idl(
+    "enum Role { MEMBER = 1, OWNER = 3 } struct User { 1: required string id, 3: optional string email }",
+  )
+  let changes = @moonthrift.compare_schemas(before, after)
+  let codes = changes.map(item => item.code)
+  assert_true(codes.contains("MTHC104"))
+  assert_true(codes.contains("MTHC103"))
+  assert_true(codes.contains("MTHC107"))
+  assert_true(codes.contains("MTHC108"))
+  assert_true(codes.contains("MTHC109"))
+  assert_true(codes.contains("MTHC110"))
+  assert_true(@moonthrift.has_breaking_changes(changes))
+}
+
+///|
+test "compatibility checker recognizes additive service changes" {
+  let before = @moonthrift.parse_idl("service Api { void ping() }")
+  let after = @moonthrift.parse_idl("service Api { void ping(), i32 status() }")
+  let changes = @moonthrift.compare_schemas(before, after)
+  assert_eq(changes.length(), 1)
+  assert_true(changes[0].kind is Compatible)
+  assert_eq(changes[0].code, "MTHC113")
+  assert_true(!@moonthrift.has_breaking_changes(changes))
+}

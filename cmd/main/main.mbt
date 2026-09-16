@@ -8,6 +8,7 @@ fn usage() -> String {
     #|  moon run cmd/main -- check <schema.thrift>
     #|  moon run cmd/main -- inspect <schema.thrift>
     #|  moon run cmd/main -- generate <schema.thrift> [output.mbt]
+    #|  moon run cmd/main -- diff <before.thrift> <after.thrift>
     #|
     #|With no arguments, the command runs a schema and compact-protocol demo.
     #|
@@ -98,6 +99,21 @@ fn run(args : Array[String]) -> Unit raise {
         let generated = @codegen.generate_moonbit(schema, path=output)
         @fs.write_string_to_file(output, generated.content)
         println("generated \{output}")
+      }
+    "diff" =>
+      if args.length() != 4 {
+        raise Failure("diff expects an old and new .thrift file")
+      } else {
+        let changes = @lib.compare_schemas(
+          read_schema(args[2]),
+          read_schema(args[3]),
+        )
+        for item in changes {
+          println(item.to_text())
+        }
+        if @lib.has_breaking_changes(changes) {
+          @sys.exit(3)
+        }
       }
     command => raise Failure("unknown command `\{command}`; run with --help")
   }
