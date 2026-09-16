@@ -80,6 +80,44 @@ pub(all) enum Value {
 } derive(Debug, Eq)
 
 ///|
+pub(all) enum MessageType {
+  Call
+  Reply
+  Exception
+  Oneway
+} derive(Debug, Eq)
+
+///|
+pub fn MessageType::id(self : MessageType) -> Int {
+  match self {
+    Call => 1
+    Reply => 2
+    Exception => 3
+    Oneway => 4
+  }
+}
+
+///|
+pub fn MessageType::from_id(id : Int) -> MessageType raise ProtocolError {
+  match id {
+    1 => Call
+    2 => Reply
+    3 => Exception
+    4 => Oneway
+    _ => raise InvalidMessage("unknown message type \{id}")
+  }
+}
+
+///|
+/// A complete Thrift RPC message independent of any transport.
+pub(all) struct Message {
+  name : String
+  kind : MessageType
+  sequence_id : Int
+  body : Value
+} derive(Debug, Eq)
+
+///|
 pub fn Value::wire_type(self : Value) -> WireType {
   match self {
     BoolValue(_) => Bool
@@ -107,4 +145,5 @@ pub(all) suberror ProtocolError {
   LimitExceeded(kind~ : String, limit~ : Int, actual~ : Int)
   TrailingData(offset~ : Int, remaining~ : Int)
   InvalidCompact(String)
+  InvalidMessage(String)
 } derive(Debug, Eq)
