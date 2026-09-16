@@ -5,16 +5,17 @@ used independently.
 
 ```text
 Thrift IDL -> lexer -> parser -> semantic checker -> checked schema
-                                                     |          |
-                                                     |          +-> MoonBit generator
+                                                     |       |       |
+                                                     |       |       +-> version compatibility
+                                                     |       +-> MoonBit generator
                                                      +-> dynamic protocol codecs
 ```
 
 The root package owns source locations, tokens, the public IDL AST, parser,
-diagnostics, and semantic checking. `protocol` owns dynamic wire values and the
-binary/compact readers and writers. `codegen` consumes a checked schema and
-emits MoonBit declarations. `cmd/main` is a thin native-only adapter for files,
-arguments, and exit codes.
+diagnostics, semantic checking, and schema compatibility analysis. `protocol`
+owns dynamic wire values, binary/compact readers and writers, and RPC message
+envelopes. `codegen` consumes a checked schema and emits MoonBit declarations.
+`cmd/main` is a thin native-only adapter for files, arguments, and exit codes.
 
 ## Functional boundary
 

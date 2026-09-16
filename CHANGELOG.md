@@ -7,4 +7,10 @@ the project uses semantic versioning.
 
 ### Added
 
-- Initial project architecture and scope.
+- Source-aware Thrift IDL lexer, parser, AST, and semantic checker.
+- Dynamic value model and bounded Binary/Compact protocol codecs.
+- Strict binary and compact RPC message envelopes.
+- MoonBit data-model code generator with compiled generated fixtures.
+- Schema compatibility analysis for records, enums, constants, and services.
+- Native `check`, `inspect`, `generate`, and `diff` CLI workflows.
+- Four-backend tests, CI, architecture, protocol, and verification docs.

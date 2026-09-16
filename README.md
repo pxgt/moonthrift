@@ -1,32 +1,133 @@
 # MoonThrift
 
-MoonThrift is a MoonBit implementation of the language-neutral parts of
-[Apache Thrift](https://thrift.apache.org/): IDL parsing and validation,
-dynamic values, binary and compact protocol codecs, and MoonBit source
-generation. It is designed for build tools, schema inspection, data migration,
-and future RPC runtimes that need one reusable Thrift foundation.
+[![CI](https://github.com/pxgt/moonthrift/actions/workflows/ci.yml/badge.svg)](https://github.com/pxgt/moonthrift/actions/workflows/ci.yml)
+[![Mooncakes](https://img.shields.io/badge/mooncakes-Xpeng%2Fmoonthrift-purple)](https://mooncakes.io/docs/Xpeng/moonthrift)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-The first release is intentionally transport-independent. It handles schemas
-and wire-format payloads without choosing an HTTP, socket, or async runtime.
-That boundary keeps the core portable across MoonBit's stable backends.
+MoonThrift 是一个用 MoonBit 编写的 Apache Thrift 基础工具库。它把 Thrift
+IDL 解析、语义检查、协议编解码、代码生成和接口兼容性检查放在同一套可复用
+API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和数据迁移流程。
 
-## Planned 0.1.0 surface
+项目当前聚焦与网络框架无关的核心能力，不绑定某一种 HTTP、Socket 或异步
+运行时，因此库和测试可在 MoonBit 的 wasm、wasm-gc、JavaScript、native 四个
+稳定后端运行；文件读写只放在 native CLI 中。
 
-- Parse Thrift IDL headers, constants, typedefs, enums, structs, unions,
-  exceptions, and services.
-- Validate duplicate names and field IDs, unresolved named types, union rules,
-  and service inheritance.
-- Encode and decode dynamic values with the standard binary and compact
-  protocols.
-- Generate readable MoonBit declarations from a checked schema.
-- Provide a native CLI for `check`, `inspect`, and `generate` workflows.
+## 已实现功能
 
-The implementation status and runnable commands will be kept here as the
-milestones land. See [the architecture note](docs/architecture.md) for the
-package boundaries and explicit non-goals.
+- Thrift IDL lexer、带行列位置的 token 与错误信息；
+- 解析 `include`、`namespace`、`const`、`typedef`、`enum`、`struct`、
+  `union`、`exception`、`service`、`throws`、容器类型和 annotations；
+- 检查重复定义、未解析类型、字段 ID/名称冲突、union required 字段、
+  oneway 约束和 service 继承；
+- 动态 Thrift 值模型，无需先生成代码即可检查协议数据；
+- 标准 Binary Protocol 和 Compact Protocol 的值、容器、结构体编解码；
+- Binary/Compact RPC message envelope 编解码；
+- 深度、容器元素数、二进制长度限制，畸形输入以明确错误返回；
+- 从 Thrift Schema 生成 MoonBit typedef、enum、struct、union、exception
+  以及 service 的参数/结果模型；
+- 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
+  breaking 变更；
+- `check`、`inspect`、`generate`、`diff` 四个 CLI 工作流。
 
-## License
+## 快速开始
 
-MoonThrift is licensed under Apache-2.0. Apache Thrift is an independent
-Apache Software Foundation project; MoonThrift is not endorsed by ASF. See
-[THIRD_PARTY.md](THIRD_PARTY.md) for the compatibility and provenance notes.
+安装依赖：
+
+```sh
+moon add Xpeng/moonthrift
+```
+
+解析和检查 IDL：
+
+```moonbit
+let idl =
+  #|struct User {
+  #|  1: required i64 id,
+  #|  2: optional string name
+  #|}
+  #|
+
+let (schema, diagnostics) = @moonthrift.compile_idl(idl)
+assert_eq(schema.definitions.length(), 1)
+assert_eq(diagnostics, [])
+```
+
+动态值可以在不依赖生成代码的情况下经过两种协议往返：
+
+```moonbit
+let value : @protocol.Value = StructValue([
+  { id: 1, value: I64Value(7L) },
+  { id: 2, value: BinaryValue(b"MoonBit") },
+])
+
+let binary = @protocol.encode_binary(value)
+assert_eq(@protocol.decode_binary(binary, Struct), value)
+
+let compact = @protocol.encode_compact(value)
+assert_eq(@protocol.decode_compact(compact, Struct), value)
+```
+
+对应的 `moon.pkg`：
+
+```moonbit
+import {
+  "Xpeng/moonthrift",
+  "Xpeng/moonthrift/protocol",
+}
+```
+
+## CLI 示例
+
+仓库提供了可直接运行的 [tutorial.thrift](examples/tutorial.thrift)：
+
+```sh
+# 内置解析与 Compact Protocol 往返示例
+moon run cmd/main --target native
+
+# 语法与语义检查
+moon run cmd/main --target native -- check examples/tutorial.thrift
+
+# 查看 Schema 轮廓
+moon run cmd/main --target native -- inspect examples/tutorial.thrift
+
+# 生成 MoonBit 数据模型
+moon run cmd/main --target native -- generate examples/tutorial.thrift generated.mbt
+
+# 比较两个 Schema 版本；发现 breaking change 时退出码为 3
+moon run cmd/main --target native -- diff \
+  examples/tutorial.thrift examples/tutorial-v2.thrift
+```
+
+[examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
+纳入四后端编译测试的结果，防止生成器只“输出文本”却无法被 MoonBit 使用。
+
+## 包结构
+
+| 包 | 用途 |
+| --- | --- |
+| `Xpeng/moonthrift` | IDL AST、解析、语义检查、兼容性比较 |
+| `Xpeng/moonthrift/protocol` | 动态值、Binary/Compact codec、RPC message |
+| `Xpeng/moonthrift/codegen` | MoonBit 源码生成器 |
+| `cmd/main` | native 文件与命令行适配层 |
+
+详细数据流、功能边界和维护方向见
+[docs/architecture.md](docs/architecture.md)，协议实现与安全限制见
+[docs/protocols.md](docs/protocols.md)，复现测试的方法见
+[docs/verification.md](docs/verification.md)。
+
+## 当前边界
+
+`0.1.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
+这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
+之上。跨文件 `include` 的磁盘定位也留给调用者；带命名空间的引用会保留在 AST
+中，单文件检查不会把它误报成未定义类型。
+
+## 质量与开源说明
+
+CI 会检查格式、公开接口漂移、四后端 check/build/test、CLI 示例、生成结果、
+package artifact 和工作区洁净度。项目为原创 MoonBit 实现，兼容行为参考 Apache
+Thrift 公开规范，没有复制上游源码；来源和许可证说明见
+[THIRD_PARTY.md](THIRD_PARTY.md)。
+
+参与方式见 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按
+[SECURITY.md](SECURITY.md) 私下报告。本项目采用 [Apache-2.0](LICENSE) 许可证。
