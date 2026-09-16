@@ -108,13 +108,14 @@ fn Lexer::identifier(self : Lexer) -> Token {
 }
 
 ///|
-fn Lexer::integer(self : Lexer) -> Token raise IdlError {
+fn Lexer::number(self : Lexer) -> Token raise IdlError {
   let start = self.offset
   let line = self.line
   let column = self.column
   if self.current() == Some('-') {
     ignore(self.advance())
   }
+  let mut floating = false
   if self.current() == Some('0') &&
     (self.peek(1) == Some('x') || self.peek(1) == Some('X')) {
     ignore(self.advance())
@@ -126,12 +127,38 @@ fn Lexer::integer(self : Lexer) -> Token raise IdlError {
     while self.current() is Some(char) && char.is_ascii_digit() {
       ignore(self.advance())
     }
+    if self.current() == Some('.') &&
+      self.peek(1) is Some(next) &&
+      next.is_ascii_digit() {
+      floating = true
+      ignore(self.advance())
+      while self.current() is Some(char) && char.is_ascii_digit() {
+        ignore(self.advance())
+      }
+    }
+    if self.current() is Some('e' | 'E') {
+      floating = true
+      ignore(self.advance())
+      if self.current() is Some('+' | '-') {
+        ignore(self.advance())
+      }
+      while self.current() is Some(char) && char.is_ascii_digit() {
+        ignore(self.advance())
+      }
+    }
   }
   let text = self.input.unsafe_substring(start~, end=self.offset)
-  let value : Int64 = @str.from_str(text) catch {
-    _ => raise InvalidInteger(text, self.span(start, line, column))
+  if floating {
+    let value : Double = @str.from_str(text) catch {
+      _ => raise InvalidInteger(text, self.span(start, line, column))
+    }
+    { kind: FloatLiteral(value), span: self.span(start, line, column), }
+  } else {
+    let value : Int64 = @str.from_str(text) catch {
+      _ => raise InvalidInteger(text, self.span(start, line, column))
+    }
+    { kind: IntegerLiteral(value), span: self.span(start, line, column), }
   }
-  { kind: IntegerLiteral(value), span: self.span(start, line, column), }
 }
 
 ///|
@@ -187,7 +214,8 @@ fn is_symbol(char : Char) -> Bool {
     | ';'
     | ','
     | '='
-    | '*' => true
+    | '*'
+    | '+' => true
     _ => false
   }
 }
@@ -206,8 +234,8 @@ fn Lexer::next_token(self : Lexer) -> Token raise IdlError {
       }
     Some(char) if is_identifier_start(char) => self.identifier()
     Some('-') if self.peek(1) is Some(next) && next.is_ascii_digit() =>
-      self.integer()
-    Some(char) if char.is_ascii_digit() => self.integer()
+      self.number()
+    Some(char) if char.is_ascii_digit() => self.number()
     Some('\'' | '"') => self.string_literal()
     Some(char) if is_symbol(char) => {
       ignore(self.advance())
