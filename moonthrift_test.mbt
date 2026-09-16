@@ -80,3 +80,38 @@ test "parser handles map and floating constants" {
   assert_eq(entries.length(), 2)
   assert_true(entries[1].1 is DoubleValue(-250.0))
 }
+
+///|
+test "semantic checker reports structural mistakes" {
+  let idl =
+    #|typedef Missing Alias
+    #|struct Bad { 1: string first, 1: required void first }
+    #|union Choice { 1: required string value }
+    #|service Api {
+    #|  oneway string broken(0: Unknown input) throws (1: Unknown problem)
+    #|  void broken()
+    #|}
+    #|
+  let (_, diagnostics) = @moonthrift.compile_idl(idl, source="bad.thrift")
+  let codes = diagnostics.map(item => item.code)
+  assert_true(codes.contains("MTH102"))
+  assert_true(codes.contains("MTH103"))
+  assert_true(codes.contains("MTH104"))
+  assert_true(codes.contains("MTH105"))
+  assert_true(codes.contains("MTH107"))
+  assert_true(codes.contains("MTH108"))
+  assert_true(codes.contains("MTH109"))
+  assert_true(codes.contains("MTH110"))
+}
+
+///|
+test "well-formed schemas pass semantic checking" {
+  let idl =
+    #|typedef i64 UserId
+    #|struct User { 1: required UserId id, 2: optional string name }
+    #|exception Missing { 1: string message }
+    #|service Api { User get(1: UserId id) throws (1: Missing missing) }
+    #|
+  let (_, diagnostics) = @moonthrift.compile_idl(idl)
+  assert_eq(diagnostics, [])
+}
