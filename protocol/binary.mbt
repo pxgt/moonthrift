@@ -243,7 +243,7 @@ pub fn decode_binary(
   max_container_size? : Int = 1000000,
   max_binary_size? : Int = 16777216,
 ) -> Value raise ProtocolError {
-  let reader = {
+  let reader : BinaryReader = {
     input,
     offset: 0,
     max_depth,
