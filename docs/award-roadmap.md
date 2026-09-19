@@ -36,15 +36,16 @@ Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
 Target: portable loading/linking foundation for `0.2.0`.
 
-- [-] Add a caller-provided source loader and public `SchemaWorkspace` model.
-- [ ] Normalize portable relative include paths.
-- [ ] Recursively load includes once in deterministic order.
-- [ ] Diagnose missing sources, include cycles, and conflicting include aliases.
-- [ ] Validate qualified types and service inheritance across direct includes.
-- [ ] Add `uuid` and parse/preserve container `cpp_type` metadata.
+- [x] Add a caller-provided source loader and public `SchemaWorkspace` model.
+- [x] Normalize portable relative include paths.
+- [x] Recursively load includes once in deterministic order.
+- [x] Diagnose missing sources, include cycles, and conflicting include aliases.
+- [x] Validate qualified types and service inheritance across direct includes.
+- [x] Add `uuid` and parse/preserve container `cpp_type` metadata.
 - [ ] Detect typedef and service-inheritance cycles.
-- [ ] Add focused black-box tests and update generated interfaces.
-- [ ] Integrate the workspace API into native CLI workflows.
+- [x] Add focused black-box tests and update generated interfaces.
+- [-] Integrate the workspace API into native CLI workflows (`check` and
+  `inspect` complete; workspace generation remains).
 
 Exit gate:
 
@@ -135,3 +136,7 @@ git diff --exit-code
 
 - 2026-09-19: Roadmap confirmed after initial-review acceptance. Phase 1 issue
   and branch created; schema workspace implementation started.
+- 2026-09-20: Added the portable workspace loader/linker, include diagnostics,
+  qualified-reference checks, UUID/`cpp_type` parsing, multi-file CLI checks,
+  and four-backend regression coverage. Typedef/service cycle analysis and
+  workspace-aware generation remain for Phase 1.

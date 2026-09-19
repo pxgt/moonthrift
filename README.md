@@ -28,6 +28,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
   breaking 变更；
 - `check`、`inspect`、`generate`、`diff` 四个 CLI 工作流。
+- 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
+  限定类型与跨文件 service 继承检查；
 
 ## 快速开始
 
@@ -90,6 +92,10 @@ moon run cmd/main --target native -- check examples/tutorial.thrift
 # 查看 Schema 轮廓
 moon run cmd/main --target native -- inspect examples/tutorial.thrift
 
+# 递归检查和查看多文件 Schema
+moon run cmd/main --target native -- check examples/multifile/api.thrift
+moon run cmd/main --target native -- inspect examples/multifile/api.thrift
+
 # 生成 MoonBit 数据模型
 moon run cmd/main --target native -- generate examples/tutorial.thrift generated.mbt
 
@@ -119,8 +125,8 @@ moon run cmd/main --target native -- diff \
 
 `0.1.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
 这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
-之上。跨文件 `include` 的磁盘定位也留给调用者；带命名空间的引用会保留在 AST
-中，单文件检查不会把它误报成未定义类型。
+之上。开发分支已经提供调用方驱动的多文件加载与链接；代码生成目前仍以一个
+Schema 为单位，workspace 级生成将在 `0.2.0` 后续里程碑完成。
 
 ## 质量与开源说明
 

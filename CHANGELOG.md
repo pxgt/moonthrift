@@ -5,7 +5,13 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
-No changes yet.
+### Added
+
+- Portable multi-file schema workspaces with caller-provided source loading,
+  normalized relative includes, deterministic traversal, and link diagnostics.
+- Qualified cross-file type and service validation.
+- IDL `uuid` and preserved container `cpp_type` metadata.
+- Recursive multi-file `check` and `inspect` CLI workflows.
 
 ## [0.1.0] - 2026-09-16
 
