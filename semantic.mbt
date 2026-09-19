@@ -40,6 +40,7 @@ fn TypeRef::walk_named(self : TypeRef, visit : (String) -> Unit) -> Unit {
       key.walk_named(visit)
       value.walk_named(visit)
     }
+    CppType(inner, _) => inner.walk_named(visit)
     Base(_) => ()
   }
 }

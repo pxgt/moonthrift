@@ -12,6 +12,8 @@ pub fn compare_schemas(Schema, Schema) -> Array[SchemaChange]
 
 pub fn compile_idl(String, source? : String) -> (Schema, Array[Diagnostic]) raise IdlError
 
+pub fn compile_workspace(String, (String) -> String?) -> (SchemaWorkspace, Array[Diagnostic]) raise IdlError
+
 pub fn has_breaking_changes(ArrayView[SchemaChange]) -> Bool
 
 pub fn has_errors(ArrayView[Diagnostic]) -> Bool
@@ -46,6 +48,7 @@ pub(all) enum BaseType {
   Double
   String
   Binary
+  Uuid
   Void
 } derive(Eq, @debug.Debug)
 
@@ -139,6 +142,11 @@ pub(all) struct SchemaChange {
 } derive(Eq, ToJson, @debug.Debug)
 pub fn SchemaChange::to_text(Self) -> String
 
+pub(all) struct SchemaWorkspace {
+  root : String
+  documents : Array[Schema]
+} derive(Eq, @debug.Debug)
+
 pub(all) enum Severity {
   Error
   Warning
@@ -174,8 +182,10 @@ pub(all) enum TypeRef {
   List(TypeRef)
   Set(TypeRef)
   Map(TypeRef, TypeRef)
+  CppType(TypeRef, String)
 } derive(Eq, @debug.Debug)
 
 // Type aliases
+pub type SourceLoader = (String) -> String?
 
 // Traits

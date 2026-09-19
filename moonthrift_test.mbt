@@ -82,6 +82,29 @@ test "parser handles map and floating constants" {
 }
 
 ///|
+test "parser preserves uuid and container cpp_type metadata" {
+  let schema = @moonthrift.parse_idl(
+    (
+      #|typedef uuid RequestId
+      #|typedef map cpp_type "std::unordered_map" <string, i64> Counts
+      #|typedef list<string> cpp_type "std::vector" Names
+      #|
+    ),
+  )
+  guard schema.definitions
+    is [
+      Typedef(target=Base(Uuid), ..),
+      Typedef(
+        target=CppType(Map(Base(String), Base(I64)), "std::unordered_map"),
+        ..
+      ),
+      Typedef(target=CppType(List(Base(String)), "std::vector"), ..),
+    ] else {
+    fail("expected uuid and cpp_type metadata")
+  }
+}
+
+///|
 test "semantic checker reports structural mistakes" {
   let idl =
     #|typedef Missing Alias
