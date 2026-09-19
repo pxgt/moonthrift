@@ -89,10 +89,12 @@ pub fn render_type(ty : @moonthrift.TypeRef) -> String {
     Base(Double) => "Double"
     Base(String) => "String"
     Base(Binary) => "Bytes"
+    Base(Uuid) => "Bytes"
     Base(Void) => "Unit"
     Named(name) => type_name(name)
     List(element) | Set(element) => "Array[\{render_type(element)}]"
     Map(key, value) => "Map[\{render_type(key)}, \{render_type(value)}]"
+    CppType(inner, _) => render_type(inner)
   }
 }
 

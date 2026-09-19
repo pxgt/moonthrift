@@ -25,4 +25,8 @@ test "generator emits records enums unions constants and service models" {
 test "type renderer handles nested containers and qualified names" {
   let ty : @moonthrift.TypeRef = Map(Base(String), List(Named("common.User")))
   assert_eq(@codegen.render_type(ty), "Map[String, Array[User]]")
+  assert_eq(
+    @codegen.render_type(CppType(List(Base(Uuid)), "std::vector")),
+    "Array[Bytes]",
+  )
 }
