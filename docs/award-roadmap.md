@@ -25,10 +25,13 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 ## Current status
 
 - Current release: `0.1.0`
-- Current development branch: `feat/schema-workspace`
-- Active milestone: Phase 1 — multi-file schema workspace
-- Tracking issue: [#4](https://github.com/pxgt/moonthrift/issues/4)
-- Last updated: 2026-09-19
+- Current development branch: `main`
+- Completed milestone: Phase 1 — multi-file schema workspace
+- Next milestone: Phase 2 — typed MoonBit codec generation
+- Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
+  [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
+  [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
+- Last updated: 2026-09-20
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -139,4 +142,5 @@ git diff --exit-code
 - 2026-09-20: Added the portable workspace loader/linker, include diagnostics,
   qualified-reference checks, UUID/`cpp_type` parsing, multi-file CLI checks,
   cycle analysis, workspace-aware generation, and four-backend regression
-  coverage. Phase 1 implementation is complete pending PR review and CI.
+  coverage. PR #5 was merged after branch CI passed; the resulting `main` CI
+  also passed all checks. Phase 1 is complete and Phase 2 is next.
