@@ -96,6 +96,10 @@ moon run cmd/main --target native -- inspect examples/tutorial.thrift
 moon run cmd/main --target native -- check examples/multifile/api.thrift
 moon run cmd/main --target native -- inspect examples/multifile/api.thrift
 
+# 把多文件 Schema 生成为一个可直接编译的 MoonBit 模型文件
+moon run cmd/main --target native -- generate \
+  examples/multifile/api.thrift generated.mbt
+
 # 生成 MoonBit 数据模型
 moon run cmd/main --target native -- generate examples/tutorial.thrift generated.mbt
 
@@ -125,8 +129,8 @@ moon run cmd/main --target native -- diff \
 
 `0.1.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
 这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
-之上。开发分支已经提供调用方驱动的多文件加载与链接；代码生成目前仍以一个
-Schema 为单位，workspace 级生成将在 `0.2.0` 后续里程碑完成。
+之上。开发分支已经提供调用方驱动的多文件加载、链接和单文件生成；生成器会给
+included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名。
 
 ## 质量与开源说明
 

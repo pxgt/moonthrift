@@ -42,10 +42,10 @@ Target: portable loading/linking foundation for `0.2.0`.
 - [x] Diagnose missing sources, include cycles, and conflicting include aliases.
 - [x] Validate qualified types and service inheritance across direct includes.
 - [x] Add `uuid` and parse/preserve container `cpp_type` metadata.
-- [ ] Detect typedef and service-inheritance cycles.
+- [x] Detect typedef and service-inheritance cycles.
 - [x] Add focused black-box tests and update generated interfaces.
-- [-] Integrate the workspace API into native CLI workflows (`check` and
-  `inspect` complete; workspace generation remains).
+- [x] Integrate the workspace API into native CLI `check`, `inspect`, and
+  `generate` workflows.
 
 Exit gate:
 
@@ -138,5 +138,5 @@ git diff --exit-code
   and branch created; schema workspace implementation started.
 - 2026-09-20: Added the portable workspace loader/linker, include diagnostics,
   qualified-reference checks, UUID/`cpp_type` parsing, multi-file CLI checks,
-  and four-backend regression coverage. Typedef/service cycle analysis and
-  workspace-aware generation remain for Phase 1.
+  cycle analysis, workspace-aware generation, and four-backend regression
+  coverage. Phase 1 implementation is complete pending PR review and CI.

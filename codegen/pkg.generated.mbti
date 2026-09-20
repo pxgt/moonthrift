@@ -9,6 +9,8 @@ import {
 // Values
 pub fn generate_moonbit(@moonthrift.Schema, path? : String) -> GeneratedFile
 
+pub fn generate_workspace(@moonthrift.SchemaWorkspace, path? : String) -> GeneratedFile
+
 pub fn render_type(@moonthrift.TypeRef) -> String
 
 // Errors

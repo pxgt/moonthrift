@@ -12,6 +12,9 @@ the project uses semantic versioning.
 - Qualified cross-file type and service validation.
 - IDL `uuid` and preserved container `cpp_type` metadata.
 - Recursive multi-file `check` and `inspect` CLI workflows.
+- Cycle diagnostics for typedefs and service inheritance.
+- Collision-resistant single-file MoonBit model generation from a complete
+  linked workspace.
 
 ## [0.1.0] - 2026-09-16
 

@@ -16,8 +16,10 @@ pub(all) struct SchemaWorkspace {
 
 ///|
 fn normalize_schema_path(path : String) -> String {
+  let portable = path.replace_all(old="\\", new="/")
+  let absolute = portable.has_prefix("/")
   let parts : Array[String] = []
-  for raw_part in path.replace_all(old="\\", new="/").split("/") {
+  for raw_part in portable.split("/") {
     let part = raw_part.to_owned()
     match part {
       "" | "." => ()
@@ -29,7 +31,12 @@ fn normalize_schema_path(path : String) -> String {
       _ => parts.push(part)
     }
   }
-  parts.join("/")
+  let normalized = parts.join("/")
+  if absolute {
+    "/\{normalized}"
+  } else {
+    normalized
+  }
 }
 
 ///|
@@ -256,6 +263,164 @@ fn validate_workspace_fields(
 }
 
 ///|
+fn definition_reference(
+  schema : Schema,
+  name : String,
+  documents : ArrayView[Schema],
+) -> (Schema, Definition)? {
+  match name.split_once(".") {
+    None =>
+      find_definition(schema, name).map(definition => (schema, definition))
+    Some((include_view, symbol_view)) => {
+      let include_name = include_view.to_owned()
+      let symbol = symbol_view.to_owned()
+      for header in schema.headers {
+        match header {
+          Include(path~, ..) if include_alias(path) == include_name => {
+            let target = resolve_include_path(schema.source, path)
+            guard find_document(documents, target) is Some(target_schema) else {
+              return None
+            }
+            return find_definition(target_schema, symbol).map(definition => {
+              (target_schema, definition)
+            })
+          }
+          _ => ()
+        }
+      }
+      None
+    }
+  }
+}
+
+///|
+fn definition_key(schema : Schema, definition : Definition) -> String {
+  "\{schema.source}#\{definition.name()}"
+}
+
+///|
+fn check_typedef_cycle_from(
+  schema : Schema,
+  definition : Definition,
+  documents : ArrayView[Schema],
+  active : Array[String],
+  diagnostics : Array[Diagnostic],
+  reported : Array[String],
+) -> Bool {
+  guard definition is Typedef(target~, span~, ..) else { return false }
+  let key = definition_key(schema, definition)
+  if active.contains(key) {
+    if !reported.contains(key) {
+      let chain = active.copy()
+      chain.push(key)
+      push_workspace_diagnostic(
+        diagnostics,
+        "MTH207",
+        "typedef cycle detected: \{chain.join(" -> ")}",
+        span,
+      )
+      reported.push(key)
+    }
+    return true
+  }
+  active.push(key)
+  let mut found = false
+  target.walk_named(name => {
+    if !found {
+      match definition_reference(schema, name, documents) {
+        Some((target_schema, target_definition)) if target_definition
+          is Typedef(..) =>
+          found = check_typedef_cycle_from(
+            target_schema, target_definition, documents, active, diagnostics, reported,
+          )
+        _ => ()
+      }
+    }
+  })
+  ignore(active.pop())
+  found
+}
+
+///|
+fn check_service_cycle_from(
+  schema : Schema,
+  definition : Definition,
+  documents : ArrayView[Schema],
+  active : Array[String],
+  diagnostics : Array[Diagnostic],
+  reported : Array[String],
+) -> Bool {
+  guard definition is Service(extends~, span~, ..) else { return false }
+  let key = definition_key(schema, definition)
+  if active.contains(key) {
+    if !reported.contains(key) {
+      let chain = active.copy()
+      chain.push(key)
+      push_workspace_diagnostic(
+        diagnostics,
+        "MTH208",
+        "service inheritance cycle detected: \{chain.join(" -> ")}",
+        span,
+      )
+      reported.push(key)
+    }
+    return true
+  }
+  active.push(key)
+  let found = match extends {
+    None => false
+    Some(base) =>
+      match definition_reference(schema, base, documents) {
+        Some((base_schema, base_definition)) if base_definition is Service(..) =>
+          check_service_cycle_from(
+            base_schema, base_definition, documents, active, diagnostics, reported,
+          )
+        _ => false
+      }
+  }
+  ignore(active.pop())
+  found
+}
+
+///|
+fn validate_workspace_cycles(
+  documents : ArrayView[Schema],
+  diagnostics : Array[Diagnostic],
+) -> Unit {
+  let typedef_reports : Array[String] = []
+  let service_reports : Array[String] = []
+  for schema in documents {
+    for definition in schema.definitions {
+      match definition {
+        Typedef(..) =>
+          ignore(
+            check_typedef_cycle_from(
+              schema,
+              definition,
+              documents,
+              [],
+              diagnostics,
+              typedef_reports,
+            ),
+          )
+        Service(..) =>
+          ignore(
+            check_service_cycle_from(
+              schema,
+              definition,
+              documents,
+              [],
+              diagnostics,
+              service_reports,
+            ),
+          )
+        _ => ()
+      }
+    }
+  }
+}
+
+///|
 fn validate_workspace_schema(
   schema : Schema,
   documents : ArrayView[Schema],
@@ -331,5 +496,6 @@ pub fn compile_workspace(
   for schema in documents {
     validate_workspace_schema(schema, documents, diagnostics)
   }
+  validate_workspace_cycles(documents, diagnostics)
   ({ root: normalized_root, documents, }, diagnostics)
 }

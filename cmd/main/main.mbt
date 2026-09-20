@@ -108,13 +108,12 @@ fn run(args : Array[String]) -> Unit raise {
       } else {
         let input = args[2]
         let output = if args.length() == 4 { args[3] } else { "generated.mbt" }
-        let schema = read_schema(input)
-        let diagnostics = @lib.check_schema(schema)
+        let (workspace, diagnostics) = read_workspace(input)
         if @lib.has_errors(diagnostics) {
           print_diagnostics(diagnostics)
           raise Failure("refusing to generate from an invalid schema")
         }
-        let generated = @codegen.generate_moonbit(schema, path=output)
+        let generated = @codegen.generate_workspace(workspace, path=output)
         @fs.write_string_to_file(output, generated.content)
         println("generated \{output}")
       }

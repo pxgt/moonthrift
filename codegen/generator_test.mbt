@@ -30,3 +30,30 @@ test "type renderer handles nested containers and qualified names" {
     "Array[Bytes]",
   )
 }
+
+///|
+test "workspace generator prefixes included declarations and rewrites references" {
+  let sources : Map[String, String] = {
+    "api.thrift": (
+      #|include "common/types.thrift"
+      #|struct Request { 1: required types.User user }
+      #|service Api { types.User get(1: types.UserId id) }
+      #|
+    ),
+    "common/types.thrift": (
+      #|typedef i64 UserId
+      #|struct User { 1: required UserId id }
+      #|
+    ),
+  }
+  let (workspace, diagnostics) = @moonthrift.compile_workspace("api.thrift", path => {
+    sources.get(path)
+  })
+  assert_eq(diagnostics, [])
+  let generated = @codegen.generate_workspace(workspace)
+  assert_true(generated.content.contains("pub(all) struct Request"))
+  assert_true(generated.content.contains("user : CommonTypesUser"))
+  assert_true(generated.content.contains("pub type CommonTypesUserId = Int64"))
+  assert_true(generated.content.contains("pub(all) struct CommonTypesUser"))
+  assert_true(generated.content.contains("id : CommonTypesUserId"))
+}

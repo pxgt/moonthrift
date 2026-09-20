@@ -43,6 +43,21 @@ test "workspace loads each included source once" {
 }
 
 ///|
+test "workspace preserves absolute logical roots" {
+  let sources : Map[String, String] = {
+    "/schemas/root.thrift": "include \"common.thrift\" struct Root { 1: common.Value value }",
+    "/schemas/common.thrift": "struct Value { 1: i32 count }",
+  }
+  let (workspace, diagnostics) = @moonthrift.compile_workspace(
+    "/schemas/./root.thrift",
+    path => sources.get(path),
+  )
+  assert_eq(diagnostics, [])
+  assert_eq(workspace.root, "/schemas/root.thrift")
+  assert_eq(workspace.documents[1].source, "/schemas/common.thrift")
+}
+
+///|
 test "workspace diagnoses missing sources and include cycles" {
   let sources : Map[String, String] = {
     "root.thrift": (
@@ -87,4 +102,23 @@ test "workspace diagnoses alias conflicts and unresolved qualified names" {
   assert_true(codes.contains("MTH203"))
   assert_true(codes.contains("MTH204"))
   assert_true(codes.contains("MTH205"))
+}
+
+///|
+test "workspace diagnoses typedef and service inheritance cycles" {
+  let sources : Map[String, String] = {
+    "cycles.thrift": (
+      #|typedef Second First
+      #|typedef First Second
+      #|service Alpha extends Beta {}
+      #|service Beta extends Alpha {}
+      #|
+    ),
+  }
+  let (_, diagnostics) = @moonthrift.compile_workspace("cycles.thrift", path => {
+    sources.get(path)
+  })
+  let codes = diagnostics.map(item => item.code)
+  assert_true(codes.contains("MTH207"))
+  assert_true(codes.contains("MTH208"))
 }
