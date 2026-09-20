@@ -52,7 +52,7 @@ jobs:
           moon run cmd/main --target native -- check examples/multifile/api.thrift
           moon run cmd/main --target native -- inspect examples/tutorial.thrift
           moon run cmd/main --target native -- inspect examples/multifile/api.thrift
-          moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift
+          moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift || test "$?" -eq 3
 
       - name: Verify generated MoonBit source
         run: |
