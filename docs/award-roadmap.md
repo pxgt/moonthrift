@@ -24,10 +24,10 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 ## Current status
 
-- Current release: `0.1.0`
-- Current development branch: `feat/python-interoperability`
-- Completed milestone: Phase 2 — typed MoonBit codec generation
-- Active milestone: Phase 3 — cross-language interoperability and `0.2.0`
+- Current release: `0.2.0`
+- Current development branch: `main`
+- Completed milestone: Phase 3 — cross-language interoperability and `0.2.0`
+- Next milestone: Phase 4 — compatibility CI
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -78,7 +78,7 @@ manually constructing the dynamic `protocol.Value` tree.
   nested containers, exceptions, and unknown fields.
 - [x] Add licensed upstream fixtures with provenance in `THIRD_PARTY.md`.
 - [x] Run interoperability as an independent CI job.
-- [ ] Publish Mooncakes `0.2.0`, annotated tag, and GitHub release.
+- [x] Publish Mooncakes `0.2.0`, annotated tag, and GitHub release.
 
 ## Phase 4 — compatibility CI
 
@@ -128,9 +128,9 @@ must run the narrowest relevant tests first and finish with:
 ```sh
 moon fmt --check
 moon info --target all
-moon check --target all --deny-warn --warn-list +73
+moon check --target all --deny-warn --warn-list +73-79
 moon build --target all
-moon test --target all --deny-warn --warn-list +73
+moon test --target all --deny-warn --warn-list +73-79
 moon package --frozen
 git diff --exit-code
 ```
@@ -156,3 +156,9 @@ git diff --exit-code
 - 2026-09-20: Started Phase 3 in Issue #9. Pinned Apache Thrift Python 0.24.0,
   added deterministic Binary/Compact reference fixtures and four-backend
   bidirectional tests, and documented fixture provenance and reproduction.
+- 2026-09-20: PR #10 passed the regular and independent interoperability CI
+  jobs and was merged. Mooncakes 0.2.0 built successfully, annotated tag
+  `v0.2.0` and the GitHub release were published, and Phase 3 was completed.
+- 2026-09-20: MoonBit 2026-09-20 added derived-method warning 079. CI was
+  updated for the new black-box test qualification rule; the broader explicit
+  trait-method export migration is tracked in Issue #13.

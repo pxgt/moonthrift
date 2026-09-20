@@ -1,11 +1,11 @@
 # Verification
 
-The `0.2.0` release is developed with the 2026-09-15 stable MoonBit toolchain:
+The `0.2.0` release is verified with the 2026-09-20 stable MoonBit toolchain:
 
 ```text
-moon 0.1.20260915 (2e1a46d 2026-09-15)
-moonc v0.10.13+cbb11c36f (2026-09-15)
-moonrun 0.1.20260915 (2e1a46d 2026-09-15)
+moon 0.1.20260920 (914d7da 2026-09-20)
+moonc v0.10.14+7d59c7ec9 (2026-09-18)
+moonrun 0.1.20260920 (914d7da 2026-09-20)
 ```
 
 Run the complete local gate from the repository root:
@@ -15,9 +15,9 @@ moon update
 moon fmt --check
 moon info --target all
 git diff --exit-code
-moon check --target all --deny-warn --warn-list +73
+moon check --target all --deny-warn --warn-list +73-79
 moon build --target all
-moon test --target all --deny-warn --warn-list +73
+moon test --target all --deny-warn --warn-list +73-79
 moon run cmd/main --target native
 moon run cmd/main --target native -- check examples/tutorial.thrift
 moon run cmd/main --target native -- inspect examples/tutorial.thrift
@@ -29,6 +29,12 @@ moon package --frozen
 python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
 ```
+
+Warning 079 is temporarily kept non-fatal with `-79` while the explicit
+derived-trait method export migration is tracked in
+[Issue #13](https://github.com/pxgt/moonthrift/issues/13). All other enabled
+warnings remain errors. The migration changes API declaration mechanics, not
+Binary/Compact wire behavior.
 
 Compare the two formatted generated files with
 `examples/generated/model.mbt` and `examples/generated_workspace/model.mbt`.
