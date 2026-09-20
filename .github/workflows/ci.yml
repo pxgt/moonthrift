@@ -67,3 +67,37 @@ jobs:
 
       - name: Reject generated or formatting drift
         run: git diff --exit-code
+
+  interoperability-python:
+    name: Apache Thrift Python interoperability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: interop/python/requirements.txt
+
+      - name: Install pinned reference runtime
+        run: python -m pip install -r interop/python/requirements.txt
+
+      - name: Rebuild and verify Python wire fixtures
+        run: python interop/python/reference.py --check
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Record toolchain
+        run: moon version --all
+
+      - name: Update package registry
+        run: moon update
+
+      - name: Run bidirectional interoperability tests
+        run: moon test interop/fixtures --target all --deny-warn --warn-list +73
