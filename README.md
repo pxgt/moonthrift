@@ -27,6 +27,7 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
   以及 service 的参数/结果模型；
 - 为生成模型提供类型安全的 `to_thrift_value` / `from_thrift_value` 与
   Binary/Compact 便捷方法，支持嵌套容器、默认值、未知字段和 required 校验；
+- 将 `///` 和 `/** ... */` IDL 文档保留为生成 MoonBit API 的文档注释；
 - 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
   breaking 变更；
 - `check`、`inspect`、`generate`、`diff` 四个 CLI 工作流。
@@ -148,8 +149,8 @@ assert_eq(decoded, user)
 这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
 之上。开发分支已经提供调用方驱动的多文件加载、链接和单文件生成；生成器会给
 included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名，并为
-生成模型提供 Binary/Compact 类型安全 codec。IDL 文档注释保留和跨语言互操作
-矩阵仍在后续里程碑中。
+生成模型提供 Binary/Compact 类型安全 codec，并保留 IDL 文档注释。跨语言互操作
+矩阵将在下一个里程碑中完成。
 
 ## 质量与开源说明
 

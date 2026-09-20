@@ -4,17 +4,18 @@ MoonThrift separates schema tooling from protocol I/O so each layer can be
 used independently.
 
 ```text
-Thrift IDL -> lexer -> parser -> semantic checker -> checked schema
-                                                     |       |       |
-                                                     |       |       +-> version compatibility
-                                                     |       +-> MoonBit generator
-                                                     +-> dynamic protocol codecs
+Thrift IDL -> lexer -> parser -> semantic checker -> linked schema workspace
+                                                        |       |       |
+                                                        |       |       +-> version compatibility
+                                                        |       +-> typed MoonBit models/codecs
+                                                        +-> dynamic protocol codecs
 ```
 
 The root package owns source locations, tokens, the public IDL AST, parser,
 diagnostics, semantic checking, and schema compatibility analysis. `protocol`
-owns dynamic wire values, binary/compact readers and writers, and RPC message
-envelopes. `codegen` consumes a checked schema and emits MoonBit declarations.
+owns dynamic wire values, checked extraction helpers, binary/compact readers
+and writers, and RPC message envelopes. `codegen` consumes a linked schema and
+emits documented MoonBit declarations plus type-safe Binary/Compact adapters.
 `cmd/main` is a thin native-only adapter for files, arguments, and exit codes.
 
 ## Functional boundary

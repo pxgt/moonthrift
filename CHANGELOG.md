@@ -21,6 +21,7 @@ the project uses semantic versioning.
   exceptions, unions, nested containers, and service argument/result models.
 - Generated decoding semantics for optional fields, default values, unknown
   fields, missing required fields, and invalid enum values.
+- Preservation of line and block IDL documentation in generated MoonBit APIs.
 
 ## [0.1.0] - 2026-09-16
 

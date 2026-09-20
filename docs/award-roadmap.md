@@ -26,8 +26,8 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 - Current release: `0.1.0`
 - Current development branch: `feat/typed-codecs`
-- Completed milestone: Phase 1 — multi-file schema workspace
-- Active milestone: Phase 2 — typed MoonBit codec generation
+- Completed milestone: Phase 2 — typed MoonBit codec generation
+- Next milestone: Phase 3 — cross-language interoperability and `0.2.0`
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -64,7 +64,7 @@ Exit gate:
 - [x] Skip unknown fields and reject missing required fields deterministically.
 - [x] Generate enum, union, exception, container, and nested-type adapters.
 - [x] Generate service argument/result codecs.
-- [ ] Preserve IDL documentation as MoonBit doc comments.
+- [x] Preserve IDL documentation as MoonBit doc comments.
 - [x] Compile and execute generated codecs on every stable backend.
 
 Exit gate: generated MoonBit values complete Binary/Compact round trips without
@@ -148,4 +148,8 @@ git diff --exit-code
   extraction and generated type-safe Binary/Compact adapters for records,
   enums, unions, exceptions, nested containers, and service models. Generated
   fixtures now execute four-backend round trips; documentation-comment
-  preservation remains before the Phase 2 exit gate.
+  preservation was the final open item before the Phase 2 exit gate.
+- 2026-09-20: Preserved line and block IDL documentation on constants,
+  typedefs, enums and members, records and fields, unions, services, and
+  functions. Phase 2 now satisfies its exit gate with 36 tests on each stable
+  backend; PR #8 records the review and CI evidence.
