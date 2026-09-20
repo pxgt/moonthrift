@@ -2,6 +2,7 @@
 package "Xpeng/moonthrift/examples/generated"
 
 import {
+  "Xpeng/moonthrift/protocol",
   "moonbitlang/core/debug",
 }
 
@@ -14,35 +15,93 @@ pub(all) enum Role {
   USER
   ADMIN
 } derive(Eq, @debug.Debug)
+pub fn Role::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Role::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Role::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Role::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Role::from_thrift_i32(Int) -> Self?
+pub fn Role::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn Role::to_thrift_i32(Self) -> Int
+pub fn Role::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct User {
   id : Int64
   name : String
   role : Role?
+  aliases : Array[String]?
+  scores : Map[String, Int]?
+  flags : Array[Int64]?
+  revision : Int
 } derive(Eq, @debug.Debug)
+pub fn User::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn User::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn User::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn User::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn User::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn User::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct UserDirectoryGetUserArgs {
   id : Int64
 } derive(Eq, @debug.Debug)
+pub fn UserDirectoryGetUserArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) enum UserDirectoryGetUserResult {
   Success(User)
   Missing(UserNotFound)
 } derive(Eq, @debug.Debug)
+pub fn UserDirectoryGetUserResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct UserDirectoryListUsersArgs {
 }
+pub fn UserDirectoryListUsersArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersArgs::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) enum UserDirectoryListUsersResult {
   Success(Array[User])
 } derive(Eq, @debug.Debug)
+pub fn UserDirectoryListUsersResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryListUsersResult::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) enum UserLookup {
+  Empty
+  Id(Int64)
+  Name(String)
+} derive(Eq, @debug.Debug)
+pub fn UserLookup::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserLookup::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserLookup::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserLookup::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserLookup::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserLookup::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct UserNotFound {
   id : Int64
   message : String
 } derive(Eq, @debug.Debug)
+pub fn UserNotFound::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserNotFound::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserNotFound::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserNotFound::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserNotFound::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserNotFound::to_thrift_value(Self) -> @protocol.Value
 
 // Type aliases
 pub type UserId = Int64

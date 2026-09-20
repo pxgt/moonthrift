@@ -2,6 +2,7 @@
 package "Xpeng/moonthrift/examples/generated_workspace"
 
 import {
+  "Xpeng/moonthrift/protocol",
   "moonbitlang/core/debug",
 }
 
@@ -12,27 +13,63 @@ import {
 // Types and methods
 pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {
 }
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
 } derive(Eq, @debug.Debug)
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct ExamplesMultifileCommonTypesUser {
   id : Int64
   display_name : String?
 } derive(Eq, @debug.Debug)
+pub fn ExamplesMultifileCommonTypesUser::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesUser::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesUser::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesUser::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesUser::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesUser::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct GetUserRequest {
   id : Int64
 } derive(Eq, @debug.Debug)
+pub fn GetUserRequest::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn GetUserRequest::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn GetUserRequest::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn GetUserRequest::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn GetUserRequest::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn GetUserRequest::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct UserDirectoryGetUserArgs {
   request : GetUserRequest
 } derive(Eq, @debug.Debug)
+pub fn UserDirectoryGetUserArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserArgs::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) enum UserDirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
 } derive(Eq, @debug.Debug)
+pub fn UserDirectoryGetUserResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn UserDirectoryGetUserResult::to_thrift_value(Self) -> @protocol.Value
 
 // Type aliases
 pub type ExamplesMultifileCommonTypesUserId = Int64

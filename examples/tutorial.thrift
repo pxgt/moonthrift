@@ -10,7 +10,16 @@ enum Role {
 struct User {
   1: required UserId id,
   2: required string name,
-  3: optional Role role
+  3: optional Role role,
+  4: optional list<string> aliases,
+  5: optional map<string, i32> scores,
+  6: optional set<i64> flags,
+  7: i32 revision = 1
+}
+
+union UserLookup {
+  1: UserId id,
+  2: string name
 }
 
 exception UserNotFound {

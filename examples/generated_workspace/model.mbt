@@ -6,6 +6,70 @@ pub(all) struct GetUserRequest {
   id : ExamplesMultifileCommonTypesUserId
 } derive(Debug, Eq)
 
+///|
+/// Converts this generated record to its schema-independent Thrift value.
+pub fn GetUserRequest::to_thrift_value(
+  self : GetUserRequest,
+) -> @protocol.Value {
+  let fields : Array[@protocol.FieldValue] = []
+  fields.push({ id: 1, value: I64Value(self.id), })
+  StructValue(fields)
+}
+
+///|
+/// Builds a generated record from a schema-independent Thrift value.
+pub fn GetUserRequest::from_thrift_value(
+  value : @protocol.Value,
+) -> GetUserRequest raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  let mut decoded_id : ExamplesMultifileCommonTypesUserId? = None
+  for field in fields {
+    match field.id {
+      1 => decoded_id = Some(field.value.require_i64())
+      _ => ()
+    }
+  }
+  {
+    id: match decoded_id {
+      Some(value) => value
+      None =>
+        raise MissingRequiredField(
+          type_name="GetUserRequest",
+          field_id=1,
+          field_name="id",
+        )
+    },
+  }
+}
+
+///|
+pub fn GetUserRequest::encode_binary(
+  self : GetUserRequest,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn GetUserRequest::decode_binary(
+  input : Bytes,
+) -> GetUserRequest raise @protocol.ProtocolError {
+  GetUserRequest::from_thrift_value(@protocol.decode_binary(input, Struct))
+}
+
+///|
+pub fn GetUserRequest::encode_compact(
+  self : GetUserRequest,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn GetUserRequest::decode_compact(
+  input : Bytes,
+) -> GetUserRequest raise @protocol.ProtocolError {
+  GetUserRequest::from_thrift_value(@protocol.decode_compact(input, Struct))
+}
+
 // Service models for `UserDirectory`. Transport dispatch is supplied by the application.
 
 ///|
@@ -15,9 +79,151 @@ pub(all) struct UserDirectoryGetUserArgs {
 } derive(Debug, Eq)
 
 ///|
+/// Converts this generated record to its schema-independent Thrift value.
+pub fn UserDirectoryGetUserArgs::to_thrift_value(
+  self : UserDirectoryGetUserArgs,
+) -> @protocol.Value {
+  let fields : Array[@protocol.FieldValue] = []
+  fields.push({ id: 1, value: self.request.to_thrift_value(), })
+  StructValue(fields)
+}
+
+///|
+/// Builds a generated record from a schema-independent Thrift value.
+pub fn UserDirectoryGetUserArgs::from_thrift_value(
+  value : @protocol.Value,
+) -> UserDirectoryGetUserArgs raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  let mut decoded_request : GetUserRequest? = None
+  for field in fields {
+    match field.id {
+      1 =>
+        decoded_request = Some(GetUserRequest::from_thrift_value(field.value))
+      _ => ()
+    }
+  }
+  {
+    request: match decoded_request {
+      Some(value) => value
+      None =>
+        raise MissingRequiredField(
+          type_name="UserDirectoryGetUserArgs",
+          field_id=1,
+          field_name="request",
+        )
+    },
+  }
+}
+
+///|
+pub fn UserDirectoryGetUserArgs::encode_binary(
+  self : UserDirectoryGetUserArgs,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn UserDirectoryGetUserArgs::decode_binary(
+  input : Bytes,
+) -> UserDirectoryGetUserArgs raise @protocol.ProtocolError {
+  UserDirectoryGetUserArgs::from_thrift_value(
+    @protocol.decode_binary(input, Struct),
+  )
+}
+
+///|
+pub fn UserDirectoryGetUserArgs::encode_compact(
+  self : UserDirectoryGetUserArgs,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn UserDirectoryGetUserArgs::decode_compact(
+  input : Bytes,
+) -> UserDirectoryGetUserArgs raise @protocol.ProtocolError {
+  UserDirectoryGetUserArgs::from_thrift_value(
+    @protocol.decode_compact(input, Struct),
+  )
+}
+
+///|
 pub(all) enum UserDirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
 } derive(Debug, Eq)
+
+///|
+pub fn UserDirectoryGetUserResult::to_thrift_value(
+  self : UserDirectoryGetUserResult,
+) -> @protocol.Value {
+  match self {
+    Success(value) => StructValue([{ id: 0, value: value.to_thrift_value(), }])
+  }
+}
+
+///|
+pub fn UserDirectoryGetUserResult::from_thrift_value(
+  value : @protocol.Value,
+) -> UserDirectoryGetUserResult raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  let mut result : UserDirectoryGetUserResult? = None
+  for field in fields {
+    match field.id {
+      0 => {
+        if result is Some(_) {
+          raise InvalidValue(
+            "result UserDirectoryGetUserResult contains multiple known fields",
+          )
+        }
+        result = Some(
+          Success(
+            ExamplesMultifileCommonTypesUser::from_thrift_value(field.value),
+          ),
+        )
+      }
+      _ => ()
+    }
+  }
+  match result {
+    Some(value) => value
+    None =>
+      raise InvalidValue(
+        "result UserDirectoryGetUserResult has no recognized field",
+      )
+  }
+}
+
+///|
+pub fn UserDirectoryGetUserResult::encode_binary(
+  self : UserDirectoryGetUserResult,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn UserDirectoryGetUserResult::decode_binary(
+  input : Bytes,
+) -> UserDirectoryGetUserResult raise @protocol.ProtocolError {
+  UserDirectoryGetUserResult::from_thrift_value(
+    @protocol.decode_binary(input, Struct),
+  )
+}
+
+///|
+pub fn UserDirectoryGetUserResult::encode_compact(
+  self : UserDirectoryGetUserResult,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn UserDirectoryGetUserResult::decode_compact(
+  input : Bytes,
+) -> UserDirectoryGetUserResult raise @protocol.ProtocolError {
+  UserDirectoryGetUserResult::from_thrift_value(
+    @protocol.decode_compact(input, Struct),
+  )
+}
 
 ///|
 pub type ExamplesMultifileCommonTypesUserId = Int64
@@ -29,6 +235,81 @@ pub(all) struct ExamplesMultifileCommonTypesUser {
   display_name : String?
 } derive(Debug, Eq)
 
+///|
+/// Converts this generated record to its schema-independent Thrift value.
+pub fn ExamplesMultifileCommonTypesUser::to_thrift_value(
+  self : ExamplesMultifileCommonTypesUser,
+) -> @protocol.Value {
+  let fields : Array[@protocol.FieldValue] = []
+  fields.push({ id: 1, value: I64Value(self.id), })
+  match self.display_name {
+    Some(value) => fields.push({ id: 2, value: @protocol.string_value(value), })
+    None => ()
+  }
+  StructValue(fields)
+}
+
+///|
+/// Builds a generated record from a schema-independent Thrift value.
+pub fn ExamplesMultifileCommonTypesUser::from_thrift_value(
+  value : @protocol.Value,
+) -> ExamplesMultifileCommonTypesUser raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  let mut decoded_id : ExamplesMultifileCommonTypesUserId? = None
+  let mut decoded_display_name : String? = None
+  for field in fields {
+    match field.id {
+      1 => decoded_id = Some(field.value.require_i64())
+      2 => decoded_display_name = Some(field.value.require_string())
+      _ => ()
+    }
+  }
+  {
+    id: match decoded_id {
+      Some(value) => value
+      None =>
+        raise MissingRequiredField(
+          type_name="ExamplesMultifileCommonTypesUser",
+          field_id=1,
+          field_name="id",
+        )
+    },
+    display_name: decoded_display_name,
+  }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesUser::encode_binary(
+  self : ExamplesMultifileCommonTypesUser,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesUser::decode_binary(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesUser raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesUser::from_thrift_value(
+    @protocol.decode_binary(input, Struct),
+  )
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesUser::encode_compact(
+  self : ExamplesMultifileCommonTypesUser,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesUser::decode_compact(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesUser raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesUser::from_thrift_value(
+    @protocol.decode_compact(input, Struct),
+  )
+}
+
 // Service models for `ExamplesMultifileCommonTypesBaseDirectory`. Transport dispatch is supplied by the application.
 
 ///|
@@ -36,6 +317,121 @@ pub(all) struct ExamplesMultifileCommonTypesUser {
 pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {}
 
 ///|
+/// Converts this generated record to its schema-independent Thrift value.
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::to_thrift_value(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingArgs,
+) -> @protocol.Value {
+  ignore(self)
+  let fields : Array[@protocol.FieldValue] = []
+  StructValue(fields)
+}
+
+///|
+/// Builds a generated record from a schema-independent Thrift value.
+#warnings("-unnecessary_annotation")
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(
+  value : @protocol.Value,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingArgs raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  for field in fields {
+    match field.id {
+      _ => ()
+    }
+  }
+  ExamplesMultifileCommonTypesBaseDirectoryPingArgs::{ }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_binary(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingArgs,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_binary(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingArgs raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(
+    @protocol.decode_binary(input, Struct),
+  )
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_compact(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingArgs,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingArgs raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(
+    @protocol.decode_compact(input, Struct),
+  )
+}
+
+///|
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
 } derive(Debug, Eq)
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::to_thrift_value(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingResult,
+) -> @protocol.Value {
+  match self {
+    Success => StructValue([])
+  }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
+  value : @protocol.Value,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError {
+  let fields = value.require_struct()
+  let result : ExamplesMultifileCommonTypesBaseDirectoryPingResult? = None
+  for field in fields {
+    match field.id {
+      _ => ()
+    }
+  }
+  match result {
+    Some(value) => value
+    None => Success
+  }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_binary(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingResult,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_binary(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_binary(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
+    @protocol.decode_binary(input, Struct),
+  )
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_compact(
+  self : ExamplesMultifileCommonTypesBaseDirectoryPingResult,
+) -> Bytes raise @protocol.ProtocolError {
+  @protocol.encode_compact(self.to_thrift_value())
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(
+  input : Bytes,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError {
+  ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
+    @protocol.decode_compact(input, Struct),
+  )
+}

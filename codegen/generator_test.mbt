@@ -19,6 +19,10 @@ test "generator emits records enums unions constants and service models" {
   assert_true(generated.content.contains("pub let default_port : Int = 9090"))
   assert_true(generated.content.contains("pub(all) struct UsersGetArgs"))
   assert_true(generated.content.contains("pub(all) enum UsersGetResult"))
+  assert_true(generated.content.contains("User::to_thrift_value"))
+  assert_true(generated.content.contains("User::decode_compact"))
+  assert_true(generated.content.contains("Lookup::from_thrift_value"))
+  assert_true(generated.content.contains("UsersGetResult::encode_binary"))
 }
 
 ///|
