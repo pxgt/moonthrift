@@ -1,5 +1,9 @@
 # Roadmap
 
+The detailed award-oriented execution plan and live progress ledger are kept in
+[docs/award-roadmap.md](docs/award-roadmap.md). This file remains the concise
+public summary.
+
 ## 0.1 series
 
 - Expand official Apache Thrift conformance fixtures and compare outputs with

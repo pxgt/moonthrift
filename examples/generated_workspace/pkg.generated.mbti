@@ -1,0 +1,40 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/examples/generated_workspace"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {
+}
+
+pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
+  Success
+} derive(Eq, @debug.Debug)
+
+pub(all) struct ExamplesMultifileCommonTypesUser {
+  id : Int64
+  display_name : String?
+} derive(Eq, @debug.Debug)
+
+pub(all) struct GetUserRequest {
+  id : Int64
+} derive(Eq, @debug.Debug)
+
+pub(all) struct UserDirectoryGetUserArgs {
+  request : GetUserRequest
+} derive(Eq, @debug.Debug)
+
+pub(all) enum UserDirectoryGetUserResult {
+  Success(ExamplesMultifileCommonTypesUser)
+} derive(Eq, @debug.Debug)
+
+// Type aliases
+pub type ExamplesMultifileCommonTypesUserId = Int64
+
+// Traits

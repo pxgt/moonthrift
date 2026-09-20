@@ -83,6 +83,24 @@ fn Parser::separator(self : Parser) -> Unit {
 }
 
 ///|
+fn Parser::parse_cpp_type(self : Parser) -> String? raise IdlError {
+  if self.eat_word("cpp_type") {
+    let (value, _) = self.expect_string()
+    Some(value)
+  } else {
+    None
+  }
+}
+
+///|
+fn with_cpp_type(ty : TypeRef, value : String?) -> TypeRef {
+  match value {
+    Some(cpp_name) => CppType(ty, cpp_name)
+    None => ty
+  }
+}
+
+///|
 fn Parser::parse_type(self : Parser) -> TypeRef raise IdlError {
   let (name, _) = self.expect_name()
   match name {
@@ -94,26 +112,42 @@ fn Parser::parse_type(self : Parser) -> TypeRef raise IdlError {
     "double" => Base(Double)
     "string" => Base(String)
     "binary" => Base(Binary)
+    "uuid" => Base(Uuid)
     "void" => Base(Void)
     "list" => {
+      let before = self.parse_cpp_type()
       self.expect_symbol('<')
       let element = self.parse_type()
       self.expect_symbol('>')
-      List(element)
+      let cpp_name = match before {
+        Some(_) => before
+        None => self.parse_cpp_type()
+      }
+      with_cpp_type(List(element), cpp_name)
     }
     "set" => {
+      let before = self.parse_cpp_type()
       self.expect_symbol('<')
       let element = self.parse_type()
       self.expect_symbol('>')
-      Set(element)
+      let cpp_name = match before {
+        Some(_) => before
+        None => self.parse_cpp_type()
+      }
+      with_cpp_type(Set(element), cpp_name)
     }
     "map" => {
+      let before = self.parse_cpp_type()
       self.expect_symbol('<')
       let key = self.parse_type()
       self.expect_symbol(',')
       let value = self.parse_type()
       self.expect_symbol('>')
-      Map(key, value)
+      let cpp_name = match before {
+        Some(_) => before
+        None => self.parse_cpp_type()
+      }
+      with_cpp_type(Map(key, value), cpp_name)
     }
     named => Named(named)
   }

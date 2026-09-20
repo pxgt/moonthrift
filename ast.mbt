@@ -9,6 +9,7 @@ pub(all) enum BaseType {
   Double
   String
   Binary
+  Uuid
   Void
 } derive(Debug, Eq)
 
@@ -20,6 +21,7 @@ pub(all) enum TypeRef {
   List(TypeRef)
   Set(TypeRef)
   Map(TypeRef, TypeRef)
+  CppType(TypeRef, String)
 } derive(Debug, Eq)
 
 ///|

@@ -21,6 +21,19 @@ fn read_schema(path : String) -> @lib.Schema raise {
 }
 
 ///|
+fn read_workspace(
+  path : String,
+) -> (@lib.SchemaWorkspace, Array[@lib.Diagnostic]) raise {
+  @lib.compile_workspace(path, candidate => {
+    try @fs.read_file_to_string(candidate) catch {
+      _ => None
+    } noraise {
+      content => Some(content)
+    }
+  })
+}
+
+///|
 fn print_diagnostics(diagnostics : Array[@lib.Diagnostic]) -> Unit {
   for item in diagnostics {
     println(item.to_text())
@@ -29,15 +42,17 @@ fn print_diagnostics(diagnostics : Array[@lib.Diagnostic]) -> Unit {
 
 ///|
 fn run_check(path : String) -> Unit raise {
-  let schema = read_schema(path)
-  let diagnostics = @lib.check_schema(schema)
+  let (workspace, diagnostics) = read_workspace(path)
   print_diagnostics(diagnostics)
   if @lib.has_errors(diagnostics) {
     println("check failed with \{diagnostics.length()} diagnostic(s)")
     @sys.exit(2)
   }
+  let definition_count = workspace.documents.fold(init=0, (count, schema) => {
+    count + schema.definitions.length()
+  })
   println(
-    "OK: \{schema.definitions.length()} definition(s), no semantic errors",
+    "OK: \{workspace.documents.length()} document(s), \{definition_count} definition(s), no semantic errors",
   )
 }
 
@@ -80,9 +95,12 @@ fn run(args : Array[String]) -> Unit raise {
       if args.length() != 3 {
         raise Failure("inspect expects one .thrift file")
       } else {
-        let schema = read_schema(args[2])
-        println(schema.to_outline())
-        print_diagnostics(@lib.check_schema(schema))
+        let (workspace, diagnostics) = read_workspace(args[2])
+        for schema in workspace.documents {
+          println("== \{schema.source} ==")
+          println(schema.to_outline())
+        }
+        print_diagnostics(diagnostics)
       }
     "generate" =>
       if args.length() < 3 || args.length() > 4 {
@@ -90,13 +108,12 @@ fn run(args : Array[String]) -> Unit raise {
       } else {
         let input = args[2]
         let output = if args.length() == 4 { args[3] } else { "generated.mbt" }
-        let schema = read_schema(input)
-        let diagnostics = @lib.check_schema(schema)
+        let (workspace, diagnostics) = read_workspace(input)
         if @lib.has_errors(diagnostics) {
           print_diagnostics(diagnostics)
           raise Failure("refusing to generate from an invalid schema")
         }
-        let generated = @codegen.generate_moonbit(schema, path=output)
+        let generated = @codegen.generate_workspace(workspace, path=output)
         @fs.write_string_to_file(output, generated.content)
         println("generated \{output}")
       }

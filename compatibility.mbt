@@ -69,6 +69,21 @@ fn find_function(
 }
 
 ///|
+fn TypeRef::wire_equal(self : TypeRef, other : TypeRef) -> Bool {
+  match (self, other) {
+    (CppType(inner, _), right) => inner.wire_equal(right)
+    (left, CppType(inner, _)) => left.wire_equal(inner)
+    (Base(left), Base(right)) => left == right
+    (Named(left), Named(right)) => left == right
+    (List(left), List(right)) | (Set(left), Set(right)) =>
+      left.wire_equal(right)
+    (Map(left_key, left_value), Map(right_key, right_value)) =>
+      left_key.wire_equal(right_key) && left_value.wire_equal(right_value)
+    _ => false
+  }
+}
+
+///|
 fn compare_fields(
   path : String,
   before_fields : ArrayView[Field],
@@ -94,7 +109,7 @@ fn compare_fields(
         )
       }
       Some(after_field) => {
-        if before_field.ty != after_field.ty {
+        if !before_field.ty.wire_equal(after_field.ty) {
           changes.push(
             change(
               "MTHC104",
@@ -211,7 +226,7 @@ fn compare_functions(
           ),
         )
       Some(after_function) => {
-        if before_function.return_type != after_function.return_type ||
+        if !before_function.return_type.wire_equal(after_function.return_type) ||
           before_function.oneway != after_function.oneway {
           changes.push(
             change(
@@ -271,7 +286,7 @@ fn compare_definition(
   }
   match (before_definition, after_definition) {
     (Typedef(target=before_target, ..), Typedef(target=after_target, ..)) =>
-      if before_target != after_target {
+      if !before_target.wire_equal(after_target) {
         changes.push(
           change("MTHC114", Breaking, path, "typedef target changed"),
         )
@@ -301,7 +316,7 @@ fn compare_definition(
       Const(ty=before_type, value=before_value, ..),
       Const(ty=after_type, value=after_value, ..),
     ) =>
-      if before_type != after_type || before_value != after_value {
+      if !before_type.wire_equal(after_type) || before_value != after_value {
         changes.push(
           change("MTHC116", Warning, path, "constant type or value changed"),
         )

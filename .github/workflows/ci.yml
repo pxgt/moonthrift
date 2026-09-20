@@ -49,13 +49,17 @@ jobs:
         run: |
           moon run cmd/main --target native
           moon run cmd/main --target native -- check examples/tutorial.thrift
+          moon run cmd/main --target native -- check examples/multifile/api.thrift
           moon run cmd/main --target native -- inspect examples/tutorial.thrift
+          moon run cmd/main --target native -- inspect examples/multifile/api.thrift
           moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift
 
       - name: Verify generated MoonBit source
         run: |
           moon run cmd/main --target native -- generate examples/tutorial.thrift _build/tutorial.generated.mbt
           cmp examples/generated/model.mbt _build/tutorial.generated.mbt
+          moon run cmd/main --target native -- generate examples/multifile/api.thrift _build/multifile.generated.mbt
+          cmp examples/generated_workspace/model.mbt _build/multifile.generated.mbt
 
       - name: Verify package artifact
         run: moon package --frozen
