@@ -22,6 +22,10 @@ pub fn encode_compact(Value) -> Bytes raise ProtocolError
 
 pub fn encode_compact_message(Message) -> Bytes raise ProtocolError
 
+pub fn find_field(ArrayView[FieldValue], Int) -> Value?
+
+pub fn string_value(String) -> Value
+
 // Errors
 pub(all) suberror ProtocolError {
   UnexpectedEof(offset~ : Int, needed~ : Int)
@@ -32,6 +36,9 @@ pub(all) suberror ProtocolError {
   TrailingData(offset~ : Int, remaining~ : Int)
   InvalidCompact(String)
   InvalidMessage(String)
+  InvalidValue(String)
+  InvalidEnum(type_name~ : String, value~ : Int)
+  MissingRequiredField(type_name~ : String, field_id~ : Int, field_name~ : String)
 } derive(Eq, @debug.Debug)
 
 // Types and methods
@@ -69,6 +76,18 @@ pub(all) enum Value {
   SetValue(element_type~ : WireType, values~ : Array[Value])
   ListValue(element_type~ : WireType, values~ : Array[Value])
 } derive(Eq, @debug.Debug)
+pub fn Value::require_binary(Self) -> Bytes raise ProtocolError
+pub fn Value::require_bool(Self) -> Bool raise ProtocolError
+pub fn Value::require_byte(Self) -> Byte raise ProtocolError
+pub fn Value::require_double(Self) -> Double raise ProtocolError
+pub fn Value::require_i16(Self) -> Int raise ProtocolError
+pub fn Value::require_i32(Self) -> Int raise ProtocolError
+pub fn Value::require_i64(Self) -> Int64 raise ProtocolError
+pub fn Value::require_list(Self, WireType) -> Array[Self] raise ProtocolError
+pub fn Value::require_map(Self, WireType, WireType) -> Array[(Self, Self)] raise ProtocolError
+pub fn Value::require_set(Self, WireType) -> Array[Self] raise ProtocolError
+pub fn Value::require_string(Self) -> String raise ProtocolError
+pub fn Value::require_struct(Self) -> Array[FieldValue] raise ProtocolError
 pub fn Value::wire_type(Self) -> WireType
 
 pub(all) enum WireType {

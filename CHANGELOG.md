@@ -15,6 +15,13 @@ the project uses semantic versioning.
 - Cycle diagnostics for typedefs and service inheritance.
 - Collision-resistant single-file MoonBit model generation from a complete
   linked workspace.
+- Checked protocol-value extraction helpers, including UTF-8 and container
+  validation.
+- Generated type-safe Binary and Compact adapters for enums, records,
+  exceptions, unions, nested containers, and service argument/result models.
+- Generated decoding semantics for optional fields, default values, unknown
+  fields, missing required fields, and invalid enum values.
+- Preservation of line and block IDL documentation in generated MoonBit APIs.
 
 ## [0.1.0] - 2026-09-16
 

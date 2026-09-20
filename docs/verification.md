@@ -22,13 +22,18 @@ moon run cmd/main --target native
 moon run cmd/main --target native -- check examples/tutorial.thrift
 moon run cmd/main --target native -- inspect examples/tutorial.thrift
 moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift
-moon run cmd/main --target native -- generate examples/tutorial.thrift _build/tutorial.generated.mbt
+moon run cmd/main --target native -- generate examples/tutorial.thrift /tmp/tutorial.generated.mbtx
+moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
+moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx
 moon package --frozen
 ```
 
-Normalize line endings and compare `_build/tutorial.generated.mbt` with
-`examples/generated/model.mbt`. The generated package is also part of the
-regular check/test graph, so invalid emitted syntax fails CI.
+Compare the two formatted generated files with
+`examples/generated/model.mbt` and `examples/generated_workspace/model.mbt`.
+Both generated packages are part of the regular check/test graph. Their tests
+execute Binary and Compact round trips on all stable backends, including
+nested containers, cross-file types, service results, defaults, unknown fields,
+and missing-required-field errors.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,

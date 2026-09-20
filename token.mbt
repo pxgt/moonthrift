@@ -5,6 +5,7 @@ pub(all) enum TokenKind {
   StringLiteral(String)
   IntegerLiteral(Int64)
   FloatLiteral(Double)
+  DocComment(String)
   Symbol(Char)
   End
 } derive(Debug, Eq)
@@ -23,6 +24,7 @@ pub fn Token::describe(self : Token) -> String {
     StringLiteral(_) => "string literal"
     IntegerLiteral(value) => "integer `\{value}`"
     FloatLiteral(value) => "floating-point number `\{value}`"
+    DocComment(_) => "documentation comment"
     Symbol(value) => "`\{value}`"
     End => "end of input"
   }

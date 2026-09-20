@@ -90,7 +90,13 @@ pub(all) struct FunctionDef {
 
 ///|
 pub(all) enum Definition {
-  Const(name~ : String, ty~ : TypeRef, value~ : ConstValue, span~ : Span)
+  Const(
+    name~ : String,
+    ty~ : TypeRef,
+    value~ : ConstValue,
+    annotations~ : Array[Annotation],
+    span~ : Span
+  )
   Typedef(
     name~ : String,
     target~ : TypeRef,
