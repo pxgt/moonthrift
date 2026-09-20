@@ -7,9 +7,9 @@
   unknown fields covered
 - [x] Fixture provenance and Apache-2.0 license source documented
 - [x] Independent interoperability CI job configured
-- [ ] Pull request and both CI jobs green
-- [ ] Mooncakes 0.2.0 build successful
-- [ ] Annotated `v0.2.0` tag and GitHub release created
+- [x] Pull request and both CI jobs green
+- [x] Mooncakes 0.2.0 build successful
+- [x] Annotated `v0.2.0` tag and GitHub release created
 
 ## 0.1.0 release record
 
