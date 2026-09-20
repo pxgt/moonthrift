@@ -1,0 +1,4 @@
+import {
+  "Xpeng/moonthrift/examples/generated",
+  "Xpeng/moonthrift/protocol",
+} for "test"
