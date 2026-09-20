@@ -1,0 +1,27 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/interop/fixtures"
+
+// Values
+pub let python_binary_empty_containers : Bytes
+
+pub let python_binary_exception : Bytes
+
+pub let python_binary_user : Bytes
+
+pub let python_binary_user_unknown : Bytes
+
+pub let python_compact_empty_containers : Bytes
+
+pub let python_compact_exception : Bytes
+
+pub let python_compact_user : Bytes
+
+pub let python_compact_user_unknown : Bytes
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

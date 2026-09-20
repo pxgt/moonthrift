@@ -27,6 +27,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
   以及 service 的参数/结果模型；
 - 为生成模型提供类型安全的 `to_thrift_value` / `from_thrift_value` 与
   Binary/Compact 便捷方法，支持嵌套容器、默认值、未知字段和 required 校验；
+- 与 Apache Thrift Python `0.24.0` 进行 Binary/Compact 双向字节级互操作验证，
+  覆盖整数边界、Unicode、空/嵌套容器、异常和未知字段；
 - 将 `///` 和 `/** ... */` IDL 文档保留为生成 MoonBit API 的文档注释；
 - 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
   breaking 变更；
@@ -141,16 +143,18 @@ assert_eq(decoded, user)
 详细数据流、功能边界和维护方向见
 [docs/architecture.md](docs/architecture.md)，协议实现与安全限制见
 [docs/protocols.md](docs/protocols.md)，复现测试的方法见
-[docs/verification.md](docs/verification.md)。
+[docs/verification.md](docs/verification.md)，跨语言夹具与验证矩阵见
+[docs/interoperability.md](docs/interoperability.md)。
 
 ## 当前边界
 
-`0.1.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
+`0.2.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
 这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
 之上。开发分支已经提供调用方驱动的多文件加载、链接和单文件生成；生成器会给
 included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名，并为
-生成模型提供 Binary/Compact 类型安全 codec，并保留 IDL 文档注释。跨语言互操作
-矩阵将在下一个里程碑中完成。
+生成模型提供 Binary/Compact 类型安全 codec，并保留 IDL 文档注释。当前版本已
+完成 Python 参考实现的跨语言互操作矩阵；socket transport、服务调度和其他语言
+参考实现仍属于后续里程碑。
 
 ## 质量与开源说明
 

@@ -25,9 +25,9 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 ## Current status
 
 - Current release: `0.1.0`
-- Current development branch: `feat/typed-codecs`
+- Current development branch: `feat/python-interoperability`
 - Completed milestone: Phase 2 — typed MoonBit codec generation
-- Next milestone: Phase 3 — cross-language interoperability and `0.2.0`
+- Active milestone: Phase 3 — cross-language interoperability and `0.2.0`
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -72,12 +72,12 @@ manually constructing the dynamic `protocol.Value` tree.
 
 ## Phase 3 — cross-language interoperability and `0.2.0`
 
-- [ ] Establish Apache Thrift Python as the first reference implementation.
-- [ ] Test Python encode -> MoonBit decode and MoonBit encode -> Python decode.
-- [ ] Cover Binary and Compact protocols, integer boundaries, Unicode, empty and
+- [x] Establish Apache Thrift Python as the first reference implementation.
+- [x] Test Python encode -> MoonBit decode and MoonBit encode -> Python decode.
+- [x] Cover Binary and Compact protocols, integer boundaries, Unicode, empty and
   nested containers, exceptions, and unknown fields.
-- [ ] Add licensed upstream fixtures with provenance in `THIRD_PARTY.md`.
-- [ ] Run interoperability as an independent CI job.
+- [x] Add licensed upstream fixtures with provenance in `THIRD_PARTY.md`.
+- [x] Run interoperability as an independent CI job.
 - [ ] Publish Mooncakes `0.2.0`, annotated tag, and GitHub release.
 
 ## Phase 4 — compatibility CI
@@ -153,3 +153,6 @@ git diff --exit-code
   typedefs, enums and members, records and fields, unions, services, and
   functions. Phase 2 now satisfies its exit gate with 36 tests on each stable
   backend; PR #8 records the review and CI evidence.
+- 2026-09-20: Started Phase 3 in Issue #9. Pinned Apache Thrift Python 0.24.0,
+  added deterministic Binary/Compact reference fixtures and four-backend
+  bidirectional tests, and documented fixture provenance and reproduction.

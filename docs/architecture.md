@@ -20,11 +20,12 @@ emits documented MoonBit declarations plus type-safe Binary/Compact adapters.
 
 ## Functional boundary
 
-Version 0.1.0 targets the reusable compiler and serialization substrate. It
-does not implement a socket transport, server loop, service dispatch runtime,
-TLS, multiplexing, or every language-specific annotation used by upstream
-Thrift generators. Those features require runtime policy choices and are kept
-outside the portable core.
+Version 0.2.0 targets the reusable compiler and serialization substrate,
+including multi-file linking, generated typed codecs, and independently
+verified Binary/Compact wire interoperability. It does not implement a socket
+transport, server loop, service dispatch runtime, TLS, multiplexing, or every
+language-specific annotation used by upstream Thrift generators. Those
+features require runtime policy choices and are kept outside the portable core.
 
 ## Maintenance value
 
