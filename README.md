@@ -25,6 +25,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - 深度、容器元素数、二进制长度限制，畸形输入以明确错误返回；
 - 从 Thrift Schema 生成 MoonBit typedef、enum、struct、union、exception
   以及 service 的参数/结果模型；
+- 为生成模型提供类型安全的 `to_thrift_value` / `from_thrift_value` 与
+  Binary/Compact 便捷方法，支持嵌套容器、默认值、未知字段和 required 校验；
 - 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
   breaking 变更；
 - `check`、`inspect`、`generate`、`diff` 四个 CLI 工作流。
@@ -109,7 +111,22 @@ moon run cmd/main --target native -- diff \
 ```
 
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
-纳入四后端编译测试的结果，防止生成器只“输出文本”却无法被 MoonBit 使用。
+纳入四后端编译与往返测试的结果，防止生成器只“输出文本”却无法被 MoonBit
+使用。生成代码所在包需要导入协议包：
+
+```moonbit
+import {
+  "Xpeng/moonthrift/protocol",
+}
+```
+
+生成后的记录类型可以直接往返，无需手工构造动态 `Value`：
+
+```moonbit
+let encoded = user.encode_compact()
+let decoded = User::decode_compact(encoded)
+assert_eq(decoded, user)
+```
 
 ## 包结构
 
@@ -130,7 +147,9 @@ moon run cmd/main --target native -- diff \
 `0.1.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
 这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
 之上。开发分支已经提供调用方驱动的多文件加载、链接和单文件生成；生成器会给
-included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名。
+included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名，并为
+生成模型提供 Binary/Compact 类型安全 codec。IDL 文档注释保留和跨语言互操作
+矩阵仍在后续里程碑中。
 
 ## 质量与开源说明
 

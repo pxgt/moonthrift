@@ -25,9 +25,9 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 ## Current status
 
 - Current release: `0.1.0`
-- Current development branch: `main`
+- Current development branch: `feat/typed-codecs`
 - Completed milestone: Phase 1 — multi-file schema workspace
-- Next milestone: Phase 2 — typed MoonBit codec generation
+- Active milestone: Phase 2 — typed MoonBit codec generation
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -59,13 +59,13 @@ Exit gate:
 
 ## Phase 2 — typed MoonBit codec generation
 
-- [ ] Generate Binary and Compact encode/decode adapters for records.
-- [ ] Implement required, optional, and default-value semantics.
-- [ ] Skip unknown fields and reject missing required fields deterministically.
-- [ ] Generate enum, union, exception, container, and nested-type adapters.
-- [ ] Generate service argument/result codecs.
+- [x] Generate Binary and Compact encode/decode adapters for records.
+- [x] Implement required, optional, and default-value semantics.
+- [x] Skip unknown fields and reject missing required fields deterministically.
+- [x] Generate enum, union, exception, container, and nested-type adapters.
+- [x] Generate service argument/result codecs.
 - [ ] Preserve IDL documentation as MoonBit doc comments.
-- [ ] Compile and execute generated codecs on every stable backend.
+- [x] Compile and execute generated codecs on every stable backend.
 
 Exit gate: generated MoonBit values complete Binary/Compact round trips without
 manually constructing the dynamic `protocol.Value` tree.
@@ -144,3 +144,8 @@ git diff --exit-code
   cycle analysis, workspace-aware generation, and four-backend regression
   coverage. PR #5 was merged after branch CI passed; the resulting `main` CI
   also passed all checks. Phase 1 is complete and Phase 2 is next.
+- 2026-09-20: Started Phase 2 in Issue #7. Added checked dynamic-value
+  extraction and generated type-safe Binary/Compact adapters for records,
+  enums, unions, exceptions, nested containers, and service models. Generated
+  fixtures now execute four-backend round trips; documentation-comment
+  preservation remains before the Phase 2 exit gate.
