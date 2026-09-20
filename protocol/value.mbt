@@ -135,6 +135,153 @@ pub fn Value::wire_type(self : Value) -> WireType {
 }
 
 ///|
+/// Finds a field by its numeric Thrift identifier.
+///
+/// Unknown fields remain available to callers but generated decoders can
+/// deliberately ignore them, which preserves Thrift's forward-compatibility
+/// behavior.
+pub fn find_field(fields : ArrayView[FieldValue], id : Int) -> Value? {
+  for field in fields {
+    if field.id == id {
+      return Some(field.value)
+    }
+  }
+  None
+}
+
+///|
+/// Converts UTF-8 text into Thrift's binary wire representation.
+pub fn string_value(value : String) -> Value {
+  BinaryValue(@utf8.encode(value))
+}
+
+///|
+pub fn Value::require_bool(self : Value) -> Bool raise ProtocolError {
+  match self {
+    BoolValue(value) => value
+    value => raise TypeMismatch(expected=Bool, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_byte(self : Value) -> Byte raise ProtocolError {
+  match self {
+    ByteValue(value) => value.to_byte()
+    value => raise TypeMismatch(expected=Byte, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_i16(self : Value) -> Int raise ProtocolError {
+  match self {
+    I16Value(value) => value
+    value => raise TypeMismatch(expected=I16, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_i32(self : Value) -> Int raise ProtocolError {
+  match self {
+    I32Value(value) => value
+    value => raise TypeMismatch(expected=I32, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_i64(self : Value) -> Int64 raise ProtocolError {
+  match self {
+    I64Value(value) => value
+    value => raise TypeMismatch(expected=I64, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_double(self : Value) -> Double raise ProtocolError {
+  match self {
+    DoubleValue(value) => value
+    value => raise TypeMismatch(expected=Double, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_binary(self : Value) -> Bytes raise ProtocolError {
+  match self {
+    BinaryValue(value) => value
+    value => raise TypeMismatch(expected=Binary, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_string(self : Value) -> String raise ProtocolError {
+  let bytes = self.require_binary()
+  @utf8.decode(bytes) catch {
+    _ => raise InvalidValue("binary field is not valid UTF-8")
+  }
+}
+
+///|
+pub fn Value::require_struct(
+  self : Value,
+) -> Array[FieldValue] raise ProtocolError {
+  match self {
+    StructValue(fields) => fields
+    value => raise TypeMismatch(expected=Struct, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_list(
+  self : Value,
+  expected_element_type : WireType,
+) -> Array[Value] raise ProtocolError {
+  match self {
+    ListValue(element_type~, values~) => {
+      if element_type != expected_element_type && values.length() > 0 {
+        raise TypeMismatch(expected=expected_element_type, actual=element_type)
+      }
+      values
+    }
+    value => raise TypeMismatch(expected=List, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_set(
+  self : Value,
+  expected_element_type : WireType,
+) -> Array[Value] raise ProtocolError {
+  match self {
+    SetValue(element_type~, values~) => {
+      if element_type != expected_element_type && values.length() > 0 {
+        raise TypeMismatch(expected=expected_element_type, actual=element_type)
+      }
+      values
+    }
+    value => raise TypeMismatch(expected=Set, actual=value.wire_type())
+  }
+}
+
+///|
+pub fn Value::require_map(
+  self : Value,
+  expected_key_type : WireType,
+  expected_value_type : WireType,
+) -> Array[(Value, Value)] raise ProtocolError {
+  match self {
+    MapValue(key_type~, value_type~, entries~) => {
+      if entries.length() > 0 && key_type != expected_key_type {
+        raise TypeMismatch(expected=expected_key_type, actual=key_type)
+      }
+      if entries.length() > 0 && value_type != expected_value_type {
+        raise TypeMismatch(expected=expected_value_type, actual=value_type)
+      }
+      entries
+    }
+    value => raise TypeMismatch(expected=Map, actual=value.wire_type())
+  }
+}
+
+///|
 /// Errors are bounded and deterministic so malformed untrusted payloads do not
 /// become panics or unbounded allocations.
 pub(all) suberror ProtocolError {
@@ -146,4 +293,11 @@ pub(all) suberror ProtocolError {
   TrailingData(offset~ : Int, remaining~ : Int)
   InvalidCompact(String)
   InvalidMessage(String)
+  InvalidValue(String)
+  InvalidEnum(type_name~ : String, value~ : Int)
+  MissingRequiredField(
+    type_name~ : String,
+    field_id~ : Int,
+    field_name~ : String
+  )
 } derive(Debug, Eq)
