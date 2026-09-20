@@ -69,7 +69,7 @@ pub(all) enum ConstValue {
 } derive(Eq, @debug.Debug)
 
 pub(all) enum Definition {
-  Const(name~ : String, ty~ : TypeRef, value~ : ConstValue, span~ : Span)
+  Const(name~ : String, ty~ : TypeRef, value~ : ConstValue, annotations~ : Array[Annotation], span~ : Span)
   Typedef(name~ : String, target~ : TypeRef, annotations~ : Array[Annotation], span~ : Span)
   Enum(name~ : String, members~ : Array[EnumMember], annotations~ : Array[Annotation], span~ : Span)
   Struct(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
@@ -172,6 +172,7 @@ pub(all) enum TokenKind {
   StringLiteral(String)
   IntegerLiteral(Int64)
   FloatLiteral(Double)
+  DocComment(String)
   Symbol(Char)
   End
 } derive(Eq, @debug.Debug)

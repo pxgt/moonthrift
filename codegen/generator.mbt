@@ -153,6 +153,40 @@ fn find_type_definition(
 }
 
 ///|
+fn documentation(annotations : ArrayView[@moonthrift.Annotation]) -> String? {
+  for annotation in annotations {
+    if annotation.key == "moonbit.doc" {
+      return annotation.value
+    }
+  }
+  None
+}
+
+///|
+fn render_doc_comment(output : StringBuilder, text : String) -> Unit {
+  for line in text.split("\n") {
+    let line = line.to_owned()
+    if line == "" {
+      output.write_string("///\n")
+    } else {
+      output.write_string("/// \{line}\n")
+    }
+  }
+}
+
+///|
+fn render_member_doc_comment(output : StringBuilder, text : String) -> Unit {
+  for line in text.split("\n") {
+    let line = line.to_owned()
+    if line == "" {
+      output.write_string("  ///\n")
+    } else {
+      output.write_string("  /// \{line}\n")
+    }
+  }
+}
+
+///|
 fn wire_type_name(
   schema : @moonthrift.Schema,
   ty : @moonthrift.TypeRef,
@@ -264,9 +298,15 @@ fn render_decode_value(
 
 ///|
 fn render_field(field : @moonthrift.Field) -> String {
+  let output = StringBuilder()
+  match documentation(field.annotations) {
+    Some(text) => render_member_doc_comment(output, text)
+    None => ()
+  }
   let ty = render_type(field.ty)
   let final_type = if field.requiredness is Optional { "\{ty}?" } else { ty }
-  "  \{value_name(field.name)} : \{final_type}\n"
+  output.write_string("  \{value_name(field.name)} : \{final_type}\n")
+  output.to_string()
 }
 
 ///|
@@ -276,8 +316,14 @@ fn render_record(
   kind : String,
   name : String,
   fields : ArrayView[@moonthrift.Field],
+  record_documentation : String?,
 ) -> Unit {
-  output.write_string("///|\n/// Generated from Thrift \{kind} `\{name}`.\n")
+  output.write_string("///|\n")
+  match record_documentation {
+    Some(text) => render_doc_comment(output, text)
+    None => ()
+  }
+  output.write_string("/// Generated from Thrift \{kind} `\{name}`.\n")
   if fields.length() == 0 {
     output.write_string("pub(all) struct \{type_name(name)} {}\n\n")
   } else {
@@ -388,10 +434,20 @@ fn render_enum(
   output : StringBuilder,
   name : String,
   members : ArrayView[@moonthrift.EnumMember],
+  annotations : ArrayView[@moonthrift.Annotation],
 ) -> Unit {
   let generated_name = type_name(name)
-  output.write_string("///|\npub(all) enum \{generated_name} {\n")
+  output.write_string("///|\n")
+  match documentation(annotations) {
+    Some(text) => render_doc_comment(output, text)
+    None => ()
+  }
+  output.write_string("pub(all) enum \{generated_name} {\n")
   for enum_member in members {
+    match documentation(enum_member.annotations) {
+      Some(text) => render_member_doc_comment(output, text)
+      None => ()
+    }
     output.write_string("  \{type_name(enum_member.name)}\n")
   }
   output.write_string("} derive(Debug, Eq)\n\n")
@@ -441,10 +497,20 @@ fn render_union(
   schema : @moonthrift.Schema,
   name : String,
   fields : ArrayView[@moonthrift.Field],
+  annotations : ArrayView[@moonthrift.Annotation],
 ) -> Unit {
   let generated_name = type_name(name)
-  output.write_string("///|\npub(all) enum \{generated_name} {\n  Empty\n")
+  output.write_string("///|\n")
+  match documentation(annotations) {
+    Some(text) => render_doc_comment(output, text)
+    None => ()
+  }
+  output.write_string("pub(all) enum \{generated_name} {\n  Empty\n")
   for field in fields {
+    match documentation(field.annotations) {
+      Some(text) => render_member_doc_comment(output, text)
+      None => ()
+    }
     output.write_string(
       "  \{type_name(field.name)}(\{render_type(field.ty)})\n",
     )
@@ -498,17 +564,32 @@ fn render_function_models(
   output : StringBuilder,
   schema : @moonthrift.Schema,
   service_name : String,
+  service_documentation : String?,
   function : @moonthrift.FunctionDef,
 ) -> Unit {
   let prefix = "\{type_name(service_name)}\{type_name(function.name)}"
+  let model_documentation = match
+    (service_documentation, documentation(function.annotations)) {
+    (Some(service_doc), Some(function_doc)) =>
+      Some("\{service_doc}\n\n\{function_doc}")
+    (Some(service_doc), None) => Some(service_doc)
+    (None, Some(function_doc)) => Some(function_doc)
+    (None, None) => None
+  }
   render_record(
     output,
     schema,
     "function arguments",
     "\{prefix}Args",
     function.arguments,
+    model_documentation,
   )
-  output.write_string("///|\npub(all) enum \{prefix}Result {\n")
+  output.write_string("///|\n")
+  match model_documentation {
+    Some(text) => render_doc_comment(output, text)
+    None => ()
+  }
+  output.write_string("pub(all) enum \{prefix}Result {\n")
   if function.return_type is Base(Void) {
     output.write_string("  Success\n")
   } else {
@@ -586,26 +667,57 @@ fn render_definition(
   definition : @moonthrift.Definition,
 ) -> Unit {
   match definition {
-    Const(name~, ty~, value~, ..) =>
+    Const(name~, ty~, value~, annotations~, ..) => {
+      output.write_string("///|\n")
+      match documentation(annotations) {
+        Some(text) => render_doc_comment(output, text)
+        None => ()
+      }
       output.write_string(
-        "///|\npub let \{value_name(name)} : \{render_type(ty)} = \{render_const(value)}\n\n",
+        "pub let \{value_name(name)} : \{render_type(ty)} = \{render_const(value)}\n\n",
       )
-    Typedef(name~, target~, ..) =>
+    }
+    Typedef(name~, target~, annotations~, ..) => {
+      output.write_string("///|\n")
+      match documentation(annotations) {
+        Some(text) => render_doc_comment(output, text)
+        None => ()
+      }
       output.write_string(
-        "///|\npub type \{type_name(name)} = \{render_type(target)}\n\n",
+        "pub type \{type_name(name)} = \{render_type(target)}\n\n",
       )
-    Enum(name~, members~, ..) => render_enum(output, name, members)
-    Struct(name~, fields~, ..) =>
-      render_record(output, schema, "struct", name, fields)
-    Exception(name~, fields~, ..) =>
-      render_record(output, schema, "exception", name, fields)
-    Union(name~, fields~, ..) => render_union(output, schema, name, fields)
-    Service(name~, functions~, ..) => {
+    }
+    Enum(name~, members~, annotations~, ..) =>
+      render_enum(output, name, members, annotations)
+    Struct(name~, fields~, annotations~, ..) =>
+      render_record(
+        output,
+        schema,
+        "struct",
+        name,
+        fields,
+        documentation(annotations),
+      )
+    Exception(name~, fields~, annotations~, ..) =>
+      render_record(
+        output,
+        schema,
+        "exception",
+        name,
+        fields,
+        documentation(annotations),
+      )
+    Union(name~, fields~, annotations~, ..) =>
+      render_union(output, schema, name, fields, annotations)
+    Service(name~, functions~, annotations~, ..) => {
+      let service_documentation = documentation(annotations)
       output.write_string(
         "// Service models for `\{name}`. Transport dispatch is supplied by the application.\n\n",
       )
       for function in functions {
-        render_function_models(output, schema, name, function)
+        render_function_models(
+          output, schema, name, service_documentation, function,
+        )
       }
     }
   }

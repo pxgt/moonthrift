@@ -185,11 +185,12 @@ fn workspace_definition(
 ) -> @moonthrift.Definition {
   let type_prefix = document_type_prefix(workspace.root, schema.source)
   match definition {
-    Const(name~, ty~, value~, span~) =>
+    Const(name~, ty~, value~, annotations~, span~) =>
       Const(
         name="\{document_value_prefix(workspace.root, schema.source)}\{name}",
         ty=workspace_type(workspace, schema, ty),
         value~,
+        annotations~,
         span~,
       )
     Typedef(name~, target~, annotations~, span~) =>

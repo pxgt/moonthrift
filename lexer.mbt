@@ -78,6 +78,14 @@ fn Lexer::skip_trivia(self : Lexer) -> Unit raise IdlError {
       ignore(self.advance())
     } else if char == '#' {
       self.skip_line_comment()
+    } else if char == '/' &&
+      self.peek(1) == Some('/') &&
+      self.peek(2) == Some('/') {
+      return
+    } else if char == '/' &&
+      self.peek(1) == Some('*') &&
+      self.peek(2) == Some('*') {
+      return
     } else if char == '/' && self.peek(1) == Some('/') {
       self.skip_line_comment()
     } else if char == '/' && self.peek(1) == Some('*') {
@@ -93,6 +101,62 @@ fn Lexer::skip_trivia(self : Lexer) -> Unit raise IdlError {
       return
     }
   }
+}
+
+///|
+fn Lexer::line_doc_comment(self : Lexer) -> Token {
+  let start = self.offset
+  let line = self.line
+  let column = self.column
+  ignore(self.advance())
+  ignore(self.advance())
+  ignore(self.advance())
+  let value = StringBuilder()
+  while self.current() is Some(char) && char != '\n' {
+    value.write_char(char)
+    ignore(self.advance())
+  }
+  {
+    kind: DocComment(value.to_string().trim().to_owned()),
+    span: self.span(start, line, column),
+  }
+}
+
+///|
+fn normalize_block_doc(value : String) -> String {
+  value
+  .split("\n")
+  .map(line => {
+    let trimmed = line.trim()
+    trimmed.strip_prefix("*").unwrap_or(trimmed).trim().to_owned()
+  })
+  .join("\n")
+  .trim()
+  .to_owned()
+}
+
+///|
+fn Lexer::block_doc_comment(self : Lexer) -> Token raise IdlError {
+  let start = self.offset
+  let line = self.line
+  let column = self.column
+  ignore(self.advance())
+  ignore(self.advance())
+  ignore(self.advance())
+  let value = StringBuilder()
+  while self.current() is Some(char) {
+    if char == '*' && self.peek(1) == Some('/') {
+      ignore(self.advance())
+      ignore(self.advance())
+      return {
+        kind: DocComment(normalize_block_doc(value.to_string())),
+        span: self.span(start, line, column),
+      }
+    }
+    value.write_char(char)
+    ignore(self.advance())
+  }
+  raise UnterminatedComment(self.span(start, line, column))
 }
 
 ///|
@@ -232,6 +296,10 @@ fn Lexer::next_token(self : Lexer) -> Token raise IdlError {
         kind: End,
         span: { source: self.source, start, end: start, line, column, },
       }
+    Some('/') if self.peek(1) == Some('/') && self.peek(2) == Some('/') =>
+      self.line_doc_comment()
+    Some('/') if self.peek(1) == Some('*') && self.peek(2) == Some('*') =>
+      self.block_doc_comment()
     Some(char) if is_identifier_start(char) => self.identifier()
     Some('-') if self.peek(1) is Some(next) && next.is_ascii_digit() =>
       self.number()

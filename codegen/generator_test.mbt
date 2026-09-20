@@ -1,10 +1,14 @@
 ///|
 test "generator emits records enums unions constants and service models" {
   let idl =
+    #|/// Stable identifier.
     #|typedef i64 UserId
+    #|/// Access role.
     #|enum Role { USER = 1, ADMIN = 4 }
+    #|/// User record.
     #|struct User { 1: required UserId id, 2: optional string display_name }
     #|union Lookup { 1: UserId id, 2: string email }
+    #|/// Default server port.
     #|const i32 default_port = 9090
     #|exception Missing { 1: string message }
     #|service Users { User get(1: UserId id) throws (1: Missing missing) }
@@ -23,6 +27,10 @@ test "generator emits records enums unions constants and service models" {
   assert_true(generated.content.contains("User::decode_compact"))
   assert_true(generated.content.contains("Lookup::from_thrift_value"))
   assert_true(generated.content.contains("UsersGetResult::encode_binary"))
+  assert_true(generated.content.contains("/// Stable identifier."))
+  assert_true(generated.content.contains("/// Access role."))
+  assert_true(generated.content.contains("/// User record."))
+  assert_true(generated.content.contains("/// Default server port."))
 }
 
 ///|

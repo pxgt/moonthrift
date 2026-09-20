@@ -29,6 +29,56 @@ test "lexer decodes string escapes and records locations" {
 }
 
 ///|
+test "parser preserves line and block documentation" {
+  let idl =
+    #|/** Account data.
+    #| * Kept across releases.
+    #| */
+    #|struct User {
+    #|  /// Stable identifier.
+    #|  1: required i64 id
+    #|}
+    #|/// Available roles.
+    #|enum Role {
+    #|  /// Regular member.
+    #|  USER = 1
+    #|}
+    #|
+  let schema = @moonthrift.parse_idl(idl)
+  guard schema.definitions
+    is [
+      Struct(annotations=struct_annotations, fields=[field], ..),
+      Enum(annotations=enum_annotations, members=[enum_member], ..),
+    ] else {
+    fail("expected documented declarations")
+  }
+  assert_true(
+    struct_annotations.contains({
+      key: "moonbit.doc",
+      value: Some("Account data.\nKept across releases."),
+    }),
+  )
+  assert_true(
+    field.annotations.contains({
+      key: "moonbit.doc",
+      value: Some("Stable identifier."),
+    }),
+  )
+  assert_true(
+    enum_annotations.contains({
+      key: "moonbit.doc",
+      value: Some("Available roles."),
+    }),
+  )
+  assert_true(
+    enum_member.annotations.contains({
+      key: "moonbit.doc",
+      value: Some("Regular member."),
+    }),
+  )
+}
+
+///|
 test "lexer rejects invalid characters" {
   try @moonthrift.lex("struct @") catch {
     UnexpectedCharacter('@', span) => assert_eq(span.column, 8)

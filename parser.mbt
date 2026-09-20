@@ -83,6 +83,33 @@ fn Parser::separator(self : Parser) -> Unit {
 }
 
 ///|
+fn Parser::take_documentation(self : Parser) -> String? {
+  let lines : Array[String] = []
+  while self.current().kind is DocComment(value) {
+    lines.push(value)
+    ignore(self.advance())
+  }
+  if lines.length() == 0 {
+    None
+  } else {
+    Some(lines.join("\n"))
+  }
+}
+
+///|
+fn with_documentation(
+  annotations : Array[Annotation],
+  documentation : String?,
+) -> Array[Annotation] {
+  match documentation {
+    Some(value) if value != "" =>
+      annotations.push({ key: "moonbit.doc", value: Some(value), })
+    _ => ()
+  }
+  annotations
+}
+
+///|
 fn Parser::parse_cpp_type(self : Parser) -> String? raise IdlError {
   if self.eat_word("cpp_type") {
     let (value, _) = self.expect_string()
@@ -212,6 +239,7 @@ fn Parser::parse_annotations(self : Parser) -> Array[Annotation] raise IdlError 
 
 ///|
 fn Parser::parse_field(self : Parser) -> Field raise IdlError {
+  let documentation = self.take_documentation()
   let id_token = self.advance()
   let id = match id_token.kind {
     IntegerLiteral(value) => value.to_int()
@@ -232,7 +260,7 @@ fn Parser::parse_field(self : Parser) -> Field raise IdlError {
   } else {
     None
   }
-  let annotations = self.parse_annotations()
+  let annotations = with_documentation(self.parse_annotations(), documentation)
   self.separator()
   {
     id,
@@ -283,12 +311,17 @@ fn Parser::parse_header(self : Parser) -> Header raise IdlError {
 }
 
 ///|
-fn Parser::parse_enum(self : Parser, start : Span) -> Definition raise IdlError {
+fn Parser::parse_enum(
+  self : Parser,
+  start : Span,
+  documentation : String?,
+) -> Definition raise IdlError {
   let (name, _) = self.expect_name()
   self.expect_symbol('{')
   let members : Array[EnumMember] = []
   let mut next_value = 0
   while !self.eat_symbol('}') {
+    let member_documentation = self.take_documentation()
     let (member_name, span) = self.expect_name()
     let value = if self.eat_symbol('=') {
       match self.advance() {
@@ -299,11 +332,14 @@ fn Parser::parse_enum(self : Parser, start : Span) -> Definition raise IdlError 
       next_value
     }
     next_value = value + 1
-    let annotations = self.parse_annotations()
+    let annotations = with_documentation(
+      self.parse_annotations(),
+      member_documentation,
+    )
     self.separator()
     members.push({ name: member_name, value, annotations, span, })
   }
-  let annotations = self.parse_annotations()
+  let annotations = with_documentation(self.parse_annotations(), documentation)
   Enum(name~, members~, annotations~, span=start)
 }
 
@@ -312,11 +348,12 @@ fn Parser::parse_record(
   self : Parser,
   kind : String,
   start : Span,
+  documentation : String?,
 ) -> Definition raise IdlError {
   let (name, _) = self.expect_name()
   self.expect_symbol('{')
   let fields = self.parse_fields('}')
-  let annotations = self.parse_annotations()
+  let annotations = with_documentation(self.parse_annotations(), documentation)
   match kind {
     "struct" => Struct(name~, fields~, annotations~, span=start)
     "union" => Union(name~, fields~, annotations~, span=start)
@@ -326,6 +363,7 @@ fn Parser::parse_record(
 
 ///|
 fn Parser::parse_function(self : Parser) -> FunctionDef raise IdlError {
+  let documentation = self.take_documentation()
   let start = self.current().span
   let oneway = self.eat_word("oneway")
   let return_type = self.parse_type()
@@ -338,7 +376,7 @@ fn Parser::parse_function(self : Parser) -> FunctionDef raise IdlError {
   } else {
     []
   }
-  let annotations = self.parse_annotations()
+  let annotations = with_documentation(self.parse_annotations(), documentation)
   self.separator()
   { name, return_type, arguments, throws, oneway, annotations, span: start, }
 }
@@ -347,6 +385,7 @@ fn Parser::parse_function(self : Parser) -> FunctionDef raise IdlError {
 fn Parser::parse_service(
   self : Parser,
   start : Span,
+  documentation : String?,
 ) -> Definition raise IdlError {
   let (name, _) = self.expect_name()
   let extends = if self.eat_word("extends") {
@@ -360,12 +399,15 @@ fn Parser::parse_service(
   while !self.eat_symbol('}') {
     functions.push(self.parse_function())
   }
-  let annotations = self.parse_annotations()
+  let annotations = with_documentation(self.parse_annotations(), documentation)
   Service(name~, extends~, functions~, annotations~, span=start)
 }
 
 ///|
-fn Parser::parse_definition(self : Parser) -> Definition raise IdlError {
+fn Parser::parse_definition(
+  self : Parser,
+  documentation : String?,
+) -> Definition raise IdlError {
   let keyword = self.advance()
   match keyword.kind {
     Identifier("const") => {
@@ -373,21 +415,31 @@ fn Parser::parse_definition(self : Parser) -> Definition raise IdlError {
       let (name, _) = self.expect_name()
       self.expect_symbol('=')
       let value = self.parse_const_value()
+      let annotations = with_documentation(
+        self.parse_annotations(),
+        documentation,
+      )
       self.separator()
-      Const(name~, ty~, value~, span=keyword.span)
+      Const(name~, ty~, value~, annotations~, span=keyword.span)
     }
     Identifier("typedef") => {
       let target = self.parse_type()
       let (name, _) = self.expect_name()
-      let annotations = self.parse_annotations()
+      let annotations = with_documentation(
+        self.parse_annotations(),
+        documentation,
+      )
       self.separator()
       Typedef(name~, target~, annotations~, span=keyword.span)
     }
-    Identifier("enum") => self.parse_enum(keyword.span)
-    Identifier("struct") => self.parse_record("struct", keyword.span)
-    Identifier("union") => self.parse_record("union", keyword.span)
-    Identifier("exception") => self.parse_record("exception", keyword.span)
-    Identifier("service") => self.parse_service(keyword.span)
+    Identifier("enum") => self.parse_enum(keyword.span, documentation)
+    Identifier("struct") =>
+      self.parse_record("struct", keyword.span, documentation)
+    Identifier("union") =>
+      self.parse_record("union", keyword.span, documentation)
+    Identifier("exception") =>
+      self.parse_record("exception", keyword.span, documentation)
+    Identifier("service") => self.parse_service(keyword.span, documentation)
     _ => raise UnexpectedToken(keyword.describe(), keyword.span)
   }
 }
@@ -400,15 +452,18 @@ pub fn parse_idl(
 ) -> Schema raise IdlError {
   let parser = { tokens: lex(input, source~), index: 0, }
   let headers : Array[Header] = []
+  let mut documentation = parser.take_documentation()
   while parser.is_word("include") ||
         parser.is_word("cpp_include") ||
         parser.is_word("namespace") {
     headers.push(parser.parse_header())
     parser.separator()
+    documentation = parser.take_documentation()
   }
   let definitions : Array[Definition] = []
   while !(parser.current().kind is End) {
-    definitions.push(parser.parse_definition())
+    definitions.push(parser.parse_definition(documentation))
+    documentation = parser.take_documentation()
   }
   { source, headers, definitions, }
 }
