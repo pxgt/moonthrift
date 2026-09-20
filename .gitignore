@@ -2,6 +2,7 @@
 _build/
 .repos/
 *.tmp
+__pycache__/
 target/
 target
 .mooncakes/

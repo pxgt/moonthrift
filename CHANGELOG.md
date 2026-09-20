@@ -5,6 +5,8 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-20
+
 ### Added
 
 - Portable multi-file schema workspaces with caller-provided source loading,
