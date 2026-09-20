@@ -5,8 +5,8 @@ Issues and focused pull requests are welcome. Before opening a change, run:
 ```sh
 moon fmt --check
 moon info --target all
-moon check --target all --deny-warn --warn-list +73
-moon test --target all --deny-warn --warn-list +73
+moon check --target all --deny-warn --warn-list +73-79
+moon test --target all --deny-warn --warn-list +73-79
 ```
 
 Keep public APIs documented, add black-box tests for observable behavior, and

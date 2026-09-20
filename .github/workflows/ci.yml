@@ -37,13 +37,13 @@ jobs:
           git diff --exit-code
 
       - name: Check every stable backend
-        run: moon check --target all --deny-warn --warn-list +73
+        run: moon check --target all --deny-warn --warn-list +73-79
 
       - name: Build every stable backend
         run: moon build --target all
 
       - name: Test every stable backend
-        run: moon test --target all --deny-warn --warn-list +73
+        run: moon test --target all --deny-warn --warn-list +73-79
 
       - name: Run CLI examples
         run: |
@@ -100,4 +100,4 @@ jobs:
         run: moon update
 
       - name: Run bidirectional interoperability tests
-        run: moon test interop/fixtures --target all --deny-warn --warn-list +73
+        run: moon test interop/fixtures --target all --deny-warn --warn-list +73-79

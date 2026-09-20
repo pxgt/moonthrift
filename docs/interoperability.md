@@ -32,7 +32,7 @@ Use an isolated Python environment and install the exact reference version:
 python -m venv .venv
 .venv/bin/python -m pip install -r interop/python/requirements.txt
 .venv/bin/python interop/python/reference.py --check
-moon test interop/fixtures --target all --deny-warn --warn-list +73
+moon test interop/fixtures --target all --deny-warn --warn-list +73-79
 ```
 
 On Windows PowerShell, replace `.venv/bin/python` with

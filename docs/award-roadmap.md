@@ -128,9 +128,9 @@ must run the narrowest relevant tests first and finish with:
 ```sh
 moon fmt --check
 moon info --target all
-moon check --target all --deny-warn --warn-list +73
+moon check --target all --deny-warn --warn-list +73-79
 moon build --target all
-moon test --target all --deny-warn --warn-list +73
+moon test --target all --deny-warn --warn-list +73-79
 moon package --frozen
 git diff --exit-code
 ```
@@ -159,3 +159,6 @@ git diff --exit-code
 - 2026-09-20: PR #10 passed the regular and independent interoperability CI
   jobs and was merged. Mooncakes 0.2.0 built successfully, annotated tag
   `v0.2.0` and the GitHub release were published, and Phase 3 was completed.
+- 2026-09-20: MoonBit 2026-09-20 added derived-method warning 079. CI was
+  updated for the new black-box test qualification rule; the broader explicit
+  trait-method export migration is tracked in Issue #13.
