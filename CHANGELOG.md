@@ -5,6 +5,13 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- Backward, forward, and full schema-compatibility policies, with exact rule
+  suppression and deterministic text, JSON, Markdown, and GitHub annotations.
+- File-tree comparison and a Git commit baseline adapter for schema PR checks.
+- A reusable compatibility CI workflow and end-to-end CLI/Git baseline tests.
+
 ## [0.2.0] - 2026-09-20
 
 ### Added

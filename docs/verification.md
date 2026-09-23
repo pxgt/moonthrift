@@ -28,6 +28,7 @@ moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx
 moon package --frozen
 python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
+python tools/test_compat_cli.py
 ```
 
 Warning 079 is temporarily kept non-fatal with `-79` while the explicit
@@ -47,6 +48,12 @@ The independent Python interoperability gate pins Apache Thrift Python 0.24.0,
 rebuilds and decodes all checked-in fixtures, and runs the focused MoonBit
 fixture package on all four stable backends. See `docs/interoperability.md` for
 the complete matrix and provenance model.
+
+The compatibility smoke test checks breaking and passing directions, exact
+rule suppression, stable JSON, Markdown report files, GitHub annotations, and
+comparison against an external Git repository's committed schema baseline.
+PR CI also compares `examples/` with the PR base commit. See
+`docs/compatibility-ci.md` for the reusable workflow and behavior contract.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,

@@ -10,9 +10,13 @@ pub fn check_schema(Schema) -> Array[Diagnostic]
 
 pub fn compare_schemas(Schema, Schema) -> Array[SchemaChange]
 
+pub fn compare_schemas_with_policy(Schema, Schema, CompatibilityPolicy, source? : String, suppressed? : Array[String]) -> Array[CompatibilityFinding]
+
 pub fn compile_idl(String, source? : String) -> (Schema, Array[Diagnostic]) raise IdlError
 
 pub fn compile_workspace(String, (String) -> String?) -> (SchemaWorkspace, Array[Diagnostic]) raise IdlError
+
+pub fn has_blocking_compatibility_findings(ArrayView[CompatibilityFinding]) -> Bool
 
 pub fn has_breaking_changes(ArrayView[SchemaChange]) -> Bool
 
@@ -21,6 +25,8 @@ pub fn has_errors(ArrayView[Diagnostic]) -> Bool
 pub fn lex(String, source? : String) -> Array[Token] raise IdlError
 
 pub fn parse_idl(String, source? : String) -> Schema raise IdlError
+
+pub fn render_compatibility_report(ArrayView[CompatibilityFinding], CompatibilityPolicy, CompatibilityFormat) -> String
 
 // Errors
 pub(all) suberror IdlError {
@@ -57,6 +63,32 @@ pub(all) enum ChangeKind {
   Warning
   Breaking
 } derive(Eq, ToJson, @debug.Debug)
+
+pub(all) enum CompatibilityDirection {
+  BackwardDirection
+  ForwardDirection
+} derive(Eq, @debug.Debug)
+pub fn CompatibilityDirection::name(Self) -> String
+
+pub(all) struct CompatibilityFinding {
+  source : String
+  direction : CompatibilityDirection
+  change : SchemaChange
+} derive(Eq, @debug.Debug)
+
+pub(all) enum CompatibilityFormat {
+  Text
+  JsonFormat
+  Markdown
+  GithubAnnotations
+} derive(Eq, @debug.Debug)
+
+pub(all) enum CompatibilityPolicy {
+  Backward
+  Forward
+  Full
+} derive(Eq, @debug.Debug)
+pub fn CompatibilityPolicy::name(Self) -> String
 
 pub(all) enum ConstValue {
   BoolValue(Bool)
