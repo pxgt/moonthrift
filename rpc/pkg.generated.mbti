@@ -1,0 +1,33 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/rpc"
+
+import {
+  "Xpeng/moonthrift/protocol",
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn call_once(RpcProtocol, @protocol.Message, (Bytes) -> Bytes raise @protocol.ProtocolError) -> @protocol.Message raise @protocol.ProtocolError
+
+pub fn process_once(RpcProtocol, Bytes, (@protocol.Message) -> @protocol.Message raise @protocol.ProtocolError) -> Bytes raise @protocol.ProtocolError
+
+// Errors
+
+// Types and methods
+pub struct MemoryTransport {
+  wire : RpcProtocol
+  handler : (@protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
+}
+pub fn MemoryTransport::call(Self, @protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
+pub fn MemoryTransport::new(RpcProtocol, (@protocol.Message) -> @protocol.Message raise @protocol.ProtocolError) -> Self
+
+pub(all) enum RpcProtocol {
+  Binary
+  Compact
+} derive(Eq, @debug.Debug)
+pub fn RpcProtocol::decode(Self, Bytes) -> @protocol.Message raise @protocol.ProtocolError
+pub fn RpcProtocol::encode(Self, @protocol.Message) -> Bytes raise @protocol.ProtocolError
+
+// Type aliases
+
+// Traits
