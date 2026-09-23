@@ -25,9 +25,9 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 ## Current status
 
 - Current release: `0.2.0`
-- Current development branch: `feat/compatibility-ci`
-- Completed milestone: Phase 3 — cross-language interoperability and `0.2.0`
-- Active milestone: Phase 4 — compatibility CI ([Issue #14](https://github.com/pxgt/moonthrift/issues/14))
+- Current development branch: `main`
+- Completed milestone: Phase 4 — compatibility CI ([Issue #14](https://github.com/pxgt/moonthrift/issues/14), [PR #15](https://github.com/pxgt/moonthrift/pull/15))
+- Next milestone: Phase 5 — RPC runtime and `0.3.0`
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -165,4 +165,6 @@ git diff --exit-code
 - 2026-09-23: Phase 4 implementation started in Issue #14. Portable policy
   comparison and report rendering, native file/directory comparison, Git
   baseline extraction, integration tests, and a reusable PR workflow are in
-  review. Phase completion still requires branch and main CI to pass.
+  PR #15. Branch CI passed all four backends, interoperability, CLI/Git
+  baseline tests, and the PR compatibility gate. Phase 4 is complete after
+  the reviewed merge and green main CI.
