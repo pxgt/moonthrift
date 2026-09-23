@@ -35,6 +35,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - `check`、`inspect`、`generate`、`diff`、`compat` 五个 CLI 工作流；
 - backward、forward、full 兼容性策略，以及稳定 JSON、Markdown、GitHub
   annotations 报告；支持规则抑制、目录和 Git 提交基线。
+- 可移植的单次 RPC 请求/响应处理和内存字节传输，支持 Binary/Compact；
+  目前作为 `0.3.0` 开发中的基础能力。
 - 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
   限定类型与跨文件 service 继承检查；
 
@@ -121,6 +123,9 @@ moon run cmd/main --target native -- compat --policy backward --format json \
 # 将当前 Schema 目录与 Git 基线比较，适合 PR CI
 python tools/compat_git.py --base-ref main --schema-dir examples \
   --policy backward --format github
+
+# 使用生成的服务模型进行一次内存 RPC 往返
+moon run examples/rpc_demo --target native
 ```
 
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
@@ -148,6 +153,7 @@ assert_eq(decoded, user)
 | `Xpeng/moonthrift` | IDL AST、解析、语义检查、兼容性比较 |
 | `Xpeng/moonthrift/protocol` | 动态值、Binary/Compact codec、RPC message |
 | `Xpeng/moonthrift/codegen` | MoonBit 源码生成器 |
+| `Xpeng/moonthrift/rpc` | 可移植的消息处理与内存 RPC 传输 |
 | `cmd/main` | native 文件与命令行适配层 |
 
 详细数据流、功能边界和维护方向见
@@ -157,6 +163,8 @@ assert_eq(decoded, user)
 [docs/interoperability.md](docs/interoperability.md)。
 Schema 版本策略、规则抑制和可复制的 CI 工作流见
 [docs/compatibility-ci.md](docs/compatibility-ci.md)。
+RPC 的协议/传输边界和当前未实现范围见
+[docs/rpc-runtime.md](docs/rpc-runtime.md)。
 
 ## 当前边界
 
@@ -167,6 +175,9 @@ included Schema 的声明添加稳定路径前缀，避免与入口文件中的�
 生成模型提供 Binary/Compact 类型安全 codec，并保留 IDL 文档注释。当前版本已
 完成 Python 参考实现的跨语言互操作矩阵；socket transport、服务调度和其他语言
 参考实现仍属于后续里程碑。
+
+开发中的 Phase 5 已加入可移植的单次 RPC 处理与内存传输，但尚未发布为新版
+Mooncakes 包；生成的类型安全客户端、服务端处理器和网络传输仍在后续计划中。
 
 ## 质量与开源说明
 

@@ -7,6 +7,9 @@ the project uses semantic versioning.
 
 ### Added
 
+- A portable one-request RPC processor, byte-exchange client boundary, and
+  synchronous in-memory transport for Binary and Compact messages.
+- Generated service-model RPC round-trip tests and a runnable memory demo.
 - Backward, forward, and full schema-compatibility policies, with exact rule
   suppression and deterministic text, JSON, Markdown, and GitHub annotations.
 - File-tree comparison and a Git commit baseline adapter for schema PR checks.
