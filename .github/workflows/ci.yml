@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Install MoonBit
         run: |
@@ -53,6 +55,18 @@ jobs:
           moon run cmd/main --target native -- inspect examples/tutorial.thrift
           moon run cmd/main --target native -- inspect examples/multifile/api.thrift
           moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift || test "$?" -eq 3
+
+      - name: Test compatibility CLI and Git baseline
+        run: python tools/test_compat_cli.py
+
+      - name: Reject breaking schema changes against PR base
+        if: github.event_name == 'pull_request'
+        run: >-
+          python tools/compat_git.py
+          --base-ref "${{ github.event.pull_request.base.sha }}"
+          --schema-dir examples
+          --policy backward
+          --format github
 
       - name: Verify generated MoonBit source
         run: |

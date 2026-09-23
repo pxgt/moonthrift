@@ -1,0 +1,40 @@
+# Copy this workflow to .github/workflows/schema-compatibility.yml in a schema
+# repository. Replace `schemas` with the directory containing its .thrift files.
+name: Thrift schema compatibility
+
+on:
+  pull_request:
+    paths:
+      - "schemas/**"
+      - ".github/workflows/schema-compatibility.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  backward-compatibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v5
+        with:
+          repository: pxgt/moonthrift
+          ref: main # Pin a reviewed tag or commit for production use.
+          path: .moonthrift
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Prepare MoonThrift
+        working-directory: .moonthrift
+        run: moon update
+      - name: Compare with the PR base commit
+        run: >-
+          python .moonthrift/tools/compat_git.py
+          --repo .
+          --base-ref "${{ github.event.pull_request.base.sha }}"
+          --schema-dir schemas
+          --policy backward
+          --format github
