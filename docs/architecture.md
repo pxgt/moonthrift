@@ -21,6 +21,10 @@ The portable compatibility policy/report layer wraps the directional schema
 diff and owns stable report ordering and formatting. The native CLI gathers
 schema files and resolves includes. The optional Python Git adapter reads Git
 objects into a temporary baseline; it does not implement compatibility rules.
+The `rpc` package composes the portable Binary/Compact message codecs with a
+byte-exchange callback and one-request handler. Its in-memory implementation
+still serializes requests and responses; network I/O remains outside this
+package. See [rpc-runtime.md](rpc-runtime.md) for the boundary contract.
 
 ## Functional boundary
 

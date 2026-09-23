@@ -47,6 +47,9 @@ jobs:
       - name: Test every stable backend
         run: moon test --target all --deny-warn --warn-list +73-79
 
+      - name: Run in-memory RPC tutorial
+        run: moon run examples/rpc_demo --target native --warn-list +73-79
+
       - name: Run CLI examples
         run: |
           moon run cmd/main --target native

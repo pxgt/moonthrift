@@ -1,6 +1,7 @@
 # Verification
 
-The `0.2.0` release is verified with the 2026-09-20 stable MoonBit toolchain:
+The `0.2.0` release and subsequent development are verified with the
+2026-09-20 stable MoonBit toolchain:
 
 ```text
 moon 0.1.20260920 (914d7da 2026-09-20)
@@ -29,6 +30,7 @@ moon package --frozen
 python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
 python tools/test_compat_cli.py
+moon run examples/rpc_demo --target native
 ```
 
 Warning 079 is temporarily kept non-fatal with `-79` while the explicit
@@ -54,6 +56,12 @@ rule suppression, stable JSON, Markdown report files, GitHub annotations, and
 comparison against an external Git repository's committed schema baseline.
 PR CI also compares `examples/` with the PR base commit. See
 `docs/compatibility-ci.md` for the reusable workflow and behavior contract.
+
+The RPC tests run on all stable backends. They cover Binary and Compact
+in-memory exchanges, generated service success and declared-exception models,
+request/reply kind validation, method and sequence-ID matching, and a native
+demo that prints `get_user(7) -> Ada`. See `docs/rpc-runtime.md` for the
+current supported boundary and deferred features.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,

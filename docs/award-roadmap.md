@@ -27,7 +27,7 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 - Current release: `0.2.0`
 - Current development branch: `main`
 - Completed milestone: Phase 4 — compatibility CI ([Issue #14](https://github.com/pxgt/moonthrift/issues/14), [PR #15](https://github.com/pxgt/moonthrift/pull/15))
-- Next milestone: Phase 5 — RPC runtime and `0.3.0`
+- Active milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #16](https://github.com/pxgt/moonthrift/issues/16))
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -91,9 +91,9 @@ manually constructing the dynamic `protocol.Value` tree.
 
 ## Phase 5 — RPC runtime and `0.3.0`
 
-- [ ] Define protocol/transport boundaries without coupling the portable core
+- [x] Define protocol/transport boundaries without coupling the portable core
   to one I/O runtime.
-- [ ] Implement an in-memory transport and request/response processor.
+- [x] Implement an in-memory transport and request/response processor.
 - [ ] Generate typed client, handler, and processor interfaces.
 - [ ] Handle sequence IDs, declared exceptions, application exceptions, oneway
   calls, and unknown methods.
@@ -168,3 +168,7 @@ git diff --exit-code
   PR #15. Branch CI passed all four backends, interoperability, CLI/Git
   baseline tests, and the PR compatibility gate. Phase 4 is complete after
   the reviewed merge and green main CI.
+- 2026-09-23: Phase 5 opened in Issue #16. A portable byte-exchange boundary,
+  single-request processor, and synchronous memory transport now exercise
+  generated service models under Binary and Compact; typed generated facades,
+  application exceptions, oneway, framing, and TCP remain ahead.
