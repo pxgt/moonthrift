@@ -32,7 +32,9 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - 将 `///` 和 `/** ... */` IDL 文档保留为生成 MoonBit API 的文档注释；
 - 按稳定字段 ID、枚举数值、方法名比较两个版本，区分 compatible、warning、
   breaking 变更；
-- `check`、`inspect`、`generate`、`diff` 四个 CLI 工作流。
+- `check`、`inspect`、`generate`、`diff`、`compat` 五个 CLI 工作流；
+- backward、forward、full 兼容性策略，以及稳定 JSON、Markdown、GitHub
+  annotations 报告；支持规则抑制、目录和 Git 提交基线。
 - 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
   限定类型与跨文件 service 继承检查；
 
@@ -111,6 +113,14 @@ moon run cmd/main --target native -- generate examples/tutorial.thrift generated
 # 比较两个 Schema 版本；发现 breaking change 时退出码为 3
 moon run cmd/main --target native -- diff \
   examples/tutorial.thrift examples/tutorial-v2.thrift
+
+# 比较两个目录；breaking 变更使检查失败
+moon run cmd/main --target native -- compat --policy backward --format json \
+  examples/compatibility/before examples/compatibility/after
+
+# 将当前 Schema 目录与 Git 基线比较，适合 PR CI
+python tools/compat_git.py --base-ref main --schema-dir examples \
+  --policy backward --format github
 ```
 
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
@@ -145,6 +155,8 @@ assert_eq(decoded, user)
 [docs/protocols.md](docs/protocols.md)，复现测试的方法见
 [docs/verification.md](docs/verification.md)，跨语言夹具与验证矩阵见
 [docs/interoperability.md](docs/interoperability.md)。
+Schema 版本策略、规则抑制和可复制的 CI 工作流见
+[docs/compatibility-ci.md](docs/compatibility-ci.md)。
 
 ## 当前边界
 

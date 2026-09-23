@@ -25,13 +25,13 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 ## Current status
 
 - Current release: `0.2.0`
-- Current development branch: `main`
+- Current development branch: `feat/compatibility-ci`
 - Completed milestone: Phase 3 — cross-language interoperability and `0.2.0`
-- Next milestone: Phase 4 — compatibility CI
+- Active milestone: Phase 4 — compatibility CI ([Issue #14](https://github.com/pxgt/moonthrift/issues/14))
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
-- Last updated: 2026-09-20
+- Last updated: 2026-09-23
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -82,12 +82,12 @@ manually constructing the dynamic `protocol.Value` tree.
 
 ## Phase 4 — compatibility CI
 
-- [ ] Support backward, forward, and full compatibility policies.
-- [ ] Add stable text and JSON output.
-- [ ] Add GitHub Actions annotations or SARIF output.
-- [ ] Support rule suppression and file/directory/Git baselines.
-- [ ] Generate Markdown compatibility reports.
-- [ ] Provide a reusable CI example that rejects a breaking schema PR.
+- [x] Support backward, forward, and full compatibility policies.
+- [x] Add stable text and JSON output.
+- [x] Add GitHub Actions annotations.
+- [x] Support rule suppression and file/directory/Git baselines.
+- [x] Generate Markdown compatibility reports.
+- [x] Provide a reusable CI example that rejects a breaking schema PR.
 
 ## Phase 5 — RPC runtime and `0.3.0`
 
@@ -162,3 +162,7 @@ git diff --exit-code
 - 2026-09-20: MoonBit 2026-09-20 added derived-method warning 079. CI was
   updated for the new black-box test qualification rule; the broader explicit
   trait-method export migration is tracked in Issue #13.
+- 2026-09-23: Phase 4 implementation started in Issue #14. Portable policy
+  comparison and report rendering, native file/directory comparison, Git
+  baseline extraction, integration tests, and a reusable PR workflow are in
+  review. Phase completion still requires branch and main CI to pass.

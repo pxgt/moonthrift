@@ -17,6 +17,10 @@ owns dynamic wire values, checked extraction helpers, binary/compact readers
 and writers, and RPC message envelopes. `codegen` consumes a linked schema and
 emits documented MoonBit declarations plus type-safe Binary/Compact adapters.
 `cmd/main` is a thin native-only adapter for files, arguments, and exit codes.
+The portable compatibility policy/report layer wraps the directional schema
+diff and owns stable report ordering and formatting. The native CLI gathers
+schema files and resolves includes. The optional Python Git adapter reads Git
+objects into a temporary baseline; it does not implement compatibility rules.
 
 ## Functional boundary
 
