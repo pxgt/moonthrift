@@ -25,6 +25,9 @@ The `rpc` package composes the portable Binary/Compact message codecs with a
 byte-exchange callback and one-request handler. Its in-memory implementation
 still serializes requests and responses; network I/O remains outside this
 package. See [rpc-runtime.md](rpc-runtime.md) for the boundary contract.
+For services with ordinary request/reply methods, `codegen` also emits a typed
+client and handler facade over this byte boundary. Inheritance and oneway
+runtime facades are withheld until those dispatch semantics are implemented.
 
 ## Functional boundary
 

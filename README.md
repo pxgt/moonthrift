@@ -36,7 +36,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - backward、forward、full 兼容性策略，以及稳定 JSON、Markdown、GitHub
   annotations 报告；支持规则抑制、目录和 Git 提交基线。
 - 可移植的单次 RPC 请求/响应处理和内存字节传输，支持 Binary/Compact；
-  目前作为 `0.3.0` 开发中的基础能力。
+  以及普通 request/reply 服务的类型化客户端和处理器生成；目前作为
+  `0.3.0` 开发中的基础能力。
 - 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
   限定类型与跨文件 service 继承检查；
 
@@ -130,11 +131,13 @@ moon run examples/rpc_demo --target native
 
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
 纳入四后端编译与往返测试的结果，防止生成器只“输出文本”却无法被 MoonBit
-使用。生成代码所在包需要导入协议包：
+使用。生成代码所在包需要导入协议包；包含普通 request/reply 服务的
+生成文件还需要导入 `rpc` 包：
 
 ```moonbit
 import {
   "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
 }
 ```
 
@@ -176,8 +179,9 @@ included Schema 的声明添加稳定路径前缀，避免与入口文件中的�
 完成 Python 参考实现的跨语言互操作矩阵；socket transport、服务调度和其他语言
 参考实现仍属于后续里程碑。
 
-开发中的 Phase 5 已加入可移植的单次 RPC 处理与内存传输，但尚未发布为新版
-Mooncakes 包；生成的类型安全客户端、服务端处理器和网络传输仍在后续计划中。
+开发中的 Phase 5 已加入可移植的单次 RPC 处理、内存传输和普通服务的
+类型化客户端/处理器，但尚未发布为新版 Mooncakes 包；继承服务、`ONEWAY`、
+应用异常解码和网络传输仍在后续计划中。
 
 ## 质量与开源说明
 
