@@ -96,7 +96,7 @@ manually constructing the dynamic `protocol.Value` tree.
 - [x] Implement an in-memory transport and request/response processor.
 - [x] Generate typed client, handler, and processor interfaces for ordinary
   request/reply services.
-- [ ] Handle sequence IDs, declared exceptions, application exceptions, oneway
+- [x] Handle sequence IDs, declared exceptions, application exceptions, oneway
   calls, and unknown methods.
 - [ ] Add framed transport.
 - [ ] Add a native TCP tutorial as a target-limited adapter.
@@ -175,5 +175,8 @@ git diff --exit-code
   application exceptions, oneway, framing, and TCP remain ahead.
 - 2026-09-24: Issue #18 adds generated typed clients, handler callbacks, and
   method dispatch for request/reply services. The generated code is compiled
-  and exercised against both wire protocols; inheritance and oneway facades
-  remain intentionally withheld.
+  and exercised against both wire protocols; inheritance is deferred.
+- 2026-09-24: Issue #20 adds standard application-exception payloads, unknown
+  method and handler-failure envelopes, and no-response `ONEWAY` dispatch.
+  Generated mixed-service facades and Apache Python wire fixtures run on all
+  four backends. Inherited-service facades remain deferred.

@@ -1,59 +1,64 @@
 # RPC runtime boundary
 
-Phase 5 starts with a synchronous, portable one-request path. It composes the
-existing `protocol.Message` Binary/Compact codecs with an application handler
-and a byte-exchange boundary. The `rpc` package imports only the portable
-`protocol` package and runs on all four stable MoonBit backends.
+Phase 5 provides a synchronous, portable one-request path. It composes the
+`protocol.Message` Binary/Compact codecs with application handlers and a
+byte-exchange boundary. The `rpc` package imports only the portable `protocol`
+package and runs on all four stable MoonBit backends.
 
 ```text
-generated Client.method(Args) -> protocol.Message(CALL) -> rpc.call_once
-  -> encode -> exchange(Bytes -> Bytes)
-  -> generated Handler.serve_once -> rpc.process_once -> decode
-  -> typed handler callback(Args) -> generated Result -> encode
-  -> decode -> validate REPLY/EXCEPTION name and sequence ID
-  -> generated Client decodes Result
+generated Client.method(Args) -> protocol.Message(CALL or ONEWAY)
+  -> encode -> exchange(Bytes -> Bytes or Bytes?)
+  -> generated Handler.serve_once -> decode and dispatch
+  -> typed handler callback(Args) -> optional generated Result -> encode
+  -> CALL: validate REPLY/EXCEPTION name and sequence ID, decode Result
+  -> ONEWAY: no response is sent or decoded
 ```
 
 `RpcProtocol` selects Binary or Compact; it does not own a transport.
-`process_once` accepts encoded bytes and a handler that maps one decoded
-`Message` to one response `Message`. `call_once` accepts any byte-exchange
-callback, so future framed TCP or other adapters can supply I/O without
-changing the protocol codec or generated service models. `MemoryTransport`
-connects these two functions in-process and still serializes both sides,
-making it useful for tests and embedded applications.
+`process_once` retains the original CALL-only `(Bytes) -> Bytes` API.
+`process_once_optional` accepts CALL and ONEWAY, returning `Some(reply)` for
+CALL and `None` for ONEWAY. `call_once` and `call_once_optional` likewise
+offer required- and optional-response byte exchanges. `send_oneway` forbids
+a reply. `MemoryTransport` retains the original request/reply interface for
+tests and embedded applications.
 
-For a service without inheritance or `ONEWAY` methods, the generator emits a
-`ServiceClient` with typed methods and a `ServiceHandler` record of typed
-callbacks. The client assigns sequence IDs starting at 1, calls through a
-byte-exchange callback, and decodes the existing generated result enum.
-Declared Thrift exceptions are variants of that result enum. The handler
-decodes arguments by method name, invokes the matching callback, and preserves
-the request method and sequence ID in its reply. It also exposes
-`serve_once` for byte-oriented transports. The generated package must import
-both `Xpeng/moonthrift/protocol` and `Xpeng/moonthrift/rpc`.
+For a non-inherited service, the generator emits a typed `ServiceClient` and a
+`ServiceHandler` record of callbacks. The client assigns sequence IDs starting
+at 1. Declared Thrift exceptions remain variants of the generated result enum.
+The handler decodes arguments by method name, invokes the matching callback,
+and preserves the request method and sequence ID in its reply. The generated
+package must import `Xpeng/moonthrift/protocol` and `Xpeng/moonthrift/rpc`.
 
-This increment rejects non-`CALL` requests, response kinds other than `REPLY`
-or `EXCEPTION`, and mismatched method names or sequence IDs. Existing message
-decoders enforce wire-format limits and reject trailing data. Application
-handlers may return `ProtocolError`; converting unknown methods and other
-handler failures into Thrift application-exception envelopes is later work.
-An unknown method currently raises `InvalidMessage`. A received application
-`EXCEPTION` envelope is detected by the typed client and rejected explicitly
-rather than being misdecoded as a declared result.
+Services without ONEWAY methods retain the original `(Bytes) -> Bytes`
+exchange and `serve_once(...) -> Bytes` API. A service with any ONEWAY method
+uses `(Bytes) -> Bytes?` and `serve_once(...) -> Bytes?`: a CALL must produce
+`Some(reply)` and ONEWAY must produce `None`. A typed ONEWAY client method
+returns `Unit` and does not decode a result.
 
-The executable example can be run from the repository root:
+The runtime rejects invalid message kinds, response kinds other than REPLY
+or EXCEPTION, and mismatched method names or sequence IDs. Message decoders
+enforce wire-format limits and reject trailing data. An unknown CALL method
+returns a standard `TApplicationException` payload (type 1); malformed typed
+arguments return type 7, and a callback failure returns type 6. The typed
+client decodes an EXCEPTION envelope into
+`ProtocolError::ApplicationException(message, type_code)` instead of treating
+it as a declared result. Unknown ONEWAY methods produce no reply. A local
+ONEWAY callback may still raise to its host; it never generates wire output.
+
+Run the in-memory demo from the repository root:
 
 ```sh
 moon run examples/rpc_demo --target native
 ```
 
-It creates a generated `UserDirectoryHandler` and `UserDirectoryClient`
-around a Compact byte exchange. The four-backend tests also cover Binary,
-sequential client calls, a declared service exception, unknown methods,
-application-exception detection, and invalid request/reply envelopes.
+It creates a generated `UserDirectoryHandler` and `UserDirectoryClient` around
+a Compact byte exchange. Four-backend tests also cover Binary, sequential
+client calls, declared and application exceptions, unknown methods, mixed
+CALL/ONEWAY dispatch, and invalid envelopes. Independent Apache Thrift Python
+fixtures verify EXCEPTION and ONEWAY bytes in both codecs.
 
-Not yet implemented: `ONEWAY`, inherited-service runtime facades,
-application-exception serialization, framed transport, TCP, async I/O,
-multiplexing, or a persistent server loop. No partial runtime facade is emitted
-for an inherited or oneway service. The byte-exchange callback is synchronous
-by design; target-specific async/TCP adapters belong in separate packages.
+Not yet implemented: inherited-service runtime facades, framed transport,
+TCP, async I/O, multiplexing, or a persistent server loop. No partial runtime
+facade is emitted for inherited services. The byte-exchange callback is
+synchronous by design; target-specific async/TCP adapters belong in separate
+packages.

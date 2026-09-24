@@ -105,3 +105,53 @@ test "Python unknown nested containers decode with integer boundaries" {
     ])
   }
 }
+
+///|
+test "Apache Thrift Python application exceptions match both RPC codecs" {
+  let fixtures : Array[(@rpc.RpcProtocol, Bytes)] = [
+    (Binary, @fixtures.python_binary_application_exception_message),
+    (Compact, @fixtures.python_compact_application_exception_message),
+  ]
+  for entry in fixtures {
+    let (wire, bytes) = entry
+    let reply = wire.decode(bytes)
+    assert_true(reply.kind is Exception)
+    assert_eq(reply.name, "missing")
+    assert_eq(reply.sequence_id, 41)
+    let exception = @rpc.ApplicationException::from_thrift_value(reply.body)
+    assert_eq(exception.type_code, 1)
+    assert_eq(exception.message, "unknown method missing")
+    assert_eq(wire.encode(reply), bytes)
+    let request : @protocol.Message = {
+      ..reply,
+      kind: Call,
+      body: StructValue([]),
+    }
+    assert_eq(
+      wire.encode(
+        @rpc.application_exception_reply(request, 1, "unknown method missing"),
+      ),
+      bytes,
+    )
+  }
+}
+
+///|
+test "Apache Thrift Python oneway requests match both RPC codecs" {
+  let fixtures : Array[(@rpc.RpcProtocol, Bytes)] = [
+    (Binary, @fixtures.python_binary_oneway_message),
+    (Compact, @fixtures.python_compact_oneway_message),
+  ]
+  for entry in fixtures {
+    let (wire, bytes) = entry
+    let request = wire.decode(bytes)
+    assert_true(request.kind is Oneway)
+    assert_eq(request.name, "emit")
+    assert_eq(request.sequence_id, 7)
+    assert_eq(
+      @protocol.find_field(request.body.require_struct(), 1),
+      Some(I32Value(9)),
+    )
+    assert_eq(wire.encode(request), bytes)
+  }
+}

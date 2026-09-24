@@ -57,8 +57,8 @@ fn require_reply(
 
 ///|
 /// Decodes one request, invokes its application handler, and encodes one
-/// response. This increment accepts CALL only; oneway and application-level
-/// exception conversion are separate Phase 5 work.
+/// response. This compatibility API accepts CALL only; use
+/// `process_once_optional` for services with ONEWAY methods.
 pub fn process_once(
   wire : RpcProtocol,
   request_bytes : Bytes,
@@ -69,6 +69,32 @@ pub fn process_once(
   let reply = handler(request)
   require_reply(request, reply)
   wire.encode(reply)
+}
+
+///|
+/// Processes a CALL or ONEWAY request. ONEWAY must produce no response,
+/// including when the application handler reports an error.
+pub fn process_once_optional(
+  wire : RpcProtocol,
+  request_bytes : Bytes,
+  handler : (@protocol.Message) -> @protocol.Message? raise @protocol.ProtocolError,
+) -> Bytes? raise @protocol.ProtocolError {
+  let request = wire.decode(request_bytes)
+  if !(request.kind is Call || request.kind is Oneway) {
+    raise InvalidMessage("RPC request must have CALL or ONEWAY message type")
+  }
+  let reply = handler(request)
+  match (request.kind, reply) {
+    (Call, Some(message)) => {
+      require_reply(request, message)
+      Some(wire.encode(message))
+    }
+    (Oneway, None) => None
+    (Call, None) => raise InvalidMessage("CALL handler did not return a reply")
+    (Oneway, Some(_)) =>
+      raise InvalidMessage("ONEWAY handler must not return a reply")
+    _ => raise InvalidMessage("invalid RPC request type")
+  }
 }
 
 ///|
@@ -83,6 +109,40 @@ pub fn call_once(
   let reply = wire.decode(exchange(wire.encode(request)))
   require_reply(request, reply)
   reply
+}
+
+///|
+/// Calls through an optional-response byte exchange. A CALL must have a
+/// response; the same exchange can also carry ONEWAY messages.
+pub fn call_once_optional(
+  wire : RpcProtocol,
+  request : @protocol.Message,
+  exchange : (Bytes) -> Bytes? raise @protocol.ProtocolError,
+) -> @protocol.Message raise @protocol.ProtocolError {
+  require_call(request)
+  let reply_bytes = match exchange(wire.encode(request)) {
+    Some(bytes) => bytes
+    None => raise InvalidMessage("CALL transport did not return a reply")
+  }
+  let reply = wire.decode(reply_bytes)
+  require_reply(request, reply)
+  reply
+}
+
+///|
+/// Sends a ONEWAY request without reading or expecting a response.
+pub fn send_oneway(
+  wire : RpcProtocol,
+  request : @protocol.Message,
+  exchange : (Bytes) -> Bytes? raise @protocol.ProtocolError,
+) -> Unit raise @protocol.ProtocolError {
+  if !(request.kind is Oneway) {
+    raise InvalidMessage("RPC request must have ONEWAY message type")
+  }
+  match exchange(wire.encode(request)) {
+    None => ()
+    Some(_) => raise InvalidMessage("ONEWAY transport returned a reply")
+  }
 }
 
 ///|

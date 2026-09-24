@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from thrift.Thrift import TType
+from thrift.Thrift import TApplicationException, TMessageType, TType
 from thrift.protocol import TBinaryProtocol, TCompactProtocol
 from thrift.transport import TTransport
 
@@ -184,6 +184,49 @@ def write_empty_containers(proto) -> None:
     proto.writeStructEnd()
 
 
+def write_application_exception_message(proto) -> None:
+    proto.writeMessageBegin("missing", TMessageType.EXCEPTION, 41)
+    TApplicationException(
+        TApplicationException.UNKNOWN_METHOD, "unknown method missing"
+    ).write(proto)
+    proto.writeMessageEnd()
+
+
+def read_application_exception_message(proto) -> tuple[str, int, int, str]:
+    name, message_type, sequence_id = proto.readMessageBegin()
+    exception = TApplicationException()
+    exception.read(proto)
+    proto.readMessageEnd()
+    assert message_type == TMessageType.EXCEPTION
+    return name, sequence_id, exception.type, exception.message
+
+
+def write_oneway_message(proto) -> None:
+    proto.writeMessageBegin("emit", TMessageType.ONEWAY, 7)
+    proto.writeStructBegin("emit_args")
+    proto.writeFieldBegin("value", TType.I32, 1)
+    proto.writeI32(9)
+    proto.writeFieldEnd()
+    proto.writeFieldStop()
+    proto.writeStructEnd()
+    proto.writeMessageEnd()
+
+
+def read_oneway_message(proto) -> tuple[str, int, int]:
+    name, message_type, sequence_id = proto.readMessageBegin()
+    assert message_type == TMessageType.ONEWAY
+    proto.readStructBegin()
+    _, field_type, field_id = proto.readFieldBegin()
+    assert (field_type, field_id) == (TType.I32, 1)
+    value = proto.readI32()
+    proto.readFieldEnd()
+    _, field_type, _ = proto.readFieldBegin()
+    assert field_type == TType.STOP
+    proto.readStructEnd()
+    proto.readMessageEnd()
+    return name, sequence_id, value
+
+
 def read_empty_containers(proto) -> tuple[int, int, int]:
     sizes: list[int] = []
     proto.readStructBegin()
@@ -228,6 +271,12 @@ def build_fixtures() -> dict[str, bytes]:
         fixtures[f"python_{factory.name}_empty_containers"] = encode(
             factory, write_empty_containers
         )
+        fixtures[f"python_{factory.name}_application_exception_message"] = encode(
+            factory, write_application_exception_message
+        )
+        fixtures[f"python_{factory.name}_oneway_message"] = encode(
+            factory, write_oneway_message
+        )
     return fixtures
 
 
@@ -253,6 +302,12 @@ def validate_with_python(fixtures: dict[str, bytes]) -> None:
         assert read_empty_containers(
             protocol_for(factory, fixtures[f"{prefix}_empty_containers"])
         ) == (0, 0, 0)
+        assert read_application_exception_message(
+            protocol_for(factory, fixtures[f"{prefix}_application_exception_message"])
+        ) == ("missing", 41, TApplicationException.UNKNOWN_METHOD, "unknown method missing")
+        assert read_oneway_message(
+            protocol_for(factory, fixtures[f"{prefix}_oneway_message"])
+        ) == ("emit", 7, 9)
 
 
 def render(fixtures: dict[str, bytes]) -> str:

@@ -6,6 +6,7 @@ Thrift specification and interoperability behavior:
 - Project: Apache Thrift
 - Source: https://github.com/apache/thrift
 - Documentation: https://thrift.apache.org/docs/idl
+- RPC specification: https://github.com/apache/thrift/blob/master/doc/specs/thrift-rpc.md
 - Reference runtime: Apache Thrift Python 0.24.0
 - Runtime source: https://pypi.org/project/thrift/0.24.0/
 - License: Apache License 2.0

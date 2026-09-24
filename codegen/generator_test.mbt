@@ -76,14 +76,17 @@ test "workspace generator prefixes included declarations and rewrites references
 }
 
 ///|
-test "generator withholds runtime facades for inherited and oneway services" {
+test "generator emits oneway runtime facades but defers inheritance" {
   let schema = @moonthrift.parse_idl(
     "service Base { void ping() }\nservice Child extends Base { void pong() }\nservice Events { oneway void emit(1: i32 value) }",
   )
   let generated = @codegen.generate_moonbit(schema)
   assert_true(generated.content.contains("pub struct BaseClient"))
   assert_true(!generated.content.contains("pub struct ChildClient"))
-  assert_true(!generated.content.contains("pub struct EventsClient"))
+  assert_true(generated.content.contains("pub struct EventsClient"))
+  assert_true(generated.content.contains("EventsClient::emit"))
+  assert_true(generated.content.contains("@rpc.send_oneway"))
+  assert_true(generated.content.contains("@rpc.process_once_optional"))
 }
 
 ///|

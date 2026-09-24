@@ -70,7 +70,7 @@ pub fn GetUserRequest::decode_compact(
   GetUserRequest::from_thrift_value(@protocol.decode_compact(input, Struct))
 }
 
-// Service models for `UserDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
+// Service models for `UserDirectory`. Runtime facades are emitted for non-inherited services.
 
 ///|
 /// Generated from Thrift function arguments `UserDirectoryGetUserArgs`.
@@ -310,7 +310,7 @@ pub fn ExamplesMultifileCommonTypesUser::decode_compact(
   )
 }
 
-// Service models for `ExamplesMultifileCommonTypesBaseDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
+// Service models for `ExamplesMultifileCommonTypesBaseDirectory`. Runtime facades are emitted for non-inherited services.
 
 ///|
 /// Generated from Thrift function arguments `ExamplesMultifileCommonTypesBaseDirectoryPingArgs`.
@@ -437,7 +437,7 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(
 }
 
 ///|
-/// Typed request/reply client for Thrift service ExamplesMultifileCommonTypesBaseDirectory.
+/// Typed client for Thrift service ExamplesMultifileCommonTypesBaseDirectory.
 pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
@@ -466,13 +466,8 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::ping(
     body: args.to_thrift_value(),
   }
   let reply = @rpc.call_once(self.wire, request, self.exchange)
-  if reply.kind is Exception {
-    raise InvalidMessage(
-      "application exception returned by ExamplesMultifileCommonTypesBaseDirectory.ping; decoding is not implemented yet",
-    )
-  }
   ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
-    reply.body,
+    @rpc.reply_result_body(reply),
   )
 }
 
@@ -494,8 +489,18 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(
     "ping" => {
       let args = ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(
         request.body,
-      )
-      let result = (self.ping)(args)
+      ) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 7, "invalid RPC arguments",
+          )
+      }
+      let result = (self.ping)(args) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 6, "RPC handler failed",
+          )
+      }
       {
         name: request.name,
         kind: Reply,
@@ -503,7 +508,12 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(
         body: result.to_thrift_value(),
       }
     }
-    _ => raise InvalidMessage("unknown RPC method \{request.name}")
+    _ =>
+      @rpc.application_exception_reply(
+        request,
+        1,
+        "unknown RPC method \{request.name}",
+      )
   }
 }
 

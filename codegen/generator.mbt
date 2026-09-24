@@ -713,7 +713,7 @@ fn render_definition(
     Service(name~, extends~, functions~, annotations~, ..) => {
       let service_documentation = documentation(annotations)
       output.write_string(
-        "// Service models for `\{name}`. Request/reply runtime facades are emitted when inheritance and oneway are absent.\n\n",
+        "// Service models for `\{name}`. Runtime facades are emitted for non-inherited services.\n\n",
       )
       for function in functions {
         render_function_models(

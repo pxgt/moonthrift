@@ -36,6 +36,7 @@ pub(all) suberror ProtocolError {
   TrailingData(offset~ : Int, remaining~ : Int)
   InvalidCompact(String)
   InvalidMessage(String)
+  ApplicationException(message~ : String, type_code~ : Int)
   InvalidValue(String)
   InvalidEnum(type_name~ : String, value~ : Int)
   MissingRequiredField(type_name~ : String, field_id~ : Int, field_name~ : String)
