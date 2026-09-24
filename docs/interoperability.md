@@ -16,6 +16,7 @@ Compact protocols, the matrix covers:
 - list, set, map, empty-container, and nested-container encodings;
 - a generated exception record;
 - a future unknown field containing a nested container.
+- standard `TApplicationException` RPC envelopes and `ONEWAY` requests.
 
 `interop/python/reference.py` writes each value with the public Apache Thrift
 protocol API and immediately reads it back with an independent Python decoder.

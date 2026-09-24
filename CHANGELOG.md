@@ -7,11 +7,14 @@ the project uses semantic versioning.
 
 ### Added
 
+- Standard Thrift application-exception encode/decode with unknown-method,
+  invalid-argument, and handler-failure envelopes across Binary and Compact.
+- Generated `ONEWAY` client/handler facades with a no-response byte exchange;
+  Apache Thrift Python cross-wire fixtures cover both new message paths.
 - Generated typed request/reply clients and handler/processor facades for
-  services without inheritance or oneway methods.
+  services without inheritance.
 - Client-side sequence IDs, method dispatch, declared-result decoding, and
-  explicit rejection of unknown methods and unsupported application-exception
-  envelopes.
+  decoded application-exception errors.
 - A portable one-request RPC processor, byte-exchange client boundary, and
   synchronous in-memory transport for Binary and Compact messages.
 - Generated service-model RPC round-trip tests and a runnable memory demo.

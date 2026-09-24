@@ -25,7 +25,8 @@ moon run cmd/main --target native -- inspect examples/tutorial.thrift
 moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tutorial-v2.thrift
 moon run cmd/main --target native -- generate examples/tutorial.thrift /tmp/tutorial.generated.mbtx
 moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
-moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx
+moon run cmd/main --target native -- generate examples/oneway.thrift /tmp/oneway.generated.mbtx
+moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/oneway.generated.mbtx
 moon package --frozen
 python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
@@ -39,9 +40,10 @@ derived-trait method export migration is tracked in
 warnings remain errors. The migration changes API declaration mechanics, not
 Binary/Compact wire behavior.
 
-Compare the two formatted generated files with
-`examples/generated/model.mbt` and `examples/generated_workspace/model.mbt`.
-Both generated packages are part of the regular check/test graph. Their tests
+Compare the three formatted generated files with
+`examples/generated/model.mbt`, `examples/generated_workspace/model.mbt`,
+and `examples/generated_oneway/model.mbt`. All generated packages are part of
+the regular check/test graph. Their tests
 execute Binary and Compact round trips on all stable backends, including
 nested containers, cross-file types, service results, defaults, unknown fields,
 and missing-required-field errors.
@@ -59,12 +61,11 @@ PR CI also compares `examples/` with the PR base commit. See
 
 The RPC tests run on all stable backends. They cover Binary and Compact
 in-memory exchanges, generated service success and declared-exception models,
-request/reply kind validation, method and sequence-ID matching, and a native
-demo that prints `get_user(7) -> Ada`. See `docs/rpc-runtime.md` for the
-current supported boundary and deferred features.
-The generated facade tests additionally exercise sequential typed client
-calls, typed handler dispatch, unknown-method rejection, and explicit handling
-of application-exception envelopes.
+CALL/ONEWAY kind validation, method and sequence-ID matching, application
+exception type codes, unknown-method envelopes, and a native demo that prints
+`get_user(7) -> Ada`. Apache Python fixtures independently cover both new RPC
+wire paths. See `docs/rpc-runtime.md` for the current boundary and deferred
+features.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,
