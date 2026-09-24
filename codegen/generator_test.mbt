@@ -27,6 +27,10 @@ test "generator emits records enums unions constants and service models" {
   assert_true(generated.content.contains("User::decode_compact"))
   assert_true(generated.content.contains("Lookup::from_thrift_value"))
   assert_true(generated.content.contains("UsersGetResult::encode_binary"))
+  assert_true(generated.content.contains("pub struct UsersClient"))
+  assert_true(generated.content.contains("pub(all) struct UsersHandler"))
+  assert_true(generated.content.contains("UsersClient::get"))
+  assert_true(generated.content.contains("UsersHandler::serve_once"))
   assert_true(generated.content.contains("/// Stable identifier."))
   assert_true(generated.content.contains("/// Access role."))
   assert_true(generated.content.contains("/// User record."))
@@ -68,4 +72,25 @@ test "workspace generator prefixes included declarations and rewrites references
   assert_true(generated.content.contains("pub type CommonTypesUserId = Int64"))
   assert_true(generated.content.contains("pub(all) struct CommonTypesUser"))
   assert_true(generated.content.contains("id : CommonTypesUserId"))
+  assert_true(generated.content.contains("pub struct ApiClient"))
+}
+
+///|
+test "generator withholds runtime facades for inherited and oneway services" {
+  let schema = @moonthrift.parse_idl(
+    "service Base { void ping() }\nservice Child extends Base { void pong() }\nservice Events { oneway void emit(1: i32 value) }",
+  )
+  let generated = @codegen.generate_moonbit(schema)
+  assert_true(generated.content.contains("pub struct BaseClient"))
+  assert_true(!generated.content.contains("pub struct ChildClient"))
+  assert_true(!generated.content.contains("pub struct EventsClient"))
+}
+
+///|
+test "generated client escapes a reserved method identifier" {
+  let schema = @moonthrift.parse_idl("service Api { void method() }")
+  let generated = @codegen.generate_moonbit(schema)
+  assert_true(generated.content.contains("ApiClient::method_"))
+  assert_true(generated.content.contains("method_ : (ApiMethodArgs)"))
+  assert_true(generated.content.contains("name: \"method\""))
 }

@@ -70,7 +70,7 @@ pub fn GetUserRequest::decode_compact(
   GetUserRequest::from_thrift_value(@protocol.decode_compact(input, Struct))
 }
 
-// Service models for `UserDirectory`. Transport dispatch is supplied by the application.
+// Service models for `UserDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
 
 ///|
 /// Generated from Thrift function arguments `UserDirectoryGetUserArgs`.
@@ -310,7 +310,7 @@ pub fn ExamplesMultifileCommonTypesUser::decode_compact(
   )
 }
 
-// Service models for `ExamplesMultifileCommonTypesBaseDirectory`. Transport dispatch is supplied by the application.
+// Service models for `ExamplesMultifileCommonTypesBaseDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
 
 ///|
 /// Generated from Thrift function arguments `ExamplesMultifileCommonTypesBaseDirectoryPingArgs`.
@@ -434,4 +434,84 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(
   ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
     @protocol.decode_compact(input, Struct),
   )
+}
+
+///|
+/// Typed request/reply client for Thrift service ExamplesMultifileCommonTypesBaseDirectory.
+pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
+  wire : @rpc.RpcProtocol
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
+  mut next_sequence_id : Int
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::new(
+  wire : @rpc.RpcProtocol,
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError,
+) -> ExamplesMultifileCommonTypesBaseDirectoryClient {
+  { wire, exchange, next_sequence_id: 1, }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::ping(
+  self : ExamplesMultifileCommonTypesBaseDirectoryClient,
+  args : ExamplesMultifileCommonTypesBaseDirectoryPingArgs,
+) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError {
+  let sequence_id = self.next_sequence_id
+  self.next_sequence_id += 1
+  let request : @protocol.Message = {
+    name: "ping",
+    kind: Call,
+    sequence_id,
+    body: args.to_thrift_value(),
+  }
+  let reply = @rpc.call_once(self.wire, request, self.exchange)
+  if reply.kind is Exception {
+    raise InvalidMessage(
+      "application exception returned by ExamplesMultifileCommonTypesBaseDirectory.ping; decoding is not implemented yet",
+    )
+  }
+  ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(
+    reply.body,
+  )
+}
+
+///|
+/// Typed callbacks for the methods of ExamplesMultifileCommonTypesBaseDirectory.
+pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryHandler {
+  ping : (ExamplesMultifileCommonTypesBaseDirectoryPingArgs) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(
+  self : ExamplesMultifileCommonTypesBaseDirectoryHandler,
+  request : @protocol.Message,
+) -> @protocol.Message raise @protocol.ProtocolError {
+  if !(request.kind is Call) {
+    raise InvalidMessage("RPC request must have CALL message type")
+  }
+  match request.name {
+    "ping" => {
+      let args = ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(
+        request.body,
+      )
+      let result = (self.ping)(args)
+      {
+        name: request.name,
+        kind: Reply,
+        sequence_id: request.sequence_id,
+        body: result.to_thrift_value(),
+      }
+    }
+    _ => raise InvalidMessage("unknown RPC method \{request.name}")
+  }
+}
+
+///|
+pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::serve_once(
+  self : ExamplesMultifileCommonTypesBaseDirectoryHandler,
+  wire : @rpc.RpcProtocol,
+  request_bytes : Bytes,
+) -> Bytes raise @protocol.ProtocolError {
+  @rpc.process_once(wire, request_bytes, request => self.process(request))
 }

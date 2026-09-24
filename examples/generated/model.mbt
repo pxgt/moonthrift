@@ -394,7 +394,7 @@ pub fn UserNotFound::decode_compact(
   UserNotFound::from_thrift_value(@protocol.decode_compact(input, Struct))
 }
 
-// Service models for `UserDirectory`. Transport dispatch is supplied by the application.
+// Service models for `UserDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
 
 ///|
 /// Typed directory operations.
@@ -710,4 +710,113 @@ pub fn UserDirectoryListUsersResult::decode_compact(
   UserDirectoryListUsersResult::from_thrift_value(
     @protocol.decode_compact(input, Struct),
   )
+}
+
+///|
+/// Typed request/reply client for Thrift service UserDirectory.
+pub struct UserDirectoryClient {
+  wire : @rpc.RpcProtocol
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
+  mut next_sequence_id : Int
+}
+
+///|
+pub fn UserDirectoryClient::new(
+  wire : @rpc.RpcProtocol,
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError,
+) -> UserDirectoryClient {
+  { wire, exchange, next_sequence_id: 1, }
+}
+
+///|
+pub fn UserDirectoryClient::get_user(
+  self : UserDirectoryClient,
+  args : UserDirectoryGetUserArgs,
+) -> UserDirectoryGetUserResult raise @protocol.ProtocolError {
+  let sequence_id = self.next_sequence_id
+  self.next_sequence_id += 1
+  let request : @protocol.Message = {
+    name: "get_user",
+    kind: Call,
+    sequence_id,
+    body: args.to_thrift_value(),
+  }
+  let reply = @rpc.call_once(self.wire, request, self.exchange)
+  if reply.kind is Exception {
+    raise InvalidMessage(
+      "application exception returned by UserDirectory.get_user; decoding is not implemented yet",
+    )
+  }
+  UserDirectoryGetUserResult::from_thrift_value(reply.body)
+}
+
+///|
+pub fn UserDirectoryClient::list_users(
+  self : UserDirectoryClient,
+  args : UserDirectoryListUsersArgs,
+) -> UserDirectoryListUsersResult raise @protocol.ProtocolError {
+  let sequence_id = self.next_sequence_id
+  self.next_sequence_id += 1
+  let request : @protocol.Message = {
+    name: "list_users",
+    kind: Call,
+    sequence_id,
+    body: args.to_thrift_value(),
+  }
+  let reply = @rpc.call_once(self.wire, request, self.exchange)
+  if reply.kind is Exception {
+    raise InvalidMessage(
+      "application exception returned by UserDirectory.list_users; decoding is not implemented yet",
+    )
+  }
+  UserDirectoryListUsersResult::from_thrift_value(reply.body)
+}
+
+///|
+/// Typed callbacks for the methods of UserDirectory.
+pub(all) struct UserDirectoryHandler {
+  get_user : (UserDirectoryGetUserArgs) -> UserDirectoryGetUserResult raise @protocol.ProtocolError
+  list_users : (UserDirectoryListUsersArgs) -> UserDirectoryListUsersResult raise @protocol.ProtocolError
+}
+
+///|
+pub fn UserDirectoryHandler::process(
+  self : UserDirectoryHandler,
+  request : @protocol.Message,
+) -> @protocol.Message raise @protocol.ProtocolError {
+  if !(request.kind is Call) {
+    raise InvalidMessage("RPC request must have CALL message type")
+  }
+  match request.name {
+    "get_user" => {
+      let args = UserDirectoryGetUserArgs::from_thrift_value(request.body)
+      let result = (self.get_user)(args)
+      {
+        name: request.name,
+        kind: Reply,
+        sequence_id: request.sequence_id,
+        body: result.to_thrift_value(),
+      }
+    }
+    "list_users" => {
+      let args = UserDirectoryListUsersArgs::from_thrift_value(request.body)
+      let result = (self.list_users)(args)
+      {
+        name: request.name,
+        kind: Reply,
+        sequence_id: request.sequence_id,
+        body: result.to_thrift_value(),
+      }
+    }
+    _ => raise InvalidMessage("unknown RPC method \{request.name}")
+  }
+}
+
+///|
+pub fn UserDirectoryHandler::serve_once(
+  self : UserDirectoryHandler,
+  wire : @rpc.RpcProtocol,
+  request_bytes : Bytes,
+) -> Bytes raise @protocol.ProtocolError {
+  @rpc.process_once(wire, request_bytes, request => self.process(request))
 }

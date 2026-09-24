@@ -28,6 +28,7 @@ fn is_keyword(name : String) -> Bool {
     | "loop"
     | "map"
     | "match"
+    | "method"
     | "mut"
     | "priv"
     | "pub"
@@ -709,16 +710,17 @@ fn render_definition(
       )
     Union(name~, fields~, annotations~, ..) =>
       render_union(output, schema, name, fields, annotations)
-    Service(name~, functions~, annotations~, ..) => {
+    Service(name~, extends~, functions~, annotations~, ..) => {
       let service_documentation = documentation(annotations)
       output.write_string(
-        "// Service models for `\{name}`. Transport dispatch is supplied by the application.\n\n",
+        "// Service models for `\{name}`. Request/reply runtime facades are emitted when inheritance and oneway are absent.\n\n",
       )
       for function in functions {
         render_function_models(
           output, schema, name, service_documentation, function,
         )
       }
+      render_service_rpc_runtime(output, name, extends, functions)
     }
   }
 }

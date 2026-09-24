@@ -3,6 +3,7 @@ package "Xpeng/moonthrift/examples/generated"
 
 import {
   "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
   "moonbitlang/core/debug",
 }
 
@@ -40,6 +41,15 @@ pub fn User::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn User::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn User::to_thrift_value(Self) -> @protocol.Value
 
+pub struct UserDirectoryClient {
+  wire : @rpc.RpcProtocol
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
+  mut next_sequence_id : Int
+}
+pub fn UserDirectoryClient::get_user(Self, UserDirectoryGetUserArgs) -> UserDirectoryGetUserResult raise @protocol.ProtocolError
+pub fn UserDirectoryClient::list_users(Self, UserDirectoryListUsersArgs) -> UserDirectoryListUsersResult raise @protocol.ProtocolError
+pub fn UserDirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
+
 pub(all) struct UserDirectoryGetUserArgs {
   id : Int64
 } derive(Eq, @debug.Debug)
@@ -60,6 +70,13 @@ pub fn UserDirectoryGetUserResult::encode_binary(Self) -> Bytes raise @protocol.
 pub fn UserDirectoryGetUserResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn UserDirectoryGetUserResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn UserDirectoryGetUserResult::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) struct UserDirectoryHandler {
+  get_user : (UserDirectoryGetUserArgs) -> UserDirectoryGetUserResult raise @protocol.ProtocolError
+  list_users : (UserDirectoryListUsersArgs) -> UserDirectoryListUsersResult raise @protocol.ProtocolError
+}
+pub fn UserDirectoryHandler::process(Self, @protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
+pub fn UserDirectoryHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes raise @protocol.ProtocolError
 
 pub(all) struct UserDirectoryListUsersArgs {
 }

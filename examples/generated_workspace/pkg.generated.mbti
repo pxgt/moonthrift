@@ -3,6 +3,7 @@ package "Xpeng/moonthrift/examples/generated_workspace"
 
 import {
   "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
   "moonbitlang/core/debug",
 }
 
@@ -11,6 +12,20 @@ import {
 // Errors
 
 // Types and methods
+pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
+  wire : @rpc.RpcProtocol
+  exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
+  mut next_sequence_id : Int
+}
+pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
+pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::ping(Self, ExamplesMultifileCommonTypesBaseDirectoryPingArgs) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError
+
+pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryHandler {
+  ping : (ExamplesMultifileCommonTypesBaseDirectoryPingArgs) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError
+}
+pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(Self, @protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
+pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes raise @protocol.ProtocolError
+
 pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {
 }
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
