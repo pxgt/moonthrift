@@ -34,4 +34,14 @@ fn main raise {
     Success(user) => println("get_user(7) -> \{user.name}")
     Missing(missing) => println("missing user \{missing.id}")
   }
+  let framed_client = @model.UserDirectoryClient::new(wire, payload => {
+    let framed_request = @rpc.encode_frame(payload)
+    let request = @rpc.decode_frame(framed_request)
+    let response = handler.serve_once(wire, request)
+    @rpc.decode_frame(@rpc.encode_frame(response))
+  })
+  match framed_client.get_user({ id: 7L, }) {
+    Success(user) => println("framed get_user(7) -> \{user.name}")
+    Missing(missing) => println("missing user \{missing.id}")
+  }
 }
