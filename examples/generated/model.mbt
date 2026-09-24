@@ -394,7 +394,7 @@ pub fn UserNotFound::decode_compact(
   UserNotFound::from_thrift_value(@protocol.decode_compact(input, Struct))
 }
 
-// Service models for `UserDirectory`. Request/reply runtime facades are emitted when inheritance and oneway are absent.
+// Service models for `UserDirectory`. Runtime facades are emitted for non-inherited services.
 
 ///|
 /// Typed directory operations.
@@ -713,7 +713,7 @@ pub fn UserDirectoryListUsersResult::decode_compact(
 }
 
 ///|
-/// Typed request/reply client for Thrift service UserDirectory.
+/// Typed client for Thrift service UserDirectory.
 pub struct UserDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
@@ -742,12 +742,7 @@ pub fn UserDirectoryClient::get_user(
     body: args.to_thrift_value(),
   }
   let reply = @rpc.call_once(self.wire, request, self.exchange)
-  if reply.kind is Exception {
-    raise InvalidMessage(
-      "application exception returned by UserDirectory.get_user; decoding is not implemented yet",
-    )
-  }
-  UserDirectoryGetUserResult::from_thrift_value(reply.body)
+  UserDirectoryGetUserResult::from_thrift_value(@rpc.reply_result_body(reply))
 }
 
 ///|
@@ -764,12 +759,7 @@ pub fn UserDirectoryClient::list_users(
     body: args.to_thrift_value(),
   }
   let reply = @rpc.call_once(self.wire, request, self.exchange)
-  if reply.kind is Exception {
-    raise InvalidMessage(
-      "application exception returned by UserDirectory.list_users; decoding is not implemented yet",
-    )
-  }
-  UserDirectoryListUsersResult::from_thrift_value(reply.body)
+  UserDirectoryListUsersResult::from_thrift_value(@rpc.reply_result_body(reply))
 }
 
 ///|
@@ -789,8 +779,18 @@ pub fn UserDirectoryHandler::process(
   }
   match request.name {
     "get_user" => {
-      let args = UserDirectoryGetUserArgs::from_thrift_value(request.body)
-      let result = (self.get_user)(args)
+      let args = UserDirectoryGetUserArgs::from_thrift_value(request.body) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 7, "invalid RPC arguments",
+          )
+      }
+      let result = (self.get_user)(args) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 6, "RPC handler failed",
+          )
+      }
       {
         name: request.name,
         kind: Reply,
@@ -799,8 +799,18 @@ pub fn UserDirectoryHandler::process(
       }
     }
     "list_users" => {
-      let args = UserDirectoryListUsersArgs::from_thrift_value(request.body)
-      let result = (self.list_users)(args)
+      let args = UserDirectoryListUsersArgs::from_thrift_value(request.body) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 7, "invalid RPC arguments",
+          )
+      }
+      let result = (self.list_users)(args) catch {
+        _ =>
+          return @rpc.application_exception_reply(
+            request, 6, "RPC handler failed",
+          )
+      }
       {
         name: request.name,
         kind: Reply,
@@ -808,7 +818,12 @@ pub fn UserDirectoryHandler::process(
         body: result.to_thrift_value(),
       }
     }
-    _ => raise InvalidMessage("unknown RPC method \{request.name}")
+    _ =>
+      @rpc.application_exception_reply(
+        request,
+        1,
+        "unknown RPC method \{request.name}",
+      )
   }
 }
 

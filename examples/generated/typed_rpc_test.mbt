@@ -67,7 +67,7 @@ test "generated typed client and handler route methods on both protocols" {
 }
 
 ///|
-test "generated handler rejects unknown methods" {
+test "generated handler returns a standard unknown-method exception" {
   let handler : @generated.UserDirectoryHandler = {
     get_user: test_get_user,
     list_users: test_list_users,
@@ -78,26 +78,57 @@ test "generated handler rejects unknown methods" {
     sequence_id: 1,
     body: StructValue([]),
   }
-  try handler.process(request) catch {
-    InvalidMessage(message) => assert_true(message.contains("unknown"))
-    _ => fail("unexpected handler error")
-  } noraise {
-    _ => fail("expected unknown-method rejection")
-  }
+  let reply = handler.process(request)
+  assert_true(reply.kind is Exception)
+  assert_eq(reply.sequence_id, 1)
+  let exception = @rpc.ApplicationException::from_thrift_value(reply.body)
+  assert_eq(exception.type_code, 1)
+  assert_true(exception.message.contains("unknown"))
 }
 
 ///|
-test "generated client does not misdecode an application exception envelope" {
+test "generated client decodes an application exception envelope" {
   let client = @generated.UserDirectoryClient::new(Binary, bytes => {
     let request = @protocol.decode_binary_message(bytes)
-    let reply : @protocol.Message = { ..request, kind: Exception, }
+    let reply = @rpc.application_exception_reply(request, 6, "handler failed")
     @protocol.encode_binary_message(reply)
   })
   try client.get_user({ id: 7L, }) catch {
-    InvalidMessage(message) =>
-      assert_true(message.contains("application exception"))
+    ApplicationException(message~, type_code~) => {
+      assert_eq(message, "handler failed")
+      assert_eq(type_code, 6)
+    }
     _ => fail("unexpected client error")
   } noraise {
     _ => fail("expected application-exception rejection")
   }
+}
+
+///|
+test "generated handler converts bad arguments and callback failures" {
+  let handler : @generated.UserDirectoryHandler = {
+    get_user: test_get_user,
+    list_users: test_list_users,
+  }
+  let request : @protocol.Message = {
+    name: "get_user",
+    kind: Call,
+    sequence_id: 12,
+    body: StructValue([]),
+  }
+  let invalid = handler.process(request)
+  assert_true(invalid.kind is Exception)
+  assert_eq(
+    @rpc.ApplicationException::from_thrift_value(invalid.body).type_code,
+    7,
+  )
+  let failing = handler.process({
+    ..request,
+    body: @generated.UserDirectoryGetUserArgs::{ id: -1L, }.to_thrift_value(),
+  })
+  assert_true(failing.kind is Exception)
+  assert_eq(
+    @rpc.ApplicationException::from_thrift_value(failing.body).type_code,
+    6,
+  )
 }

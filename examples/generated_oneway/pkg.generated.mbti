@@ -1,0 +1,73 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/examples/generated_oneway"
+
+import {
+  "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub struct EventsClient {
+  wire : @rpc.RpcProtocol
+  exchange : (Bytes) -> Bytes? raise @protocol.ProtocolError
+  mut next_sequence_id : Int
+}
+pub fn EventsClient::emit(Self, EventsEmitArgs) -> Unit raise @protocol.ProtocolError
+pub fn EventsClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes? raise @protocol.ProtocolError) -> Self
+pub fn EventsClient::ping(Self, EventsPingArgs) -> EventsPingResult raise @protocol.ProtocolError
+
+pub(all) struct EventsEmitArgs {
+  value : Int
+} derive(Eq, @debug.Debug)
+pub fn EventsEmitArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsEmitArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsEmitArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitArgs::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) enum EventsEmitResult {
+  Success
+} derive(Eq, @debug.Debug)
+pub fn EventsEmitResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsEmitResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsEmitResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn EventsEmitResult::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) struct EventsHandler {
+  emit : (EventsEmitArgs) -> Unit raise @protocol.ProtocolError
+  ping : (EventsPingArgs) -> EventsPingResult raise @protocol.ProtocolError
+}
+pub fn EventsHandler::process(Self, @protocol.Message) -> @protocol.Message? raise @protocol.ProtocolError
+pub fn EventsHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes? raise @protocol.ProtocolError
+
+pub(all) struct EventsPingArgs {
+  value : Int
+} derive(Eq, @debug.Debug)
+pub fn EventsPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsPingArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsPingArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsPingArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsPingArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn EventsPingArgs::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) enum EventsPingResult {
+  Success(Int)
+} derive(Eq, @debug.Debug)
+pub fn EventsPingResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsPingResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn EventsPingResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsPingResult::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn EventsPingResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn EventsPingResult::to_thrift_value(Self) -> @protocol.Value
+
+// Type aliases
+
+// Traits

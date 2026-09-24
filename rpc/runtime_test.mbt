@@ -96,7 +96,7 @@ test "client validates responses from an arbitrary byte transport" {
 }
 
 ///|
-test "oneway is deferred while exception replies preserve their envelope" {
+test "legacy processor rejects oneway while exception replies preserve envelope" {
   let request : @protocol.Message = {
     name: "ping",
     kind: Oneway,
@@ -128,4 +128,57 @@ test "oneway is deferred while exception replies preserve their envelope" {
   assert_true(reply.kind is Exception)
   assert_eq(reply.name, "ping")
   assert_eq(reply.sequence_id, 9)
+}
+
+///|
+test "optional processor sends no oneway response and requires call replies" {
+  let protocols : Array[@rpc.RpcProtocol] = [Binary, Compact]
+  for wire in protocols {
+    let request : @protocol.Message = {
+      name: "emit",
+      kind: Oneway,
+      sequence_id: 9,
+      body: StructValue([]),
+    }
+    let mut invoked = false
+    let result = @rpc.process_once_optional(wire, wire.encode(request), _ => {
+      invoked = true
+      None
+    })
+    assert_true(invoked)
+    assert_eq(result, None)
+    @rpc.send_oneway(wire, request, bytes => {
+      @rpc.process_once_optional(wire, bytes, _ => None)
+    })
+    let call = { ..request, kind: Call, }
+    try @rpc.process_once_optional(wire, wire.encode(call), _ => None) catch {
+      InvalidMessage(message) => assert_true(message.contains("did not return"))
+      _ => fail("unexpected missing-reply error")
+    } noraise {
+      _ => fail("expected missing CALL reply rejection")
+    }
+    try
+      @rpc.process_once_optional(wire, wire.encode(request), message => {
+        Some({ ..message, kind: Reply, })
+      })
+    catch {
+      InvalidMessage(message) => assert_true(message.contains("must not"))
+      _ => fail("unexpected oneway reply error")
+    } noraise {
+      _ => fail("expected ONEWAY reply rejection")
+    }
+    try @rpc.send_oneway(wire, request, _ => Some(b"unexpected")) catch {
+      InvalidMessage(message) =>
+        assert_true(message.contains("returned a reply"))
+      _ => fail("unexpected oneway transport error")
+    } noraise {
+      _ => fail("expected unsolicited reply rejection")
+    }
+    try @rpc.call_once_optional(wire, call, _ => None) catch {
+      InvalidMessage(message) => assert_true(message.contains("did not return"))
+      _ => fail("unexpected call transport error")
+    } noraise {
+      _ => fail("expected absent call reply rejection")
+    }
+  }
 }
