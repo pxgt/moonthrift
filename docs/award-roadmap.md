@@ -98,7 +98,7 @@ manually constructing the dynamic `protocol.Value` tree.
   request/reply services.
 - [x] Handle sequence IDs, declared exceptions, application exceptions, oneway
   calls, and unknown methods.
-- [ ] Add framed transport.
+- [x] Add framed transport.
 - [ ] Add a native TCP tutorial as a target-limited adapter.
 - [ ] Publish Mooncakes `0.3.0`, annotated tag, and GitHub release.
 
@@ -180,3 +180,7 @@ git diff --exit-code
   method and handler-failure envelopes, and no-response `ONEWAY` dispatch.
   Generated mixed-service facades and Apache Python wire fixtures run on all
   four backends. Inherited-service facades remain deferred.
+- 2026-09-24: Issue #22 adds a bounded big-endian framed codec and incremental
+  stream decoder. Binary/Compact frame bytes are checked against Apache Python
+  `TFramedTransport`; a framed in-memory RPC example stays portable. Socket
+  I/O is the next separate increment.

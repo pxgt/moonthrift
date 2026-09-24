@@ -23,8 +23,10 @@ schema files and resolves includes. The optional Python Git adapter reads Git
 objects into a temporary baseline; it does not implement compatibility rules.
 The `rpc` package composes the portable Binary/Compact message codecs with a
 byte-exchange callback and one-request handler. Its in-memory implementation
-still serializes requests and responses; network I/O remains outside this
-package. See [rpc-runtime.md](rpc-runtime.md) for the boundary contract.
+still serializes requests and responses. A separate bounded frame codec and
+incremental decoder prepare complete messages for a future stream adapter;
+network I/O remains outside this package. See [rpc-runtime.md](rpc-runtime.md)
+for the boundary contract.
 For non-inherited services, `codegen` also emits a typed client and handler
 facade over this byte boundary. Mixed services use an optional-response byte
 exchange: `CALL` requires a reply and `ONEWAY` forbids one. Inherited-service
