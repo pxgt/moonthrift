@@ -155,3 +155,30 @@ test "Apache Thrift Python oneway requests match both RPC codecs" {
     assert_eq(wire.encode(request), bytes)
   }
 }
+
+///|
+test "Apache Thrift Python framed messages match the portable frame codec" {
+  let fixtures : Array[(Bytes, Bytes)] = [
+    (
+      @fixtures.python_binary_framed_application_exception, @fixtures.python_binary_application_exception_message,
+    ),
+    (
+      @fixtures.python_compact_framed_application_exception, @fixtures.python_compact_application_exception_message,
+    ),
+    (
+      @fixtures.python_binary_framed_oneway, @fixtures.python_binary_oneway_message,
+    ),
+    (
+      @fixtures.python_compact_framed_oneway, @fixtures.python_compact_oneway_message,
+    ),
+  ]
+  for entry in fixtures {
+    let (framed, payload) = entry
+    assert_eq(@rpc.decode_frame(framed), payload)
+    assert_eq(@rpc.encode_frame(payload), framed)
+    let decoder = @rpc.FrameDecoder::new()
+    let split = framed.length() / 2
+    assert_eq(decoder.push(framed[:split].to_owned()), [])
+    assert_eq(decoder.push(framed[split:].to_owned()), [payload])
+  }
+}

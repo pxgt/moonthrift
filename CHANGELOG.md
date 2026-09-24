@@ -7,6 +7,9 @@ the project uses semantic versioning.
 
 ### Added
 
+- Bounded Apache Thrift framed transport with exact-frame codec and
+  incremental decoder for fragmented or coalesced streams; reference Python
+  `TFramedTransport` fixtures cover Binary and Compact RPC messages.
 - Standard Thrift application-exception encode/decode with unknown-method,
   invalid-argument, and handler-failure envelopes across Binary and Compact.
 - Generated `ONEWAY` client/handler facades with a no-response byte exchange;

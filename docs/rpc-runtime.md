@@ -22,6 +22,22 @@ offer required- and optional-response byte exchanges. `send_oneway` forbids
 a reply. `MemoryTransport` retains the original request/reply interface for
 tests and embedded applications.
 
+Framed transport is a separate layer around those byte exchanges:
+
+```text
+socket bytes -> FrameDecoder.push(chunk) -> complete frame payload
+  -> RpcProtocol.decode(payload) -> handler -> RpcProtocol.encode(reply)
+  -> encode_frame(reply) -> socket bytes
+```
+
+`encode_frame` writes a signed, big-endian 32-bit payload length;
+`decode_frame` requires exactly one complete frame. `FrameDecoder` accepts
+arbitrary stream chunks and returns zero or more complete payloads. A custom
+limit may lower, but not raise, Apache Thrift's 16,384,000-byte maximum.
+Negative and oversized lengths are rejected before body buffering. An empty
+frame is legal at the transport layer but not a valid RPC message. Framed and
+unframed streams cannot be mixed on one connection.
+
 For a non-inherited service, the generator emits a typed `ServiceClient` and a
 `ServiceHandler` record of callbacks. The client assigns sequence IDs starting
 at 1. Declared Thrift exceptions remain variants of the generated result enum.
@@ -52,13 +68,14 @@ moon run examples/rpc_demo --target native
 ```
 
 It creates a generated `UserDirectoryHandler` and `UserDirectoryClient` around
-a Compact byte exchange. Four-backend tests also cover Binary, sequential
+Compact unframed and framed in-memory byte exchanges. Four-backend tests also
+cover Binary, sequential
 client calls, declared and application exceptions, unknown methods, mixed
 CALL/ONEWAY dispatch, and invalid envelopes. Independent Apache Thrift Python
-fixtures verify EXCEPTION and ONEWAY bytes in both codecs.
+fixtures verify EXCEPTION, ONEWAY, and framed bytes in both codecs.
 
-Not yet implemented: inherited-service runtime facades, framed transport,
-TCP, async I/O, multiplexing, or a persistent server loop. No partial runtime
+Not yet implemented: inherited-service runtime facades, TCP, async I/O,
+multiplexing, or a persistent server loop. No partial runtime
 facade is emitted for inherited services. The byte-exchange callback is
 synchronous by design; target-specific async/TCP adapters belong in separate
 packages.

@@ -1,3 +1,4 @@
 import {
   "Xpeng/moonthrift/protocol",
+  "moonbitlang/core/buffer",
 }

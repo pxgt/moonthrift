@@ -3,6 +3,7 @@ package "Xpeng/moonthrift/rpc"
 
 import {
   "Xpeng/moonthrift/protocol",
+  "moonbitlang/core/buffer",
   "moonbitlang/core/debug",
 }
 
@@ -12,6 +13,12 @@ pub fn application_exception_reply(@protocol.Message, Int, String) -> @protocol.
 pub fn call_once(RpcProtocol, @protocol.Message, (Bytes) -> Bytes raise @protocol.ProtocolError) -> @protocol.Message raise @protocol.ProtocolError
 
 pub fn call_once_optional(RpcProtocol, @protocol.Message, (Bytes) -> Bytes? raise @protocol.ProtocolError) -> @protocol.Message raise @protocol.ProtocolError
+
+pub fn decode_frame(Bytes, max_frame_size? : Int) -> Bytes raise @protocol.ProtocolError
+
+pub let default_max_frame_size : Int
+
+pub fn encode_frame(Bytes, max_frame_size? : Int) -> Bytes raise @protocol.ProtocolError
 
 pub fn process_once(RpcProtocol, Bytes, (@protocol.Message) -> @protocol.Message raise @protocol.ProtocolError) -> Bytes raise @protocol.ProtocolError
 
@@ -30,6 +37,17 @@ pub(all) struct ApplicationException {
 } derive(Eq, @debug.Debug)
 pub fn ApplicationException::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn ApplicationException::to_thrift_value(Self) -> @protocol.Value
+
+pub struct FrameDecoder {
+  max_frame_size : Int
+  header : Array[Byte]
+  mut body : @buffer.Buffer
+  mut expected : Int
+  mut received : Int
+}
+pub fn FrameDecoder::has_pending(Self) -> Bool
+pub fn FrameDecoder::new(max_frame_size? : Int) -> Self raise @protocol.ProtocolError
+pub fn FrameDecoder::push(Self, Bytes) -> Array[Bytes] raise @protocol.ProtocolError
 
 pub struct MemoryTransport {
   wire : RpcProtocol

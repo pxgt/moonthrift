@@ -45,8 +45,21 @@ def encode(factory: ProtocolFactory, writer: Callable[[object], None]) -> bytes:
     return transport.getvalue()
 
 
+def encode_framed(factory: ProtocolFactory, writer: Callable[[object], None]) -> bytes:
+    transport = TTransport.TMemoryBuffer()
+    framed = TTransport.TFramedTransport(transport)
+    writer(factory.build(framed))
+    framed.flush()
+    return transport.getvalue()
+
+
 def protocol_for(factory: ProtocolFactory, payload: bytes):
     return factory.build(TTransport.TMemoryBuffer(payload))
+
+
+def protocol_for_framed(factory: ProtocolFactory, payload: bytes):
+    transport = TTransport.TFramedTransport(TTransport.TMemoryBuffer(payload))
+    return factory.build(transport)
 
 
 def write_user(proto, *, unknown: bool = False) -> None:
@@ -277,6 +290,12 @@ def build_fixtures() -> dict[str, bytes]:
         fixtures[f"python_{factory.name}_oneway_message"] = encode(
             factory, write_oneway_message
         )
+        fixtures[f"python_{factory.name}_framed_application_exception"] = (
+            encode_framed(factory, write_application_exception_message)
+        )
+        fixtures[f"python_{factory.name}_framed_oneway"] = encode_framed(
+            factory, write_oneway_message
+        )
     return fixtures
 
 
@@ -307,6 +326,14 @@ def validate_with_python(fixtures: dict[str, bytes]) -> None:
         ) == ("missing", 41, TApplicationException.UNKNOWN_METHOD, "unknown method missing")
         assert read_oneway_message(
             protocol_for(factory, fixtures[f"{prefix}_oneway_message"])
+        ) == ("emit", 7, 9)
+        assert read_application_exception_message(
+            protocol_for_framed(
+                factory, fixtures[f"{prefix}_framed_application_exception"]
+            )
+        ) == ("missing", 41, TApplicationException.UNKNOWN_METHOD, "unknown method missing")
+        assert read_oneway_message(
+            protocol_for_framed(factory, fixtures[f"{prefix}_framed_oneway"])
         ) == ("emit", 7, 9)
 
 

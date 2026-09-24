@@ -62,10 +62,11 @@ PR CI also compares `examples/` with the PR base commit. See
 The RPC tests run on all stable backends. They cover Binary and Compact
 in-memory exchanges, generated service success and declared-exception models,
 CALL/ONEWAY kind validation, method and sequence-ID matching, application
-exception type codes, unknown-method envelopes, and a native demo that prints
-`get_user(7) -> Ada`. Apache Python fixtures independently cover both new RPC
-wire paths. See `docs/rpc-runtime.md` for the current boundary and deferred
-features.
+exception type codes, unknown-method envelopes, bounded frame lengths,
+fragmented/coalesced frame decoding, and a native demo that prints
+`get_user(7) -> Ada` and `framed get_user(7) -> Ada`. Apache Python fixtures
+independently cover RPC envelopes and framed bytes. See `docs/rpc-runtime.md`
+for the current boundary and deferred features.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,
