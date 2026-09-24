@@ -99,7 +99,7 @@ manually constructing the dynamic `protocol.Value` tree.
 - [x] Handle sequence IDs, declared exceptions, application exceptions, oneway
   calls, and unknown methods.
 - [x] Add framed transport.
-- [ ] Add a native TCP tutorial as a target-limited adapter.
+- [x] Add a native TCP tutorial as a target-limited adapter.
 - [ ] Publish Mooncakes `0.3.0`, annotated tag, and GitHub release.
 
 ## Phase 6 — hardening and presentation
@@ -184,3 +184,7 @@ git diff --exit-code
   stream decoder. Binary/Compact frame bytes are checked against Apache Python
   `TFramedTransport`; a framed in-memory RPC example stays portable. Socket
   I/O is the next separate increment.
+- 2026-09-24: Issue #24 adds a native-only, loopback TCP tutorial. It uses
+  the portable framed decoder and generated service models with the official
+  async socket runtime. Binary and Compact are exercised with fragmented
+  writes and two sequential calls; the core RPC package stays portable.

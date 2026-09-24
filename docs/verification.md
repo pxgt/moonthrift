@@ -32,6 +32,8 @@ python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
 python tools/test_compat_cli.py
 moon run examples/rpc_demo --target native
+moon test examples/tcp_demo --target native --deny-warn --warn-list +73-79
+moon run examples/tcp_demo --target native
 ```
 
 Warning 079 is temporarily kept non-fatal with `-79` while the explicit
@@ -68,8 +70,15 @@ fragmented/coalesced frame decoding, and a native demo that prints
 independently cover RPC envelopes and framed bytes. See `docs/rpc-runtime.md`
 for the current boundary and deferred features.
 
+The separate TCP tutorial uses an ephemeral loopback listener and runs both
+wire protocols with two sequential calls each. CI runs it on Ubuntu. The
+official async dependency currently requires MSVC for Windows native builds;
+the MinGW compiler alone cannot build its C runtime. Windows contributors can
+use an MSVC environment or run the native check in Linux/WSL.
+
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,
 nested containers, defensive limits, malformed protocol data, RPC envelopes,
 code generation, and use of generated declarations. All portable packages run
-on wasm, wasm-gc, JavaScript, and native; only the filesystem CLI is native.
+on wasm, wasm-gc, JavaScript, and native; the filesystem CLI and TCP tutorial
+are native-only.

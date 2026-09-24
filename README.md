@@ -192,3 +192,7 @@ Thrift 公开规范，没有复制上游源码；来源和许可证说明见
 
 参与方式见 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按
 [SECURITY.md](SECURITY.md) 私下报告。本项目采用 [Apache-2.0](LICENSE) 许可证。
+
+开发中的 native TCP 回环教程可运行
+moon run examples/tcp_demo --target native。它使用随机本地端口演示
+Binary/Compact 分帧 RPC，并位于独立的 native 包，不影响核心库的四后端兼容性。

@@ -74,8 +74,21 @@ client calls, declared and application exceptions, unknown methods, mixed
 CALL/ONEWAY dispatch, and invalid envelopes. Independent Apache Thrift Python
 fixtures verify EXCEPTION, ONEWAY, and framed bytes in both codecs.
 
-Not yet implemented: inherited-service runtime facades, TCP, async I/O,
-multiplexing, or a persistent server loop. No partial runtime
+The native TCP tutorial in examples/tcp_demo uses the official
+moonbitlang/async@0.22.0 socket API. Run it with
+moon run examples/tcp_demo --target native. It binds 127.0.0.1:0 (an
+ephemeral loopback port), makes two sequential calls over separate connections,
+and exercises Binary and Compact. Each frame is split across writes and read
+through FrameDecoder in small chunks, so it never assumes a TCP read equals
+one message. A 4 KiB frame limit bounds buffering. The generated argument,
+result, and handler types are reused; the async client explicitly constructs
+its message because the generated synchronous callback cannot invoke async I/O.
+This is a tutorial, not a production server: it handles one request per
+connection, without TLS, timeouts, authentication, pooling, or concurrent
+dispatch. The rpc package itself has no async dependency and remains portable.
+
+Not yet implemented: inherited-service runtime facades, a reusable async
+TCP client/server API, multiplexing, or a persistent server loop. No partial runtime
 facade is emitted for inherited services. The byte-exchange callback is
 synchronous by design; target-specific async/TCP adapters belong in separate
 packages.
