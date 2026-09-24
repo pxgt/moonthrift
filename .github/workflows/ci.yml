@@ -50,6 +50,9 @@ jobs:
       - name: Run in-memory RPC tutorial
         run: moon run examples/rpc_demo --target native --warn-list +73-79
 
+      - name: Run native TCP RPC tutorial
+        run: moon run examples/tcp_demo --target native --warn-list +73-79
+
       - name: Run CLI examples
         run: |
           moon run cmd/main --target native

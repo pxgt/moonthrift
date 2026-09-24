@@ -7,6 +7,8 @@ the project uses semantic versioning.
 
 ### Added
 
+- A native-only framed TCP RPC tutorial and loopback integration test using
+  generated service models, Binary/Compact protocols, and incremental framing.
 - Bounded Apache Thrift framed transport with exact-frame codec and
   incremental decoder for fragmented or coalesced streams; reference Python
   `TFramedTransport` fixtures cover Binary and Compact RPC messages.
