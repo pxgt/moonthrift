@@ -62,6 +62,9 @@ in-memory exchanges, generated service success and declared-exception models,
 request/reply kind validation, method and sequence-ID matching, and a native
 demo that prints `get_user(7) -> Ada`. See `docs/rpc-runtime.md` for the
 current supported boundary and deferred features.
+The generated facade tests additionally exercise sequential typed client
+calls, typed handler dispatch, unknown-method rejection, and explicit handling
+of application-exception envelopes.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,

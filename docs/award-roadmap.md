@@ -94,7 +94,8 @@ manually constructing the dynamic `protocol.Value` tree.
 - [x] Define protocol/transport boundaries without coupling the portable core
   to one I/O runtime.
 - [x] Implement an in-memory transport and request/response processor.
-- [ ] Generate typed client, handler, and processor interfaces.
+- [x] Generate typed client, handler, and processor interfaces for ordinary
+  request/reply services.
 - [ ] Handle sequence IDs, declared exceptions, application exceptions, oneway
   calls, and unknown methods.
 - [ ] Add framed transport.
@@ -172,3 +173,7 @@ git diff --exit-code
   single-request processor, and synchronous memory transport now exercise
   generated service models under Binary and Compact; typed generated facades,
   application exceptions, oneway, framing, and TCP remain ahead.
+- 2026-09-24: Issue #18 adds generated typed clients, handler callbacks, and
+  method dispatch for request/reply services. The generated code is compiled
+  and exercised against both wire protocols; inheritance and oneway facades
+  remain intentionally withheld.

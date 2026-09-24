@@ -7,6 +7,11 @@ the project uses semantic versioning.
 
 ### Added
 
+- Generated typed request/reply clients and handler/processor facades for
+  services without inheritance or oneway methods.
+- Client-side sequence IDs, method dispatch, declared-result decoding, and
+  explicit rejection of unknown methods and unsupported application-exception
+  envelopes.
 - A portable one-request RPC processor, byte-exchange client boundary, and
   synchronous in-memory transport for Binary and Compact messages.
 - Generated service-model RPC round-trip tests and a runnable memory demo.
