@@ -4,9 +4,15 @@
   ONEWAY, and bounded framed transport covered on all four stable backends
 - [x] Native-only TCP loopback tutorial tested with Binary and Compact
 - [x] Apache Thrift Python wire interoperability and main CI green
-- [ ] Release-preparation PR merged and release commit CI green
-- [ ] Mooncakes 0.3.0 published under Xpeng with successful build
-- [ ] Annotated v0.3.0 tag and GitHub Release created
+- [x] Release-preparation PR merged and release commit CI green
+- [x] Mooncakes 0.3.0 published under Xpeng with successful build
+- [x] Fresh consumer installed 0.3.0 and called a public API
+- [x] Annotated v0.3.0 tag and GitHub Release created
+
+Release evidence: [PR #27](https://github.com/pxgt/moonthrift/pull/27),
+[main CI](https://github.com/pxgt/moonthrift/actions/runs/36088294413),
+[Mooncakes 0.3.0](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.0),
+and [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0).
 
 ## 0.2.0 release record
 

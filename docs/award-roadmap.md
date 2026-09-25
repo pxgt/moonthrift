@@ -24,10 +24,10 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 ## Current status
 
-- Current release: `0.2.0`
+- Current release: `0.3.0`
 - Current development branch: `main`
-- Completed milestone: Phase 4 — compatibility CI ([Issue #14](https://github.com/pxgt/moonthrift/issues/14), [PR #15](https://github.com/pxgt/moonthrift/pull/15))
-- Active milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #16](https://github.com/pxgt/moonthrift/issues/16))
+- Completed milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #26](https://github.com/pxgt/moonthrift/issues/26), [release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0))
+- Next milestone: Phase 6 — hardening and presentation
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -100,7 +100,7 @@ manually constructing the dynamic `protocol.Value` tree.
   calls, and unknown methods.
 - [x] Add framed transport.
 - [x] Add a native TCP tutorial as a target-limited adapter.
-- [ ] Publish Mooncakes `0.3.0`, annotated tag, and GitHub release.
+- [x] Publish Mooncakes `0.3.0`, annotated tag, and GitHub release.
 
 ## Phase 6 — hardening and presentation
 
@@ -192,3 +192,10 @@ git diff --exit-code
   documentation, the registry publication, tag, and GitHub Release are
   tracked separately so the published artifact can be verified before
   marking Phase 5 complete.
+- 2026-09-25: PR #27 passed both CI jobs and was merged. Main CI
+  https://github.com/pxgt/moonthrift/actions/runs/36088294413 passed all
+  stable backends, examples, package, and Apache Python interoperability.
+  Xpeng/moonthrift 0.3.0 was published on Mooncakes with a successful build;
+  a fresh consumer project installed it and called its public API. Annotated
+  tag v0.3.0 and the GitHub Release point to the publication source commit.
+  Phase 5 is complete; Phase 6 is next.
