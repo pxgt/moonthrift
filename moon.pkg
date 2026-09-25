@@ -1,3 +1,7 @@
 import {
   "moonbitlang/core/string" @str,
 }
+
+import {
+  "moonbitlang/core/bench",
+} for "test"

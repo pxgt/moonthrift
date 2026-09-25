@@ -19,6 +19,7 @@ git diff --exit-code
 moon check --target all --deny-warn --warn-list +73-79
 moon build --target all
 moon test --target all --deny-warn --warn-list +73-79
+moon bench --build-only --target all --release --deny-warn --warn-list +73-79
 moon run cmd/main --target native
 moon run cmd/main --target native -- check examples/tutorial.thrift
 moon run cmd/main --target native -- inspect examples/tutorial.thrift
@@ -75,6 +76,11 @@ wire protocols with two sequential calls each. CI runs it on Ubuntu. The
 official async dependency currently requires MSVC for Windows native builds;
 the MinGW compiler alone cannot build its C runtime. Windows contributors can
 use an MSVC environment or run the native check in Linux/WSL.
+
+The release-mode parser and Binary/Compact benchmarks are compiled in the
+verification gate above. To run the calibrated measurements and compare them
+with the recorded machine-specific baseline, see
+[benchmarks.md](benchmarks.md). Benchmarks are not a pass/fail performance gate.
 
 The tests cover lexer locations and failures, every principal IDL declaration,
 semantic diagnostics, schema evolution, known binary/compact byte fixtures,
