@@ -98,3 +98,30 @@ On the 2026-09-20 stable toolchain, the initial Phase 6 baseline was
 1859/2366 (78.57%). Focused protocol and generator tests raised it to
 2059/2366 (87.02%). The CI gate runs this check after the normal four-backend
 tests, so a later drop below 85% fails the PR.
+
+## Deterministic fuzz and property corpus
+
+`protocol/fuzz_test.mbt` uses fixed seeds `0x4d544852` and
+`0x46555a5a`. It generates 512 bounded nested values and checks Binary
+and Compact round trips and stable encoding. It also truncates a valid RPC
+envelope at every byte boundary and feeds 1024 arbitrary byte strings (up to
+64 bytes) to both decoders with depth 4, container size 8, and binary size 32
+limits. A byte string may be valid; if so, its decoded value must re-encode to
+a stable canonical representation. Both accepted and rejected paths are
+required. The Compact wire format omits key/value type IDs for an empty map,
+so generated empty maps use `Stop/Stop` for equality after decoding.
+
+`idl_fuzz_test.mbt` uses fixed seed `0x49444c46` to delete, replace,
+or insert a character in 768 valid IDL templates. Each mutation must produce
+a schema or a typed `IdlError`; successful parses must be deterministic
+and safe to pass through semantic checking. Both outcomes are required.
+These tests are reproducible regression corpora, not a claim of exhaustive
+coverage or a replacement for a coverage-guided fuzzer. With these corpora,
+the same core-package coverage check reports 2102/2366 lines (88.84%).
+
+Run the focused corpora with:
+
+```sh
+moon test protocol/fuzz_test.mbt --target all --deny-warn --warn-list +73-79
+moon test idl_fuzz_test.mbt --target all --deny-warn --warn-list +73-79
+```
