@@ -1,0 +1,6 @@
+import {
+  "Xpeng/moonthrift",
+  "Xpeng/moonthrift/protocol",
+}
+
+pkgtype(kind: "executable")

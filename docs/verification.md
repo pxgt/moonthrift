@@ -33,6 +33,11 @@ python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
 python tools/test_compat_cli.py
 moon run examples/rpc_demo --target native
+moon run examples/directory_demo --target wasm-gc
+moon test examples/directory_demo --target all --deny-warn --warn-list +73-79
+moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73-79
+moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
+moon -C examples/mooncakes_consumer run . --target wasm-gc
 moon test examples/tcp_demo --target native --deny-warn --warn-list +73-79
 moon run examples/tcp_demo --target native
 ```
@@ -76,6 +81,12 @@ wire protocols with two sequential calls each. CI runs it on Ubuntu. The
 official async dependency currently requires MSVC for Windows native builds;
 the MinGW compiler alone cannot build its C runtime. Windows contributors can
 use an MSVC environment or run the native check in Linux/WSL.
+
+The [multi-file service tutorial](multifile-service-tutorial.md) links a
+shared IDL type into a generated service model and exercises Binary/Compact
+clients, handlers, framing, and application-error behavior. Its separate
+consumer module resolves the published Mooncakes 0.3.0 package instead of
+the checkout's source; CI checks both paths.
 
 The release-mode parser and Binary/Compact benchmarks are compiled in the
 verification gate above. To run the calibrated measurements and compare them

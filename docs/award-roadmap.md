@@ -107,7 +107,7 @@ manually constructing the dynamic `protocol.Value` tree.
 - [x] Reach at least 85% measurable coverage in core packages.
 - [x] Add randomized round-trip/property tests and malformed-input fuzz cases.
 - [x] Publish parser and protocol benchmarks.
-- [ ] Provide a complete multi-file service tutorial and an independent
+- [x] Provide a complete multi-file service tutorial and an independent
   Mooncakes consumer project.
 - [ ] Maintain API documentation, architecture decisions, changelog, Issues,
   PRs, CI evidence, and reproducible release records.
@@ -217,3 +217,8 @@ git diff --exit-code
   and a documented wasm-gc baseline. The new files are test-only and make no
   public API change. The remaining Phase 6 tutorial, consumer, and presentation
   work stays open.
+- 2026-09-25: Issue #35 adds a linked multi-file service with generated
+  client/handler, Binary/Compact memory and framed exchanges, and a
+  negative-path RPC test. A nested but separately resolved MoonBit module
+  pins the published Mooncakes 0.3.0 package and checks its public parser and
+  codecs. CI regenerates the model and verifies both modules.

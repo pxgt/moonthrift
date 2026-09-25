@@ -1,0 +1,7 @@
+import {
+  "Xpeng/moonthrift/examples/generated_directory" @directory,
+  "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
+}
+
+pkgtype(kind: "executable")
