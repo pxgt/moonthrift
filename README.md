@@ -169,6 +169,9 @@ RPC 的协议/传输边界和当前未实现范围见
 [docs/rpc-runtime.md](docs/rpc-runtime.md)。
 解析器和 Binary/Compact 编解码的可复现性能基准见
 [docs/benchmarks.md](docs/benchmarks.md)。
+跨文件 Thrift 服务从生成代码到 RPC 往返的步骤，以及从 Mooncakes
+安装已发布包的独立消费工程，见
+[docs/multifile-service-tutorial.md](docs/multifile-service-tutorial.md)。
 
 ## 当前边界
 

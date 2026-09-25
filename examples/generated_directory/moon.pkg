@@ -1,0 +1,4 @@
+import {
+  "Xpeng/moonthrift/protocol",
+  "Xpeng/moonthrift/rpc",
+}

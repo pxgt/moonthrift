@@ -56,6 +56,17 @@ jobs:
       - name: Run in-memory RPC tutorial
         run: moon run examples/rpc_demo --target native --warn-list +73-79
 
+      - name: Run multi-file service tutorial
+        run: moon run examples/directory_demo --target wasm-gc --warn-list +73-79
+
+      - name: Check published Mooncakes package in independent module
+        run: |
+          moon -C examples/mooncakes_consumer fmt --check
+          moon -C examples/mooncakes_consumer info --target all
+          moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73-79
+          moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
+          moon -C examples/mooncakes_consumer run . --target wasm-gc --warn-list +73-79
+
       - name: Run native TCP RPC tutorial
         run: moon run examples/tcp_demo --target native --warn-list +73-79
 
@@ -84,10 +95,12 @@ jobs:
         run: |
           moon run cmd/main --target native -- generate examples/tutorial.thrift /tmp/tutorial.generated.mbtx
           moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
+          moon run cmd/main --target native -- generate examples/multifile/directory.thrift /tmp/directory.generated.mbtx
           moon run cmd/main --target native -- generate examples/oneway.thrift /tmp/oneway.generated.mbtx
-          moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/oneway.generated.mbtx
+          moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/directory.generated.mbtx /tmp/oneway.generated.mbtx
           cmp examples/generated/model.mbt /tmp/tutorial.generated.mbtx
           cmp examples/generated_workspace/model.mbt /tmp/multifile.generated.mbtx
+          cmp examples/generated_directory/model.mbt /tmp/directory.generated.mbtx
           cmp examples/generated_oneway/model.mbt /tmp/oneway.generated.mbtx
 
       - name: Verify package artifact
