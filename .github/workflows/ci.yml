@@ -47,6 +47,9 @@ jobs:
       - name: Test every stable backend
         run: moon test --target all --deny-warn --warn-list +73-79
 
+      - name: Enforce core line-coverage floor
+        run: python tools/check_core_coverage.py --minimum 85
+
       - name: Run in-memory RPC tutorial
         run: moon run examples/rpc_demo --target native --warn-list +73-79
 

@@ -82,3 +82,19 @@ nested containers, defensive limits, malformed protocol data, RPC envelopes,
 code generation, and use of generated declarations. All portable packages run
 on wasm, wasm-gc, JavaScript, and native; the filesystem CLI and TCP tutorial
 are native-only.
+
+## Core coverage
+
+Run `python tools/check_core_coverage.py --minimum 85` from the repository
+root. The script runs fresh instrumented MoonBit tests, then reads the
+`moon coverage report -f summary -p <package>` totals for the root IDL,
+`protocol`, `codegen`, and `rpc` packages. It combines covered and measurable
+lines before comparing with the 85% floor; it does not average package
+percentages. Generated examples, demos, CLI adapters, and interoperability
+fixtures are outside this **core-package** denominator but remain in the
+regular four-backend test gate.
+
+On the 2026-09-20 stable toolchain, the initial Phase 6 baseline was
+1859/2366 (78.57%). Focused protocol and generator tests raised it to
+2059/2366 (87.02%). The CI gate runs this check after the normal four-backend
+tests, so a later drop below 85% fails the PR.
