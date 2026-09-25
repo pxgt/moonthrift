@@ -1,4 +1,14 @@
-# 0.2.0 release checklist
+# 0.3.0 release checklist
+
+- [x] Portable RPC processor, typed service facades, application exceptions,
+  ONEWAY, and bounded framed transport covered on all four stable backends
+- [x] Native-only TCP loopback tutorial tested with Binary and Compact
+- [x] Apache Thrift Python wire interoperability and main CI green
+- [ ] Release-preparation PR merged and release commit CI green
+- [ ] Mooncakes 0.3.0 published under Xpeng with successful build
+- [ ] Annotated v0.3.0 tag and GitHub Release created
+
+## 0.2.0 release record
 
 - [x] Apache Thrift Python 0.24.0 reference runtime pinned
 - [x] Binary and Compact fixtures reproducibly generated and Python-decoded

@@ -24,8 +24,9 @@ objects into a temporary baseline; it does not implement compatibility rules.
 The `rpc` package composes the portable Binary/Compact message codecs with a
 byte-exchange callback and one-request handler. Its in-memory implementation
 still serializes requests and responses. A separate bounded frame codec and
-incremental decoder prepare complete messages for a future stream adapter;
-network I/O remains outside this package. See [rpc-runtime.md](rpc-runtime.md)
+incremental decoder prepare complete messages for a stream adapter; the
+native-only TCP tutorial is one example. Network I/O remains outside the
+portable package. See [rpc-runtime.md](rpc-runtime.md)
 for the boundary contract.
 For non-inherited services, `codegen` also emits a typed client and handler
 facade over this byte boundary. Mixed services use an optional-response byte
@@ -34,12 +35,12 @@ facades still need method flattening and are not emitted.
 
 ## Functional boundary
 
-Version 0.2.0 targets the reusable compiler and serialization substrate,
-including multi-file linking, generated typed codecs, and independently
-verified Binary/Compact wire interoperability. It does not implement a socket
-transport, server loop, service dispatch runtime, TLS, multiplexing, or every
-language-specific annotation used by upstream Thrift generators. Those
-features require runtime policy choices and are kept outside the portable core.
+Version 0.3.0 adds portable RPC message dispatch, generated service facades,
+framed transport, and a native-only loopback TCP tutorial to the earlier
+compiler and serialization substrate. It does not provide a reusable socket
+transport API, long-running server loop, TLS, multiplexing, inherited-service
+runtime facade, or every language-specific annotation used by upstream Thrift
+generators. These require further runtime policy choices.
 
 ## Maintenance value
 
