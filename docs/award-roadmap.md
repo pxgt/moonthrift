@@ -31,7 +31,7 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
-- Last updated: 2026-09-23
+- Last updated: 2026-09-25
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -188,3 +188,7 @@ git diff --exit-code
   the portable framed decoder and generated service models with the official
   async socket runtime. Binary and Compact are exercised with fragmented
   writes and two sequential calls; the core RPC package stays portable.
+- 2026-09-25: Issue #26 starts the 0.3.0 release. Version metadata,
+  documentation, the registry publication, tag, and GitHub Release are
+  tracked separately so the published artifact can be verified before
+  marking Phase 5 complete.

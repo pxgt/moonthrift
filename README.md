@@ -10,7 +10,7 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 
 项目当前聚焦与网络框架无关的核心能力，不绑定某一种 HTTP、Socket 或异步
 运行时，因此库和测试可在 MoonBit 的 wasm、wasm-gc、JavaScript、native 四个
-稳定后端运行；文件读写只放在 native CLI 中。
+稳定后端运行；文件和网络 I/O 只放在 native 限定的适配层或示例中。
 
 ## 已实现功能
 
@@ -36,8 +36,7 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - backward、forward、full 兼容性策略，以及稳定 JSON、Markdown、GitHub
   annotations 报告；支持规则抑制、目录和 Git 提交基线。
 - 可移植的单次 RPC 请求/响应处理和内存字节传输，支持 Binary/Compact；
-  类型化客户端/处理器、无响应 `ONEWAY`、应用异常和有长度上限的分帧传输；目前作为
-  `0.3.0` 开发中的基础能力。
+  类型化客户端/处理器、无响应 `ONEWAY`、应用异常和有长度上限的分帧传输；
 - 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
   限定类型与跨文件 service 继承检查；
 
@@ -171,17 +170,11 @@ RPC 的协议/传输边界和当前未实现范围见
 
 ## 当前边界
 
-`0.2.0` 不包含 socket transport、服务端调度、TLS、连接池以及其他语言生成器。
-这些能力依赖具体运行时策略，后续可以作为独立包建立在当前 AST、生成器和 codec
-之上。开发分支已经提供调用方驱动的多文件加载、链接和单文件生成；生成器会给
-included Schema 的声明添加稳定路径前缀，避免与入口文件中的类型重名，并为
-生成模型提供 Binary/Compact 类型安全 codec，并保留 IDL 文档注释。当前版本已
-完成 Python 参考实现的跨语言互操作矩阵；socket transport、服务调度和其他语言
-参考实现仍属于后续里程碑。
-
-开发中的 Phase 5 已加入可移植的单次 RPC 处理、内存传输、类型化
-客户端/处理器、应用异常编解码、无响应的 `ONEWAY` 调用与可增量解码的
-分帧传输，但尚未发布为新版 Mooncakes 包；继承服务运行时和网络传输仍在后续计划中。
+`0.3.0` 已提供可移植的单次 RPC 处理、内存传输、类型化客户端与
+处理器、应用异常、无响应的 `ONEWAY` 调用和可增量解码的分帧传输。
+native TCP 回环示例展示如何把这些能力接到真实连接上，但它仅处理每个连接的一次
+请求，不是可复用的异步网络框架。继承服务运行时、长期运行的并发服务端、TLS、
+连接池、多路复用和其他语言生成器仍在范围之外。
 
 ## 质量与开源说明
 
@@ -193,6 +186,6 @@ Thrift 公开规范，没有复制上游源码；来源和许可证说明见
 参与方式见 [CONTRIBUTING.md](CONTRIBUTING.md)，安全问题请按
 [SECURITY.md](SECURITY.md) 私下报告。本项目采用 [Apache-2.0](LICENSE) 许可证。
 
-开发中的 native TCP 回环教程可运行
-moon run examples/tcp_demo --target native。它使用随机本地端口演示
+native TCP 回环教程可运行
+`moon run examples/tcp_demo --target native`。它使用随机本地端口演示
 Binary/Compact 分帧 RPC，并位于独立的 native 包，不影响核心库的四后端兼容性。

@@ -1,6 +1,6 @@
 # Verification
 
-The `0.2.0` release and subsequent development are verified with the
+The `0.3.0` release is verified with the
 2026-09-20 stable MoonBit toolchain:
 
 ```text
