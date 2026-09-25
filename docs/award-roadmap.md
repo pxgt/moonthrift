@@ -105,7 +105,7 @@ manually constructing the dynamic `protocol.Value` tree.
 ## Phase 6 — hardening and presentation
 
 - [x] Reach at least 85% measurable coverage in core packages.
-- [ ] Add randomized round-trip/property tests and malformed-input fuzz cases.
+- [x] Add randomized round-trip/property tests and malformed-input fuzz cases.
 - [ ] Publish parser and protocol benchmarks.
 - [ ] Provide a complete multi-file service tutorial and an independent
   Mooncakes consumer project.
@@ -205,3 +205,10 @@ git diff --exit-code
   schema tests raised the same denominator to 2059/2366 (87.02%).
   `tools/check_core_coverage.py` now enforces the 85% floor in CI; the
   remaining Phase 6 hardening and presentation items are still open.
+- 2026-09-25: Issue #31 adds fixed-seed, bounded property tests: 512 generated
+  values round-trip through Binary and Compact, every proper prefix of a valid
+  RPC envelope is rejected, 1024 arbitrary byte strings exercise both decoders
+  under tight limits, and 768 mutated IDL documents exercise parsing and
+  semantic checking. Accepted wire inputs must canonicalize stably; rejected
+  inputs must return typed errors without a panic. Core line coverage rose to
+  2102/2366 (88.84%), and no public API changed.
