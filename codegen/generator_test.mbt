@@ -97,3 +97,80 @@ test "generated client escapes a reserved method identifier" {
   assert_true(generated.content.contains("method_ : (ApiMethodArgs)"))
   assert_true(generated.content.contains("name: \"method\""))
 }
+
+///|
+test "generator covers scalar and container codec branches" {
+  assert_eq(@codegen.render_type(Base(Bool)), "Bool")
+  assert_eq(@codegen.render_type(Base(Double)), "Double")
+  assert_eq(@codegen.render_type(Base(Binary)), "Bytes")
+  assert_eq(@codegen.render_type(Base(Void)), "Unit")
+  let idl =
+    #|const bool enabled = true
+    #|const double ratio = 1.5
+    #|/// A composite record.
+    #|///
+    #|/// Its fields exercise every container codec.
+    #|struct Payload {
+    #|  /// Signed flag.
+    #|  1: required bool flag
+    #|  2: required double fraction
+    #|  3: required binary raw
+    #|  4: required uuid identifier
+    #|  5: required list<i16> numbers
+    #|  6: required set<byte> bytes
+    #|  7: required map<string, i32> scores
+    #|}
+    #|
+  let generated = @codegen.generate_moonbit(@moonthrift.parse_idl(idl))
+  assert_true(generated.content.contains("pub let enabled : Bool = true"))
+  assert_true(generated.content.contains("pub let ratio : Double = 1.5"))
+  assert_true(generated.content.contains("/// A composite record.\n///\n"))
+  assert_true(generated.content.contains("  /// Signed flag."))
+  assert_true(generated.content.contains("flag : Bool"))
+  assert_true(generated.content.contains("fraction : Double"))
+  assert_true(generated.content.contains("raw : Bytes"))
+  assert_true(generated.content.contains("numbers : Array[Int]"))
+  assert_true(generated.content.contains("bytes : Array[Byte]"))
+  assert_true(generated.content.contains("scores : Map[String, Int]"))
+  assert_true(generated.content.contains(".require_map("))
+  assert_true(generated.content.contains(".require_set("))
+  assert_true(generated.content.contains(".require_list("))
+}
+
+///|
+test "workspace generator rewrites included declaration kinds and containers" {
+  let sources : Map[String, String] = {
+    "app/api.thrift": (
+      #|include "./types.thrift"
+      #|const types.Kind default_kind = types.Kind.ONE
+      #|struct Request {
+      #|  1: required list<types.Item> items
+      #|  2: optional map<string, types.Kind> kinds
+      #|}
+      #|service Api extends types.Base { types.Item fetch(1: types.Kind kind) }
+      #|
+    ),
+    "app/types.thrift": (
+      #|const i32 limit = 3
+      #|enum Kind { ONE = 1 }
+      #|struct Item { 1: required i32 id }
+      #|union Choice { 1: Item item }
+      #|exception Fault { 1: string message }
+      #|service Base { void ping() }
+      #|
+    ),
+  }
+  let (workspace, diagnostics) = @moonthrift.compile_workspace(
+    "app/api.thrift",
+    path => sources.get(path),
+  )
+  assert_eq(diagnostics, [])
+  let generated = @codegen.generate_workspace(workspace)
+  assert_true(generated.content.contains("pub let app_types_limit"))
+  assert_true(generated.content.contains("pub(all) enum AppTypesKind"))
+  assert_true(generated.content.contains("pub(all) struct AppTypesItem"))
+  assert_true(generated.content.contains("pub(all) enum AppTypesChoice"))
+  assert_true(generated.content.contains("pub(all) struct AppTypesFault"))
+  assert_true(generated.content.contains("Array[AppTypesItem]"))
+  assert_true(generated.content.contains("Map[String, AppTypesKind]"))
+}

@@ -104,7 +104,7 @@ manually constructing the dynamic `protocol.Value` tree.
 
 ## Phase 6 — hardening and presentation
 
-- [ ] Reach at least 85% measurable coverage in core packages.
+- [x] Reach at least 85% measurable coverage in core packages.
 - [ ] Add randomized round-trip/property tests and malformed-input fuzz cases.
 - [ ] Publish parser and protocol benchmarks.
 - [ ] Provide a complete multi-file service tutorial and an independent
@@ -199,3 +199,9 @@ git diff --exit-code
   a fresh consumer project installed it and called its public API. Annotated
   tag v0.3.0 and the GitHub Release point to the publication source commit.
   Phase 5 is complete; Phase 6 is next.
+- 2026-09-25: Phase 6 coverage work began in Issue #29. A fresh instrumented
+  run measured 1859/2366 lines (78.57%) across the root IDL, protocol,
+  codegen, and RPC packages. Focused protocol malformed-input and generator
+  schema tests raised the same denominator to 2059/2366 (87.02%).
+  `tools/check_core_coverage.py` now enforces the 85% floor in CI; the
+  remaining Phase 6 hardening and presentation items are still open.
