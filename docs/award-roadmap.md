@@ -106,7 +106,7 @@ manually constructing the dynamic `protocol.Value` tree.
 
 - [x] Reach at least 85% measurable coverage in core packages.
 - [x] Add randomized round-trip/property tests and malformed-input fuzz cases.
-- [ ] Publish parser and protocol benchmarks.
+- [x] Publish parser and protocol benchmarks.
 - [ ] Provide a complete multi-file service tutorial and an independent
   Mooncakes consumer project.
 - [ ] Maintain API documentation, architecture decisions, changelog, Issues,
@@ -212,3 +212,8 @@ git diff --exit-code
   semantic checking. Accepted wire inputs must canonicalize stably; rejected
   inputs must return typed errors without a panic. Core line coverage rose to
   2102/2366 (88.84%), and no public API changed.
+- 2026-09-25: Issue #33 adds release-mode parser and Binary/Compact protocol
+  benchmarks with correctness prechecks, fixed workloads, repeatable commands,
+  and a documented wasm-gc baseline. The new files are test-only and make no
+  public API change. The remaining Phase 6 tutorial, consumer, and presentation
+  work stays open.

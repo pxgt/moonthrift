@@ -167,6 +167,8 @@ Schema 版本策略、规则抑制和可复制的 CI 工作流见
 [docs/compatibility-ci.md](docs/compatibility-ci.md)。
 RPC 的协议/传输边界和当前未实现范围见
 [docs/rpc-runtime.md](docs/rpc-runtime.md)。
+解析器和 Binary/Compact 编解码的可复现性能基准见
+[docs/benchmarks.md](docs/benchmarks.md)。
 
 ## 当前边界
 
