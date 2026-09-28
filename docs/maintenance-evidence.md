@@ -53,6 +53,7 @@ published.
 | Fixed-seed property and malformed-input corpus | [#31](https://github.com/pxgt/moonthrift/issues/31), [#32](https://github.com/pxgt/moonthrift/pull/32) | `65de1d5bf2e39dbcd34f8e4244a7a5ae592bf8a6` | [success](https://github.com/pxgt/moonthrift/actions/runs/36093334298) |
 | Parser and protocol benchmarks | [#33](https://github.com/pxgt/moonthrift/issues/33), [#34](https://github.com/pxgt/moonthrift/pull/34) | `7e5f14e7b2336689975b8871ef7592ab486141f9` | [success](https://github.com/pxgt/moonthrift/actions/runs/36094505242) |
 | Multi-file service and published-package consumer | [#35](https://github.com/pxgt/moonthrift/issues/35), [#36](https://github.com/pxgt/moonthrift/pull/36) | `a150200d947d29122802d4f67ba92c7bc35307fb` | [success](https://github.com/pxgt/moonthrift/actions/runs/36096189877) |
+| API and release documentation | [#37](https://github.com/pxgt/moonthrift/issues/37), [#38](https://github.com/pxgt/moonthrift/pull/38) | `2abc6495ce5735e278f7d9c1013265b53c0c7018` | [success](https://github.com/pxgt/moonthrift/actions/runs/36393251471) |
 
 Each PR preserves the implementation review and branch checks; the linked
 main run verifies the merged commit. The current measured core line coverage

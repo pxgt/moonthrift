@@ -70,6 +70,9 @@ jobs:
           moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
           moon -C examples/mooncakes_consumer run . --target wasm-gc --warn-list +73-79
 
+      - name: Run reproducible judging demonstration
+        run: python tools/award_demo.py
+
       - name: Run native TCP RPC tutorial
         run: moon run examples/tcp_demo --target native --warn-list +73-79
 

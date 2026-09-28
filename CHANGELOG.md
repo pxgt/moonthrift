@@ -17,6 +17,8 @@ the project uses semantic versioning.
   `0.3.0` consumer module, both exercised in CI.
 - Public API guidance, architecture-decision records, and a source-to-CI
   release/maintenance evidence ledger.
+- A single-command, CI-checked judging demonstration spanning multi-file IDL,
+  deterministic generation, typed RPC, schema evolution, and Mooncakes use.
 
 These Phase 6 changes are on `main` and are not part of published `0.3.0`.
 
