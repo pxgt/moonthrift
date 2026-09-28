@@ -172,6 +172,10 @@ RPC 的协议/传输边界和当前未实现范围见
 跨文件 Thrift 服务从生成代码到 RPC 往返的步骤，以及从 Mooncakes
 安装已发布包的独立消费工程，见
 [docs/multifile-service-tutorial.md](docs/multifile-service-tutorial.md)。
+各包公开接口的选用指南见 [docs/public-api.md](docs/public-api.md)，
+关键设计取舍见 [docs/design-decisions.md](docs/design-decisions.md)，
+Issue、PR、CI 与已发布版本的对应证据见
+[docs/maintenance-evidence.md](docs/maintenance-evidence.md)。
 
 ## 当前边界
 
