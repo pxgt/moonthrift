@@ -38,6 +38,9 @@ jobs:
           moon info --target all
           git diff --exit-code
 
+      - name: Generate API documentation
+        run: moon doc --frozen
+
       - name: Check every stable backend
         run: moon check --target all --deny-warn --warn-list +73-79
 

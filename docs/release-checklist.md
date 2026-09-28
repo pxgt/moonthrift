@@ -13,6 +13,9 @@ Release evidence: [PR #27](https://github.com/pxgt/moonthrift/pull/27),
 [main CI](https://github.com/pxgt/moonthrift/actions/runs/36088294413),
 [Mooncakes 0.3.0](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.0),
 and [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0).
+The dereferenced annotated-tag commit and matching CI for each release are
+recorded in [maintenance-evidence.md](maintenance-evidence.md). Phase 6
+changes on `main` are not part of the published `0.3.0` artifact.
 
 ## 0.2.0 release record
 
@@ -41,6 +44,6 @@ and [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0).
 - [x] Mooncakes build successful
 - [x] Annotated tag and GitHub release created
 
-The unchecked release steps are completed only after their corresponding
-public service reports success. Issue #1 tracks the online evidence; issue #2
-remains open for post-release maintenance.
+Release steps are marked complete only after their corresponding public
+service reports success. Issue #1 tracked the initial online evidence;
+Issue #2 remains open for post-release maintenance.

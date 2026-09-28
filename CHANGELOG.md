@@ -5,6 +5,21 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- Core-package line coverage enforcement above 85%, with focused protocol and
+  generator edge-case tests.
+- Fixed-seed Binary/Compact round-trip properties, malformed wire input, and
+  mutated IDL regression corpora.
+- Reproducible parser and protocol microbenchmarks, with a recorded release-mode
+  wasm-gc baseline and CI compilation on all stable backends.
+- A generated multi-file service tutorial and an independent Mooncakes
+  `0.3.0` consumer module, both exercised in CI.
+- Public API guidance, architecture-decision records, and a source-to-CI
+  release/maintenance evidence ledger.
+
+These Phase 6 changes are on `main` and are not part of published `0.3.0`.
+
 ## [0.3.0] - 2026-09-25
 
 ### Added

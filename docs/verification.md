@@ -15,6 +15,7 @@ Run the complete local gate from the repository root:
 moon update
 moon fmt --check
 moon info --target all
+moon doc --frozen
 git diff --exit-code
 moon check --target all --deny-warn --warn-list +73-79
 moon build --target all
@@ -142,3 +143,7 @@ Run the focused corpora with:
 moon test protocol/fuzz_test.mbt --target all --deny-warn --warn-list +73-79
 moon test idl_fuzz_test.mbt --target all --deny-warn --warn-list +73-79
 ```
+
+The [public API guide](public-api.md) maps stable entry points to their
+generated interfaces. [Maintenance evidence](maintenance-evidence.md) maps
+published tags and the unreleased Phase 6 commits to exact CI runs.

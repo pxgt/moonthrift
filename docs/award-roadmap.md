@@ -27,11 +27,11 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 - Current release: `0.3.0`
 - Current development branch: `main`
 - Completed milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #26](https://github.com/pxgt/moonthrift/issues/26), [release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0))
-- Next milestone: Phase 6 — hardening and presentation
+- Active milestone: Phase 6 — hardening and presentation
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
-- Last updated: 2026-09-25
+- Last updated: 2026-09-28
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -109,7 +109,7 @@ manually constructing the dynamic `protocol.Value` tree.
 - [x] Publish parser and protocol benchmarks.
 - [x] Provide a complete multi-file service tutorial and an independent
   Mooncakes consumer project.
-- [ ] Maintain API documentation, architecture decisions, changelog, Issues,
+- [x] Maintain API documentation, architecture decisions, changelog, Issues,
   PRs, CI evidence, and reproducible release records.
 - [ ] Prepare a short end-to-end demonstration for quarterly judging.
 
@@ -222,3 +222,7 @@ git diff --exit-code
   negative-path RPC test. A nested but separately resolved MoonBit module
   pins the published Mooncakes 0.3.0 package and checks its public parser and
   codecs. CI regenerates the model and verifies both modules.
+- 2026-09-28: Issue #37 records a public API entry map, package-boundary
+  decisions, the Phase 6 unreleased changelog, exact annotated release-tag
+  commits, registry versions, and Issue/PR/main-CI traceability. The judging
+  demonstration remains the last Phase 6 presentation item.

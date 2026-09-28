@@ -49,3 +49,7 @@ tools, and custom generators. The dynamic protocol layer supports fixture
 inspection and interoperability tests without generated code. Future transport
 packages can build on the same checked schema and codecs rather than duplicate
 the IDL and wire-format work.
+
+The rationale and tradeoffs behind these package boundaries are recorded in
+[design-decisions.md](design-decisions.md). For exact public entry points,
+imports, and failure contracts, see [public-api.md](public-api.md).
