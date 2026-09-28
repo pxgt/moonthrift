@@ -176,6 +176,9 @@ RPC 的协议/传输边界和当前未实现范围见
 关键设计取舍见 [docs/design-decisions.md](docs/design-decisions.md)，
 Issue、PR、CI 与已发布版本的对应证据见
 [docs/maintenance-evidence.md](docs/maintenance-evidence.md)。
+需要快速展示项目从多文件 IDL 到生成服务调用、兼容性检查和
+Mooncakes 包消费的完整路径，可运行
+[评审演示](docs/award-demo.md)。
 
 ## 当前边界
 

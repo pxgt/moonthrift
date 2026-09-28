@@ -26,8 +26,9 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 - Current release: `0.3.0`
 - Current development branch: `main`
-- Completed milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #26](https://github.com/pxgt/moonthrift/issues/26), [release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0))
-- Active milestone: Phase 6 — hardening and presentation
+- Latest published milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #26](https://github.com/pxgt/moonthrift/issues/26), [release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0))
+- Current source milestone: Phase 6 — hardening and presentation complete;
+  its changes remain unreleased
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
@@ -111,7 +112,7 @@ manually constructing the dynamic `protocol.Value` tree.
   Mooncakes consumer project.
 - [x] Maintain API documentation, architecture decisions, changelog, Issues,
   PRs, CI evidence, and reproducible release records.
-- [ ] Prepare a short end-to-end demonstration for quarterly judging.
+- [x] Prepare a short end-to-end demonstration for quarterly judging.
 
 ## Deferred work
 
@@ -226,3 +227,9 @@ git diff --exit-code
   decisions, the Phase 6 unreleased changelog, exact annotated release-tag
   commits, registry versions, and Issue/PR/main-CI traceability. The judging
   demonstration remains the last Phase 6 presentation item.
+- 2026-09-28: Issue #39 adds a one-command, CI-checked judging demo with a
+  short Chinese presentation guide. It verifies linked multi-file IDL,
+  deterministic generated source, four typed RPC paths, breaking schema
+  changes, and consumption of the published Mooncakes 0.3.0 package. All
+  Phase 6 roadmap items are now implemented; publication of Phase 6 changes
+  is a separate future release decision.
