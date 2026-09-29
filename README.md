@@ -53,7 +53,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 | 语义检查（重复定义、字段 ID、union、oneway、循环） | ✅ | |
 | Binary Protocol | ✅ | 严格版本头；不接受旧式非严格消息头 |
 | Compact Protocol | ✅ | |
-| uuid 线格式 | ⚠️ | 目前按 binary 编码，与 Apache Thrift ≥0.19 的 UUID 类型不互通 |
+| uuid 线格式 | ✅ | 0.4.0；Binary 类型号 16 / Compact 类型号 13，16 字节原始值，与 Apache Thrift Python 0.24.0 互通；可兼容读取 ≤0.3.1 写出的 16 字节 binary |
+| uuid 常量/默认值 | ❌ | 暂不支持：生成的常量是 36 字符的文本而不是 16 字节，可选字段的默认值也不会生效；uuid 字段本身请通过值传递 |
 | JSON / SimpleJSON Protocol | ❌ | |
 | Framed 传输 | ✅ | 可移植编解码 + 增量解码 |
 | Buffered / HTTP / Header 传输 | ❌ | |
@@ -225,7 +226,7 @@ native TCP 回环示例展示如何把这些能力接到真实连接上，但它
 
 尚未实现（详见上面的功能支持矩阵）：
 
-- uuid 目前按 binary 编码，与 Apache Thrift ≥0.19 的 UUID 类型不互通；
+- uuid 常量和默认值（uuid 字段本身已支持）；
 - JSON / SimpleJSON 协议，以及 Buffered、HTTP、Header 传输；
 - 结构体作为 Map 键（生成代码无法编译）；
 - 继承服务的运行时门面（只生成模型）；

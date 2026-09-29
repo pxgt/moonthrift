@@ -29,6 +29,8 @@ pub(all) struct Inventory {
   by_owner : Map[String, Array[Status]]?
   badges : Map[Status, Badge]?
   marker : Marker?
+  id : Bytes?
+  related : Array[Bytes]?
 } derive(Eq, @debug.Debug)
 pub fn Inventory::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Inventory::decode_compact(Bytes) -> Self raise @protocol.ProtocolError

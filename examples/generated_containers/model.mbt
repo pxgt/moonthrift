@@ -249,6 +249,8 @@ pub(all) struct Inventory {
   by_owner : Map[String, Array[Status]]?
   badges : Map[Status, Badge]?
   marker : Marker?
+  id : Bytes?
+  related : Array[Bytes]?
 } derive(Debug, Eq)
 
 ///|
@@ -341,6 +343,21 @@ pub fn Inventory::to_thrift_value(self : Inventory) -> @protocol.Value {
     Some(value) => fields.push({ id: 6, value: value.to_thrift_value(), })
     None => ()
   }
+  match self.id {
+    Some(value) => fields.push({ id: 7, value: UuidValue(value), })
+    None => ()
+  }
+  match self.related {
+    Some(value) =>
+      fields.push({
+        id: 8,
+        value: ListValue(
+          element_type=Uuid,
+          values=value.map(item => UuidValue(item)),
+        ),
+      })
+    None => ()
+  }
   StructValue(fields)
 }
 
@@ -356,6 +373,8 @@ pub fn Inventory::from_thrift_value(
   let mut decoded_by_owner : Map[String, Array[Status]]? = None
   let mut decoded_badges : Map[Status, Badge]? = None
   let mut decoded_marker : Marker? = None
+  let mut decoded_id : Bytes? = None
+  let mut decoded_related : Array[Bytes]? = None
   for field in fields {
     match field.id {
       1 =>
@@ -409,6 +428,11 @@ pub fn Inventory::from_thrift_value(
           ),
         )
       6 => decoded_marker = Some(Marker::from_thrift_value(field.value))
+      7 => decoded_id = Some(field.value.require_uuid())
+      8 =>
+        decoded_related = Some(
+          field.value.require_list(Uuid).map(item => item.require_uuid()),
+        )
       _ => ()
     }
   }
@@ -427,6 +451,8 @@ pub fn Inventory::from_thrift_value(
     by_owner: decoded_by_owner,
     badges: decoded_badges,
     marker: decoded_marker,
+    id: decoded_id,
+    related: decoded_related,
   }
 }
 

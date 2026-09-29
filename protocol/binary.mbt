@@ -86,6 +86,14 @@ fn BinaryReader::read_binary(self : BinaryReader) -> Bytes raise ProtocolError {
 }
 
 ///|
+fn BinaryReader::read_uuid(self : BinaryReader) -> Bytes raise ProtocolError {
+  self.require(16)
+  let value = self.input[self.offset:self.offset + 16].to_owned()
+  self.offset += 16
+  value
+}
+
+///|
 fn BinaryReader::check_container(
   self : BinaryReader,
   size : Int,
@@ -123,6 +131,7 @@ fn BinaryReader::read_value(
     I64 => I64Value(self.read_i64())
     Double => DoubleValue(self.read_i64().reinterpret_as_double())
     Binary => BinaryValue(self.read_binary())
+    Uuid => UuidValue(self.read_uuid())
     Struct => {
       let fields : Array[FieldValue] = []
       while true {
@@ -196,6 +205,10 @@ fn write_value(
     DoubleValue(value) => buffer.write_double_be(value)
     BinaryValue(value) => {
       buffer.write_int_be(value.length())
+      buffer.write_bytes(value)
+    }
+    UuidValue(value) => {
+      check_uuid_length(value)
       buffer.write_bytes(value)
     }
     StructValue(fields) => {

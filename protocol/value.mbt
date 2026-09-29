@@ -13,6 +13,8 @@ pub(all) enum WireType {
   Map
   Set
   List
+  /// Apache Thrift 0.19+ `uuid`: 16 raw bytes, Binary type 16, Compact type 13.
+  Uuid
 } derive(Debug, Eq)
 
 ///|
@@ -30,6 +32,7 @@ pub fn WireType::binary_id(self : WireType) -> Byte {
     Map => 13
     Set => 14
     List => 15
+    Uuid => 16
   }
 }
 
@@ -48,6 +51,7 @@ pub fn WireType::from_binary_id(id : Byte) -> WireType raise ProtocolError {
     13 => Map
     14 => Set
     15 => List
+    16 => Uuid
     value => raise InvalidType(value)
   }
 }
@@ -69,6 +73,8 @@ pub(all) enum Value {
   I64Value(Int64)
   DoubleValue(Double)
   BinaryValue(Bytes)
+  /// A uuid as exactly 16 bytes in RFC 4122 (big-endian) order.
+  UuidValue(Bytes)
   StructValue(Array[FieldValue])
   MapValue(
     key_type~ : WireType,
@@ -127,6 +133,7 @@ pub fn Value::wire_type(self : Value) -> WireType {
     I64Value(_) => I64
     DoubleValue(_) => Double
     BinaryValue(_) => Binary
+    UuidValue(_) => Uuid
     StructValue(_) => Struct
     MapValue(..) => Map
     SetValue(..) => Set
@@ -208,6 +215,29 @@ pub fn Value::require_binary(self : Value) -> Bytes raise ProtocolError {
   match self {
     BinaryValue(value) => value
     value => raise TypeMismatch(expected=Binary, actual=value.wire_type())
+  }
+}
+
+///|
+/// Checks that a uuid payload is exactly 16 bytes.
+fn check_uuid_length(value : Bytes) -> Unit raise ProtocolError {
+  if value.length() != 16 {
+    raise InvalidValue("uuid must be exactly 16 bytes, got \{value.length()}")
+  }
+}
+
+///|
+/// Returns the 16 uuid bytes of a `UuidValue`.
+///
+/// A 16-byte `BinaryValue` is accepted too, so data written by MoonThrift
+/// 0.3.1 and earlier (which encoded uuid as binary) can still be read.
+pub fn Value::require_uuid(self : Value) -> Bytes raise ProtocolError {
+  match self {
+    UuidValue(value) | BinaryValue(value) => {
+      check_uuid_length(value)
+      value
+    }
+    value => raise TypeMismatch(expected=Uuid, actual=value.wire_type())
   }
 }
 

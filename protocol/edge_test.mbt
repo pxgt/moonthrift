@@ -159,8 +159,8 @@ test "compact decoder rejects malformed lengths and types" {
   } noraise {
     _ => fail("expected list limit")
   }
-  try @protocol.decode_compact(b"\x1d\x00", Struct) catch {
-    InvalidType(0x0d) => ()
+  try @protocol.decode_compact(b"\x1e\x00", Struct) catch {
+    InvalidType(0x0e) => ()
     _ => fail("unexpected compact field type error")
   } noraise {
     _ => fail("expected invalid compact field type")
