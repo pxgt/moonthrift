@@ -5,6 +5,11 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Documentation
+
+- README shows how to run the published CLI with `moonx` without cloning the
+  repository (verified with `check` and `generate` on 0.4.0).
+
 ## [0.4.0] - 2026-09-30
 
 ### Added
