@@ -77,7 +77,7 @@ def main() -> int:
             materialize_baseline(repo, commit_id, directory, baseline)
             command = [
                 "moon", "run", "cmd/main", "--target", "native", "--frozen",
-                "--warn-list", "+73-79", "--", "compat",
+                "--warn-list", "+73", "--", "compat",
                 "--policy", args.policy, "--format", args.format,
             ]
             for code in args.suppress:

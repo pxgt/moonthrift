@@ -61,7 +61,7 @@ def main() -> None:
     checked = run(
         "IDL + includes",
         "moon", "run", "cmd/main", "--target", "native",
-        "--warn-list", "+73-79", "--", "check", SCHEMA,
+        "--warn-list", "+73", "--", "check", SCHEMA,
     )
     require("IDL + includes", checked, "OK: 2 document(s), 4 definition(s)")
     print(checked)
@@ -69,7 +69,7 @@ def main() -> None:
     inspected = run(
         "linked schema",
         "moon", "run", "cmd/main", "--target", "native",
-        "--warn-list", "+73-79", "--", "inspect", SCHEMA,
+        "--warn-list", "+73", "--", "inspect", SCHEMA,
     )
     for item in ("service Directory", "typedef UserId", "struct User"):
         require("linked schema", inspected, item)
@@ -80,7 +80,7 @@ def main() -> None:
         run(
             "generate typed MoonBit",
             "moon", "run", "cmd/main", "--target", "native",
-            "--warn-list", "+73-79", "--", "generate", SCHEMA,
+            "--warn-list", "+73", "--", "generate", SCHEMA,
             str(generated),
         )
         run("format generated source", "moon", "fmt", str(generated))
@@ -103,7 +103,7 @@ def main() -> None:
     rpc = run(
         "typed Binary + Compact RPC",
         "moon", "run", "examples/directory_demo", "--target", "wasm-gc",
-        "--warn-list", "+73-79",
+        "--warn-list", "+73",
     )
     if tuple(rpc.splitlines()) != EXPECTED_RPC:
         raise RuntimeError(f"unexpected RPC transcript:\n{rpc}")
@@ -112,7 +112,7 @@ def main() -> None:
     compatibility = run(
         "schema evolution",
         "moon", "run", "cmd/main", "--target", "native",
-        "--warn-list", "+73-79", "--", "diff",
+        "--warn-list", "+73", "--", "diff",
         "examples/tutorial.thrift", "examples/tutorial-v2.thrift",
         expected_code=3,
     )
@@ -128,7 +128,7 @@ def main() -> None:
     consumer = run(
         "independent Mooncakes consumer",
         "moon", "-C", "examples/mooncakes_consumer", "run", ".",
-        "--target", "wasm-gc", "--warn-list", "+73-79",
+        "--target", "wasm-gc", "--warn-list", "+73",
     )
     require("independent Mooncakes consumer", consumer, EXPECTED_CONSUMER)
     print(consumer)

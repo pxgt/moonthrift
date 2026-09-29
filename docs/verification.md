@@ -17,10 +17,10 @@ moon fmt --check
 moon info --target all
 moon doc --frozen
 git diff --exit-code
-moon check --target all --deny-warn --warn-list +73-79
+moon check --target all --deny-warn --warn-list +73
 moon build --target all
-moon test --target all --deny-warn --warn-list +73-79
-moon bench --build-only --target all --release --deny-warn --warn-list +73-79
+moon test --target all --deny-warn --warn-list +73
+moon bench --build-only --target all --release --deny-warn --warn-list +73
 moon run cmd/main --target native
 moon run cmd/main --target native -- check examples/tutorial.thrift
 moon run cmd/main --target native -- inspect examples/tutorial.thrift
@@ -35,19 +35,21 @@ python interop/python/reference.py --check
 python tools/test_compat_cli.py
 moon run examples/rpc_demo --target native
 moon run examples/directory_demo --target wasm-gc
-moon test examples/directory_demo --target all --deny-warn --warn-list +73-79
-moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73-79
-moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
+moon test examples/directory_demo --target all --deny-warn --warn-list +73
+moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73
+moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73
 moon -C examples/mooncakes_consumer run . --target wasm-gc
-moon test examples/tcp_demo --target native --deny-warn --warn-list +73-79
+moon test examples/tcp_demo --target native --deny-warn --warn-list +73
 moon run examples/tcp_demo --target native
 ```
 
-Warning 079 is temporarily kept non-fatal with `-79` while the explicit
-derived-trait method export migration is tracked in
-[Issue #13](https://github.com/pxgt/moonthrift/issues/13). All other enabled
-warnings remain errors. The migration changes API declaration mechanics, not
-Binary/Compact wire behavior.
+Warning 079 (`implicit_impl_as_method`) is handled with MoonBit's official
+migration: each package's `deprecated.mbt` declares hidden, deprecated
+`pub extend` blocks for derived trait methods, and the code generator emits
+the same blocks for generated public types
+([Issue #13](https://github.com/pxgt/moonthrift/issues/13)). CI does not exempt
+any warning. The migration changes API declaration mechanics, not
+Binary/Compact wire behavior, and leaves every `.mbti` unchanged.
 
 Compare the three formatted generated files with
 `examples/generated/model.mbt`, `examples/generated_workspace/model.mbt`,
@@ -140,8 +142,8 @@ the same core-package coverage check reports 2102/2366 lines (88.84%).
 Run the focused corpora with:
 
 ```sh
-moon test protocol/fuzz_test.mbt --target all --deny-warn --warn-list +73-79
-moon test idl_fuzz_test.mbt --target all --deny-warn --warn-list +73-79
+moon test protocol/fuzz_test.mbt --target all --deny-warn --warn-list +73
+moon test idl_fuzz_test.mbt --target all --deny-warn --warn-list +73
 ```
 
 The [public API guide](public-api.md) maps stable entry points to their

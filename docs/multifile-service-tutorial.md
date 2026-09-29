@@ -19,7 +19,7 @@ moon run cmd/main --target native -- inspect examples/multifile/directory.thrift
 moon run cmd/main --target native -- generate \
   examples/multifile/directory.thrift examples/generated_directory/model.mbt
 moon fmt examples/generated_directory/model.mbt
-moon check examples/generated_directory --target all --deny-warn --warn-list +73-79
+moon check examples/generated_directory --target all --deny-warn --warn-list +73
 ```
 
 The generated model is checked into
@@ -35,7 +35,7 @@ implements a small handler and calls it through the generated client:
 
 ```sh
 moon run examples/directory_demo --target wasm-gc
-moon test examples/directory_demo --target all --deny-warn --warn-list +73-79
+moon test examples/directory_demo --target all --deny-warn --warn-list +73
 ```
 
 Expected output:
@@ -66,8 +66,8 @@ import the checkout's source module or generated-directory package.
 
 ```sh
 moon -C examples/mooncakes_consumer tree
-moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73-79
-moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
+moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73
+moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73
 moon -C examples/mooncakes_consumer run . --target wasm-gc
 ```
 

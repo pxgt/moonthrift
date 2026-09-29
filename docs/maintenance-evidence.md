@@ -38,7 +38,7 @@ git rev-parse 'v0.3.0^{}'
 git show v0.3.0:moon.mod
 moon view Xpeng/moonthrift@0.3.0
 moon -C examples/mooncakes_consumer tree
-moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
+moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73
 ```
 
 The first command requires repository access, `moon view` requires the
@@ -70,9 +70,9 @@ is 2102/2366 (88.84%) under
 [service tutorial](multifile-service-tutorial.md) document what those gates
 exercise and what they do not.
 
-Open maintenance work includes
-[derived-method warning 079](https://github.com/pxgt/moonthrift/issues/13);
-`--warn-list +73-79` is the documented temporary exception. The broader
+The [derived-method warning 079](https://github.com/pxgt/moonthrift/issues/13)
+was migrated the official MoonBit way (see each package's `deprecated.mbt` and
+the generator output); CI no longer exempts any warning. The broader
 [roadmap Issue #2](https://github.com/pxgt/moonthrift/issues/2) and
 [award roadmap](award-roadmap.md) retain deferred feature scope.
 

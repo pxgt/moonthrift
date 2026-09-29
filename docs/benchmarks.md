@@ -24,14 +24,15 @@ with the code so later changes can be measured against the same workloads.
 Run from the repository root:
 
 ```sh
-moon bench parser_bench_test.mbt --target wasm-gc --release --warn-list +73-79
-moon bench protocol/wire_bench_test.mbt --target wasm-gc --release --warn-list +73-79
+moon bench parser_bench_test.mbt --target wasm-gc --release --warn-list +73
+moon bench protocol/wire_bench_test.mbt --target wasm-gc --release --warn-list +73
 ```
 
 `moon bench` performs calibration and reports ten samples per case. Run on an
 otherwise idle machine, repeat before making a performance claim, and compare
-only measurements from the same toolchain, backend, and hardware. The
-`-79` warning exception is documented in [verification.md](verification.md).
+only measurements from the same toolchain, backend, and hardware. Warning
+handling is documented in [verification.md](verification.md); CI does not
+exempt any warning.
 
 ## Baseline (2026-09-25)
 
