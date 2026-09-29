@@ -103,11 +103,13 @@ jobs:
           moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
           moon run cmd/main --target native -- generate examples/multifile/directory.thrift /tmp/directory.generated.mbtx
           moon run cmd/main --target native -- generate examples/oneway.thrift /tmp/oneway.generated.mbtx
-          moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/directory.generated.mbtx /tmp/oneway.generated.mbtx
+          moon run cmd/main --target native -- generate examples/containers.thrift /tmp/containers.generated.mbtx
+          moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/directory.generated.mbtx /tmp/oneway.generated.mbtx /tmp/containers.generated.mbtx
           cmp examples/generated/model.mbt /tmp/tutorial.generated.mbtx
           cmp examples/generated_workspace/model.mbt /tmp/multifile.generated.mbtx
           cmp examples/generated_directory/model.mbt /tmp/directory.generated.mbtx
           cmp examples/generated_oneway/model.mbt /tmp/oneway.generated.mbtx
+          cmp examples/generated_containers/model.mbt /tmp/containers.generated.mbtx
 
       - name: Verify package artifact
         run: moon package --frozen

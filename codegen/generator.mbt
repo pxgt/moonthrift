@@ -276,8 +276,6 @@ fn render_decode_value(
       match find_type_definition(schema, name) {
         Some(Typedef(target~, ..)) =>
           render_decode_value(schema, target, expression)
-        Some(Enum(..)) =>
-          "match \{generated_name}::from_thrift_i32(\{expression}.require_i32()) { Some(value) => value; None => raise InvalidEnum(type_name=\{escape_string(generated_name)}, value=\{expression}.require_i32()) }"
         _ => "\{generated_name}::from_thrift_value(\{expression})"
       }
     }
@@ -326,15 +324,17 @@ fn render_record(
   }
   output.write_string("/// Generated from Thrift \{kind} `\{name}`.\n")
   if fields.length() == 0 {
-    output.write_string("pub(all) struct \{type_name(name)} {}\n\n")
+    output.write_string(
+      "pub(all) struct \{type_name(name)} {} derive(Debug, Eq)\n\n",
+    )
   } else {
     output.write_string("pub(all) struct \{type_name(name)} {\n")
     for field in fields {
       output.write_string(render_field(field))
     }
     output.write_string("} derive(Debug, Eq)\n\n")
-    render_derived_method_extends(output, type_name(name), hash=false)
   }
+  render_derived_method_extends(output, type_name(name), hash=false)
   render_record_codec(output, schema, name, fields)
 }
 
@@ -452,8 +452,8 @@ fn render_enum(
     }
     output.write_string("  \{type_name(enum_member.name)}\n")
   }
-  output.write_string("} derive(Debug, Eq)\n\n")
-  render_derived_method_extends(output, generated_name, hash=false)
+  output.write_string("} derive(Debug, Eq, Hash)\n\n")
+  render_derived_method_extends(output, generated_name, hash=true)
   output.write_string(
     "///|\npub fn \{generated_name}::to_thrift_i32(self : \{generated_name}) -> Int {\n",
   )

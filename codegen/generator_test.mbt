@@ -174,3 +174,25 @@ test "workspace generator rewrites included declaration kinds and containers" {
   assert_true(generated.content.contains("Array[AppTypesItem]"))
   assert_true(generated.content.contains("Map[String, AppTypesKind]"))
 }
+
+///|
+test "generator handles enums in containers, enum map keys, and empty structs" {
+  let idl =
+    #|enum Status { ACTIVE = 1, SUSPENDED = 2 }
+    #|struct Marker {}
+    #|struct Inventory {
+    #|  1: required list<Status> history
+    #|  2: optional map<Status, i32> counts
+    #|  3: optional map<string, list<Status>> by_owner
+    #|  4: optional Marker marker
+    #|}
+    #|
+  let generated = @codegen.generate_moonbit(@moonthrift.parse_idl(idl))
+  assert_true(generated.content.contains("} derive(Debug, Eq, Hash)"))
+  assert_true(generated.content.contains("Status::from_thrift_value("))
+  assert_true(
+    generated.content.contains("pub(all) struct Marker {} derive(Debug, Eq)"),
+  )
+  assert_true(generated.content.contains("pub extend Status with Hash::"))
+  assert_true(generated.content.contains("pub extend Marker with Eq::"))
+}
