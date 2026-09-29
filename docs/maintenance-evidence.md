@@ -1,13 +1,17 @@
 # Maintenance and release evidence
 
-Snapshot verified on 2026-09-28. This ledger ties source commits to public
-CI, releases, and the registry. It deliberately distinguishes published
-`0.1.0`–`0.3.0` from Phase 6 work currently on `main`: Phase 6 has **not**
-been published as a new Mooncakes version.
+Historical evidence verified on 2026-09-28. This ledger ties source commits
+to public CI, releases, and the registry. Phase 6 is prepared as `0.3.1` in
+[Issue #41](https://github.com/pxgt/moonthrift/issues/41). For its publication
+status and exact source commit, use the
+[v0.3.1 Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.1),
+[Mooncakes 0.3.1](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.1), and
+dereference the annotated tag. A `moon.mod` version alone is not publication
+evidence.
 
 ## Published releases
 
-All three `v` tags are annotated. The commit column is the tag's dereferenced
+The historical `v` tags below are annotated. The commit column is the tag's dereferenced
 source commit (`git rev-parse 'vX.Y.Z^{}'`), not the tag object's SHA. The
 corresponding `moon.mod` at each commit declares that same version.
 
@@ -19,8 +23,9 @@ corresponding `moon.mod` at each commit declares that same version.
 
 The Mooncakes entries report the matching version, Apache-2.0 license, and
 GitHub repository via `moon view Xpeng/moonthrift@<version>`. The independently
-resolved [consumer module](../examples/mooncakes_consumer/moon.mod) pins
-`0.3.0`; its [test](../examples/mooncakes_consumer/main_wbtest.mbt) parses IDL
+resolved [consumer module](../examples/mooncakes_consumer/moon.mod)
+intentionally pins `0.3.0` as a backward-compatibility regression; its
+[test](../examples/mooncakes_consumer/main_wbtest.mbt) parses IDL
 and uses both codecs. The [release checklist](release-checklist.md) records
 the publication gates and the 0.3.0 Mooncakes build check.
 
@@ -41,9 +46,10 @@ registry, and the last two commands run from the current repository's
 Phase 6 checkout on a host with the native compiler and Node.js available.
 For the historical source tests, use a **separate clone**
 detached at the tag and the commands in [verification.md](verification.md);
-do not switch a working checkout with uncommitted changes. A successful
-registry lookup or tag alone does not establish that a new `main` commit was
-published.
+do not switch a working checkout with uncommitted changes. For `0.3.1`, also
+test a fresh, separate consumer pinned to `Xpeng/moonthrift@0.3.1`. A
+successful registry lookup or tag alone does not establish that a new `main`
+commit was published.
 
 ## Phase 6 development trace
 
@@ -72,10 +78,11 @@ Open maintenance work includes
 
 ## Next release discipline
 
-Do not infer a `0.4.0` release from the current `main` tree. A future release
+Do not infer publication of `0.3.1` or a future `0.4.0` from the `main` tree.
+A release
 requires a reviewed version/changelog change, green PR and exact main-commit
 CI, packaging, publication under the intended Mooncakes account, a successful
 registry build, an annotated tag pointing at the published source commit, a
 GitHub Release, and a fresh consumer dependency check. Record the resulting
-commit, CI run, Mooncakes page, and tag in this ledger. The prior
-[0.3.0 checklist](release-checklist.md) is a concrete example.
+commit, CI run, Mooncakes page, and tag in the GitHub Release and its tracking
+Issue. The prior [0.3.0 checklist](release-checklist.md) is a concrete example.

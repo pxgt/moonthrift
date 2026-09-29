@@ -5,6 +5,8 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-29
+
 ### Added
 
 - Core-package line coverage enforcement above 85%, with focused protocol and
@@ -20,7 +22,8 @@ the project uses semantic versioning.
 - A single-command, CI-checked judging demonstration spanning multi-file IDL,
   deterministic generation, typed RPC, schema evolution, and Mooncakes use.
 
-These Phase 6 changes are on `main` and are not part of published `0.3.0`.
+This release packages the Phase 6 work already merged to `main`. It does not
+change the public MoonBit API or the supported protocol behavior of `0.3.0`.
 
 ## [0.3.0] - 2026-09-25
 

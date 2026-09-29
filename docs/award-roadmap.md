@@ -24,15 +24,17 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 ## Current status
 
-- Current release: `0.3.0`
+- Current source version: `0.3.1`
 - Current development branch: `main`
-- Latest published milestone: Phase 5 — RPC runtime and `0.3.0` ([Issue #26](https://github.com/pxgt/moonthrift/issues/26), [release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0))
-- Current source milestone: Phase 6 — hardening and presentation complete;
-  its changes remain unreleased
+- Current release candidate: Phase 6 — hardening and presentation in `0.3.1`
+  ([Issue #41](https://github.com/pxgt/moonthrift/issues/41)); verify its
+  publication from the [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.1)
+  and [Mooncakes entry](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.1),
+  not from the source version alone.
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
-- Last updated: 2026-09-28
+- Last updated: 2026-09-29
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -224,7 +226,7 @@ git diff --exit-code
   pins the published Mooncakes 0.3.0 package and checks its public parser and
   codecs. CI regenerates the model and verifies both modules.
 - 2026-09-28: Issue #37 records a public API entry map, package-boundary
-  decisions, the Phase 6 unreleased changelog, exact annotated release-tag
+  decisions, the Phase 6 changelog, exact annotated release-tag
   commits, registry versions, and Issue/PR/main-CI traceability. The judging
   demonstration remains the last Phase 6 presentation item.
 - 2026-09-28: Issue #39 adds a one-command, CI-checked judging demo with a
@@ -232,4 +234,8 @@ git diff --exit-code
   deterministic generated source, four typed RPC paths, breaking schema
   changes, and consumption of the published Mooncakes 0.3.0 package. All
   Phase 6 roadmap items are now implemented; publication of Phase 6 changes
-  is a separate future release decision.
+  is tracked separately.
+- 2026-09-29: Issue #41 prepares maintenance release `0.3.1` from the
+  completed Phase 6 work. The version change carries no public API change;
+  publication, registry build, fresh installation, tag, and Release evidence
+  are verified separately from the source commit.
