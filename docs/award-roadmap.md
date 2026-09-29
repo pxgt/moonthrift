@@ -265,3 +265,5 @@ git diff --exit-code
 - 2026-09-30: MoonThrift 0.4.0 was published (Mooncakes build success, annotated
   tag `v0.4.0`, GitHub Release, fresh consumer check). Issue #52 documents
   zero-clone CLI use via `moonx Xpeng/moonthrift/cmd/main@0.4.0`.
+- 2026-09-30: Issue #54 adds an English README summary and the 0.3.1 and 0.4.0
+  release evidence rows to the maintenance ledger.

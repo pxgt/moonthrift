@@ -1,6 +1,6 @@
 # Maintenance and release evidence
 
-Historical evidence verified on 2026-09-28. This ledger ties source commits
+Evidence verified on 2026-09-30. This ledger ties source commits
 to public CI, releases, and the registry. The current source is prepared as
 `0.4.0` in [Issue #50](https://github.com/pxgt/moonthrift/issues/50); Phase 6
 was prepared as `0.3.1` in
@@ -22,6 +22,8 @@ corresponding `moon.mod` at each commit declares that same version.
 | `0.1.0` | `d445864363f9e972a6a65566a8432418b9557f89` | [success](https://github.com/pxgt/moonthrift/actions/runs/35091007421) | [Mooncakes](https://mooncakes.io/docs/Xpeng/moonthrift@0.1.0), [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.1.0) |
 | `0.2.0` | `a0a30ae2f586c8e149245edd5606981cba64618c` | [success](https://github.com/pxgt/moonthrift/actions/runs/35503641455) | [Mooncakes](https://mooncakes.io/docs/Xpeng/moonthrift@0.2.0), [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.2.0) |
 | `0.3.0` | `0cfae581e39a2438b33995537c0d7a3c32930898` | [success](https://github.com/pxgt/moonthrift/actions/runs/36088294413) | [Mooncakes](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.0), [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.0) |
+| `0.3.1` | `4f5ab8eba8e3421e37bae6ff0982a2c82521d0ef` | [success](https://github.com/pxgt/moonthrift/actions/runs/36577492990) | [Mooncakes](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.1), [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.1) |
+| `0.4.0` | `533b59eeafde94e0bedf14acbbb83c7c0ce98008` | [success](https://github.com/pxgt/moonthrift/actions/runs/36591722605) | [Mooncakes](https://mooncakes.io/docs/Xpeng/moonthrift@0.4.0), [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.4.0) |
 
 The Mooncakes entries report the matching version, Apache-2.0 license, and
 GitHub repository via `moon view Xpeng/moonthrift@<version>`. The independently

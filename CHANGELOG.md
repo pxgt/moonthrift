@@ -7,6 +7,9 @@ the project uses semantic versioning.
 
 ### Documentation
 
+- README starts with a short English summary, and the maintenance evidence
+  ledger lists the `0.3.1` and `0.4.0` source commits, CI runs, and public
+  artifacts.
 - README shows how to run the published CLI with `moonx` without cloning the
   repository (verified with `check` and `generate` on 0.4.0).
 
