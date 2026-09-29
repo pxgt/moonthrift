@@ -24,17 +24,19 @@ Filesystem and network adapters belong in explicitly target-limited packages.
 
 ## Current status
 
-- Current source version: `0.3.1`
+- Current source version: `0.4.0`
 - Current development branch: `main`
-- Current release candidate: Phase 6 — hardening and presentation in `0.3.1`
-  ([Issue #41](https://github.com/pxgt/moonthrift/issues/41)); verify its
-  publication from the [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.1)
-  and [Mooncakes entry](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.1),
-  not from the source version alone.
+- Current release candidate: `0.4.0` — generator fixes, the Apache Thrift
+  `uuid` wire format, warning 0079 migration, and the wasm CLI
+  ([Issue #50](https://github.com/pxgt/moonthrift/issues/50)); verify its
+  publication from the [GitHub Release](https://github.com/pxgt/moonthrift/releases/tag/v0.4.0)
+  and [Mooncakes entry](https://mooncakes.io/docs/Xpeng/moonthrift@0.4.0),
+  not from the source version alone. The previous release is `0.3.1`
+  ([Issue #41](https://github.com/pxgt/moonthrift/issues/41)).
 - Phase 1 evidence: [Issue #4](https://github.com/pxgt/moonthrift/issues/4),
   [PR #5](https://github.com/pxgt/moonthrift/pull/5), and
   [main CI](https://github.com/pxgt/moonthrift/actions/runs/35481230921)
-- Last updated: 2026-09-29
+- Last updated: 2026-09-30
 
 Status legend: `[ ]` planned, `[-]` active, `[x]` complete.
 
@@ -256,3 +258,7 @@ git diff --exit-code
   0.24.0 byte fixtures, boundary tests, fuzz coverage, and bidirectional
   Python interoperability fixtures for the `Inventory` record back the change.
   `Value::require_uuid` still reads the 16-byte binary form written by 0.3.1.
+- 2026-09-30: Issue #50 prepares release `0.4.0`. The version change carries
+  the `Uuid` protocol additions, the generator fixes, and the wasm CLI;
+  publication, registry build, fresh installation, tag, and Release evidence
+  are verified separately from the source commit.
