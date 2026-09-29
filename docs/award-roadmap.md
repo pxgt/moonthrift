@@ -132,9 +132,9 @@ must run the narrowest relevant tests first and finish with:
 ```sh
 moon fmt --check
 moon info --target all
-moon check --target all --deny-warn --warn-list +73-79
+moon check --target all --deny-warn --warn-list +73
 moon build --target all
-moon test --target all --deny-warn --warn-list +73-79
+moon test --target all --deny-warn --warn-list +73
 moon package --frozen
 git diff --exit-code
 ```
@@ -239,3 +239,7 @@ git diff --exit-code
   completed Phase 6 work. The version change carries no public API change;
   publication, registry build, fresh installation, tag, and Release evidence
   are verified separately from the source commit.
+- 2026-09-30: Issue #13 is resolved. All 111 warning 079 diagnostics were
+  migrated with hidden deprecated `pub extend` declarations (`deprecated.mbt`
+  per package and generator output), public interfaces are unchanged, and CI
+  no longer exempts any warning.

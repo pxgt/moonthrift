@@ -9,6 +9,16 @@ pub(all) struct DirectoryGetUserArgs {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend DirectoryGetUserArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend DirectoryGetUserArgs with Eq::{equal, not_equal}
+
+///|
 /// Converts this generated record to its schema-independent Thrift value.
 pub fn DirectoryGetUserArgs::to_thrift_value(
   self : DirectoryGetUserArgs,
@@ -80,6 +90,16 @@ pub fn DirectoryGetUserArgs::decode_compact(
 pub(all) enum DirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend DirectoryGetUserResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend DirectoryGetUserResult with Eq::{equal, not_equal}
 
 ///|
 pub fn DirectoryGetUserResult::to_thrift_value(
@@ -251,6 +271,16 @@ pub(all) struct ExamplesMultifileCommonTypesUser {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesUser with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesUser with Eq::{equal, not_equal}
+
+///|
 /// Converts this generated record to its schema-independent Thrift value.
 pub fn ExamplesMultifileCommonTypesUser::to_thrift_value(
   self : ExamplesMultifileCommonTypesUser,
@@ -392,6 +422,21 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingResult with Debug::{
+  to_repr,
+}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingResult with Eq::{
+  equal,
+  not_equal,
+}
 
 ///|
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::to_thrift_value(

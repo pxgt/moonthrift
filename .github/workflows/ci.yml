@@ -42,39 +42,39 @@ jobs:
         run: moon doc --frozen
 
       - name: Check every stable backend
-        run: moon check --target all --deny-warn --warn-list +73-79
+        run: moon check --target all --deny-warn --warn-list +73
 
       - name: Build every stable backend
         run: moon build --target all
 
       - name: Test every stable backend
-        run: moon test --target all --deny-warn --warn-list +73-79
+        run: moon test --target all --deny-warn --warn-list +73
 
       - name: Compile release benchmarks on every stable backend
-        run: moon bench --build-only --target all --release --deny-warn --warn-list +73-79
+        run: moon bench --build-only --target all --release --deny-warn --warn-list +73
 
       - name: Enforce core line-coverage floor
         run: python tools/check_core_coverage.py --minimum 85
 
       - name: Run in-memory RPC tutorial
-        run: moon run examples/rpc_demo --target native --warn-list +73-79
+        run: moon run examples/rpc_demo --target native --warn-list +73
 
       - name: Run multi-file service tutorial
-        run: moon run examples/directory_demo --target wasm-gc --warn-list +73-79
+        run: moon run examples/directory_demo --target wasm-gc --warn-list +73
 
       - name: Check published Mooncakes package in independent module
         run: |
           moon -C examples/mooncakes_consumer fmt --check
           moon -C examples/mooncakes_consumer info --target all
-          moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73-79
-          moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73-79
-          moon -C examples/mooncakes_consumer run . --target wasm-gc --warn-list +73-79
+          moon -C examples/mooncakes_consumer check --target all --deny-warn --warn-list +73
+          moon -C examples/mooncakes_consumer test --target all --deny-warn --warn-list +73
+          moon -C examples/mooncakes_consumer run . --target wasm-gc --warn-list +73
 
       - name: Run reproducible judging demonstration
         run: python tools/award_demo.py
 
       - name: Run native TCP RPC tutorial
-        run: moon run examples/tcp_demo --target native --warn-list +73-79
+        run: moon run examples/tcp_demo --target native --warn-list +73
 
       - name: Run CLI examples
         run: |
@@ -147,4 +147,4 @@ jobs:
         run: moon update
 
       - name: Run bidirectional interoperability tests
-        run: moon test interop/fixtures --target all --deny-warn --warn-list +73-79
+        run: moon test interop/fixtures --target all --deny-warn --warn-list +73

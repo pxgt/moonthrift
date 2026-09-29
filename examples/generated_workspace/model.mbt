@@ -7,6 +7,16 @@ pub(all) struct GetUserRequest {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GetUserRequest with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend GetUserRequest with Eq::{equal, not_equal}
+
+///|
 /// Converts this generated record to its schema-independent Thrift value.
 pub fn GetUserRequest::to_thrift_value(
   self : GetUserRequest,
@@ -77,6 +87,16 @@ pub fn GetUserRequest::decode_compact(
 pub(all) struct UserDirectoryGetUserArgs {
   request : GetUserRequest
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserArgs with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.
@@ -151,6 +171,16 @@ pub fn UserDirectoryGetUserArgs::decode_compact(
 pub(all) enum UserDirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserResult with Eq::{equal, not_equal}
 
 ///|
 pub fn UserDirectoryGetUserResult::to_thrift_value(
@@ -234,6 +264,16 @@ pub(all) struct ExamplesMultifileCommonTypesUser {
   id : ExamplesMultifileCommonTypesUserId
   display_name : String?
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesUser with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesUser with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.
@@ -377,6 +417,21 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingResult with Debug::{
+  to_repr,
+}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingResult with Eq::{
+  equal,
+  not_equal,
+}
 
 ///|
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::to_thrift_value(

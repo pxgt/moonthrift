@@ -9,6 +9,16 @@ pub(all) struct EventsEmitArgs {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsEmitArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsEmitArgs with Eq::{equal, not_equal}
+
+///|
 /// Converts this generated record to its schema-independent Thrift value.
 pub fn EventsEmitArgs::to_thrift_value(
   self : EventsEmitArgs,
@@ -78,6 +88,16 @@ pub(all) enum EventsEmitResult {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsEmitResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsEmitResult with Eq::{equal, not_equal}
+
+///|
 pub fn EventsEmitResult::to_thrift_value(
   self : EventsEmitResult,
 ) -> @protocol.Value {
@@ -136,6 +156,16 @@ pub fn EventsEmitResult::decode_compact(
 pub(all) struct EventsPingArgs {
   value : Int
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsPingArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsPingArgs with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.
@@ -205,6 +235,16 @@ pub fn EventsPingArgs::decode_compact(
 pub(all) enum EventsPingResult {
   Success(Int)
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsPingResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend EventsPingResult with Eq::{equal, not_equal}
 
 ///|
 pub fn EventsPingResult::to_thrift_value(

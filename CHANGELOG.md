@@ -5,6 +5,14 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- Migrated all 111 `[0079]` (`implicit_impl_as_method`) warnings reported by
+  MoonBit 0.10.14 using hidden, deprecated `pub extend` declarations in each
+  package's `deprecated.mbt`. Generated code now emits the same declarations
+  for every public type. Public interfaces (`.mbti`) are unchanged, and CI no
+  longer exempts any warning (`--warn-list +73-79` became `--warn-list +73`).
+
 ## [0.3.1] - 2026-09-29
 
 ### Added

@@ -12,7 +12,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent.parent
 BEFORE = "examples/compatibility/before"
 AFTER = "examples/compatibility/after"
-MOON = ["moon", "run", "cmd/main", "--target", "native", "--frozen", "--warn-list", "+73-79", "--", "compat"]
+MOON = ["moon", "run", "cmd/main", "--target", "native", "--frozen", "--warn-list", "+73", "--", "compat"]
 
 
 def run(*args: str) -> subprocess.CompletedProcess[str]:
