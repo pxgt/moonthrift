@@ -25,8 +25,17 @@ fn WireTestRng::bytes(self : WireTestRng, maximum : Int) -> Bytes {
 }
 
 ///|
+fn WireTestRng::uuid_bytes(self : WireTestRng) -> Bytes {
+  let items : Array[Byte] = []
+  for _ in 0..<16 {
+    items.push(self.next().to_byte())
+  }
+  Bytes::from_array(items)
+}
+
+///|
 fn generated_value(rng : WireTestRng, depth : Int) -> @protocol.Value {
-  let variant = rng.choose(if depth == 0 { 7 } else { 11 })
+  let variant = rng.choose(if depth == 0 { 8 } else { 13 })
   match variant {
     0 => BoolValue(rng.choose(2) == 1)
     1 => ByteValue(rng.choose(256) - 128)
@@ -35,26 +44,34 @@ fn generated_value(rng : WireTestRng, depth : Int) -> @protocol.Value {
     4 => I64Value(rng.next().to_int64() - 2147483648L)
     5 => DoubleValue((rng.choose(2000) - 1000).to_double() / 4.0)
     6 => BinaryValue(rng.bytes(16))
-    7 => {
+    7 => UuidValue(rng.uuid_bytes())
+    8 => {
       let fields : Array[@protocol.FieldValue] = []
       for index in 0..<rng.choose(4) {
         fields.push({ id: index + 1, value: generated_value(rng, depth - 1), })
       }
       StructValue(fields)
     }
-    8 => {
+    9 => {
       let values : Array[@protocol.Value] = []
       for _ in 0..<rng.choose(5) {
         values.push(I32Value(rng.next().reinterpret_as_int()))
       }
       ListValue(element_type=I32, values~)
     }
-    9 => {
+    10 => {
       let values : Array[@protocol.Value] = []
       for _ in 0..<rng.choose(5) {
         values.push(BinaryValue(rng.bytes(8)))
       }
       SetValue(element_type=Binary, values~)
+    }
+    11 => {
+      let values : Array[@protocol.Value] = []
+      for _ in 0..<rng.choose(5) {
+        values.push(UuidValue(rng.uuid_bytes()))
+      }
+      ListValue(element_type=Uuid, values~)
     }
     _ => {
       let entries : Array[(@protocol.Value, @protocol.Value)] = []
@@ -134,13 +151,14 @@ test "bounded malformed byte corpus is rejected or canonicalizes stably" {
   let mut compact_rejected = 0
   for case_index in 0..<1024 {
     let input = rng.bytes(64)
-    let ty : @protocol.WireType = match rng.choose(7) {
+    let ty : @protocol.WireType = match rng.choose(8) {
       0 => Struct
       1 => Map
       2 => List
       3 => Set
       4 => Binary
       5 => I64
+      6 => Uuid
       _ => Bool
     }
     try

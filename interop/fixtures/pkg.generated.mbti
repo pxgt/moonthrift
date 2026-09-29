@@ -12,6 +12,8 @@ pub let python_binary_framed_application_exception : Bytes
 
 pub let python_binary_framed_oneway : Bytes
 
+pub let python_binary_inventory : Bytes
+
 pub let python_binary_oneway_message : Bytes
 
 pub let python_binary_user : Bytes
@@ -27,6 +29,8 @@ pub let python_compact_exception : Bytes
 pub let python_compact_framed_application_exception : Bytes
 
 pub let python_compact_framed_oneway : Bytes
+
+pub let python_compact_inventory : Bytes
 
 pub let python_compact_oneway_message : Bytes
 

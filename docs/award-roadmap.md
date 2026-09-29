@@ -251,3 +251,8 @@ git diff --exit-code
   (`check`, `inspect`, `generate`, `diff`, `compat`, and the demo), adds a CI
   step that compares wasm-generated source byte for byte, and documents a
   feature-support matrix in the README.
+- 2026-09-30: Issue #48 encodes `uuid` with Apache Thrift's own wire format
+  (Binary type 16, Compact type 13, 16 raw bytes). Fixed Apache Thrift Python
+  0.24.0 byte fixtures, boundary tests, fuzz coverage, and bidirectional
+  Python interoperability fixtures for the `Inventory` record back the change.
+  `Value::require_uuid` still reads the 16-byte binary form written by 0.3.1.

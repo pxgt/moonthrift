@@ -196,3 +196,21 @@ test "generator handles enums in containers, enum map keys, and empty structs" {
   assert_true(generated.content.contains("pub extend Status with Hash::"))
   assert_true(generated.content.contains("pub extend Marker with Eq::"))
 }
+
+///|
+test "generator encodes uuid fields with the dedicated uuid wire type" {
+  let idl =
+    #|struct Tag {
+    #|  1: required uuid id
+    #|  2: optional list<uuid> related
+    #|}
+    #|
+  let generated = @codegen.generate_moonbit(@moonthrift.parse_idl(idl))
+  assert_true(generated.content.contains("id : Bytes"))
+  assert_true(generated.content.contains("related : Array[Bytes]?"))
+  assert_true(generated.content.contains("UuidValue("))
+  assert_true(generated.content.contains("element_type=Uuid"))
+  assert_true(generated.content.contains(".require_uuid()"))
+  assert_true(generated.content.contains(".require_list(Uuid)"))
+  assert_true(!generated.content.contains("BinaryValue("))
+}

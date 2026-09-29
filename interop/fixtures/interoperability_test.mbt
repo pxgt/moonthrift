@@ -12,6 +12,51 @@ fn reference_user() -> @generated.User {
 }
 
 ///|
+#warnings("-unnecessary_annotation")
+fn reference_inventory() -> @generated_containers.Inventory {
+  {
+    history: [ACTIVE, SUSPENDED, ACTIVE],
+    allowed: Some([ACTIVE, DELETED]),
+    counts: Some(Map::from_array([(ACTIVE, 2), (SUSPENDED, 1)])),
+    by_owner: Some(Map::from_array([("ada", [ACTIVE]), ("lin", [])])),
+    badges: Some(
+      Map::from_array([(ACTIVE, { label: "gold", level: Some(3), })]),
+    ),
+    marker: Some(@generated_containers.Marker::{ }),
+    id: Some(
+      b"\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff",
+    ),
+    related: Some([
+      b"\xff\xee\xdd\xcc\xbb\xaa\x99\x88\x77\x66\x55\x44\x33\x22\x11\x00", b"\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff",
+    ]),
+  }
+}
+
+///|
+test "Apache Thrift Python Binary inventory with uuid is bidirectionally compatible" {
+  let expected = reference_inventory()
+  assert_eq(
+    @generated_containers.Inventory::decode_binary(
+      @fixtures.python_binary_inventory,
+    ),
+    expected,
+  )
+  assert_eq(expected.encode_binary(), @fixtures.python_binary_inventory)
+}
+
+///|
+test "Apache Thrift Python Compact inventory with uuid is bidirectionally compatible" {
+  let expected = reference_inventory()
+  assert_eq(
+    @generated_containers.Inventory::decode_compact(
+      @fixtures.python_compact_inventory,
+    ),
+    expected,
+  )
+  assert_eq(expected.encode_compact(), @fixtures.python_compact_inventory)
+}
+
+///|
 test "Apache Thrift Python Binary user is bidirectionally compatible" {
   let expected = reference_user()
   assert_eq(

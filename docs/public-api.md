@@ -65,6 +65,11 @@ both codecs; [protocol notes](protocols.md) specify the wire details and
 default limits. A `Value` is not a substitute for validating an IDL schema
 when field-level compatibility matters.
 
+`uuid` values use `WireType::Uuid` and `Value::UuidValue(Bytes)` (exactly 16
+bytes); `Value::require_uuid` returns the bytes and also accepts a 16-byte
+`BinaryValue` so data written by 0.3.1 and earlier stays readable. See the
+[UUID wire format](protocols.md#uuid-wire-format).
+
 `rpc.RpcProtocol` selects a message codec, while `call_once` and
 `process_once` accept application-supplied byte callbacks. Generated service
 clients and handlers sit on that boundary. `encode_frame`,

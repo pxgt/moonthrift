@@ -15,7 +15,10 @@ Compact protocols, the matrix covers:
 - UTF-8 strings and empty strings;
 - list, set, map, empty-container, and nested-container encodings;
 - a generated exception record;
-- a future unknown field containing a nested container.
+- a future unknown field containing a nested container;
+- the `examples/containers.thrift` `Inventory` record, which covers enums in
+  lists, sets, and map keys/values, an empty struct, a `uuid`, and a
+  `list<uuid>` (Binary type 16, Compact type 13, 16 raw bytes).
 - standard `TApplicationException` RPC envelopes and `ONEWAY` requests.
 - Apache Python `TFramedTransport` output for Binary/Compact application
   exceptions and `ONEWAY` calls, checked against the MoonBit frame codec.

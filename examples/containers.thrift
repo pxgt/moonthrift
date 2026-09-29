@@ -26,4 +26,6 @@ struct Inventory {
   4: optional map<string, list<Status>> by_owner
   5: optional map<Status, Badge> badges
   6: optional Marker marker
+  7: optional uuid id
+  8: optional list<uuid> related
 }

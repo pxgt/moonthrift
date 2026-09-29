@@ -12,6 +12,12 @@ the project uses semantic versioning.
   is byte-identical across backends, and CI exercises the wasm CLI.
 - A feature-support matrix in the README that states what is and is not
   implemented, and a refreshed "current boundaries" section.
+- `WireType::Uuid`, `Value::UuidValue(Bytes)` and `Value::require_uuid`:
+  `uuid` is now encoded exactly as Apache Thrift 0.19+ does (Binary type 16,
+  Compact type 13, 16 raw bytes with no length prefix), including inside
+  structs, lists, sets, and maps. Fixed byte sequences from Apache Thrift
+  Python 0.24.0 and bidirectional interoperability tests for an `Inventory`
+  record with `uuid` and `list<uuid>` fields cover the new format.
 
 ### Fixed
 
@@ -25,6 +31,18 @@ the project uses semantic versioning.
 
 ### Changed
 
+- **Wire-format behavior change for `uuid`.** MoonThrift 0.3.1 and earlier
+  wrote `uuid` as length-prefixed `binary`, which did not interoperate with
+  Apache Thrift: a uuid written by Apache Thrift failed to decode with
+  `InvalidType`, even when the field was only being skipped. Exchanging `uuid` fields with a MoonThrift
+  <= 0.3.1 peer is therefore not symmetric: the old peer rejects the new type
+  ID as an unknown type, while the new version can still read the old format
+  because `Value::require_uuid` also accepts a 16-byte `BinaryValue`. Generated
+  code decodes uuid through `require_uuid` and exposes uuid fields as `Bytes`,
+  as before. `WireType` and `Value` gained a variant, so exhaustive `match`
+  expressions over them need a new arm.
+- `uuid` constants and field defaults are not supported: the generator emits the
+  36-character text, not 16 bytes.
 - Migrated all 111 `[0079]` (`implicit_impl_as_method`) warnings reported by
   MoonBit 0.10.14 using hidden, deprecated `pub extend` declarations in each
   package's `deprecated.mbt`. Generated code now emits the same declarations

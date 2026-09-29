@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -266,6 +267,157 @@ def read_empty_containers(proto) -> tuple[int, int, int]:
     return tuple(sizes)
 
 
+STATUS_ACTIVE = 1
+STATUS_SUSPENDED = 2
+STATUS_DELETED = 3
+UUID_A = uuid.UUID("00112233-4455-6677-8899-aabbccddeeff")
+UUID_B = uuid.UUID("ffeeddcc-bbaa-9988-7766-554433221100")
+
+
+def write_inventory(proto) -> None:
+    """Mirrors examples/containers.thrift `Inventory` and the MoonBit sample."""
+    proto.writeStructBegin("Inventory")
+    proto.writeFieldBegin("history", TType.LIST, 1)
+    proto.writeListBegin(TType.I32, 3)
+    for status in (STATUS_ACTIVE, STATUS_SUSPENDED, STATUS_ACTIVE):
+        proto.writeI32(status)
+    proto.writeListEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("allowed", TType.SET, 2)
+    proto.writeSetBegin(TType.I32, 2)
+    proto.writeI32(STATUS_ACTIVE)
+    proto.writeI32(STATUS_DELETED)
+    proto.writeSetEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("counts", TType.MAP, 3)
+    proto.writeMapBegin(TType.I32, TType.I32, 2)
+    proto.writeI32(STATUS_ACTIVE)
+    proto.writeI32(2)
+    proto.writeI32(STATUS_SUSPENDED)
+    proto.writeI32(1)
+    proto.writeMapEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("by_owner", TType.MAP, 4)
+    proto.writeMapBegin(TType.STRING, TType.LIST, 2)
+    proto.writeString("ada")
+    proto.writeListBegin(TType.I32, 1)
+    proto.writeI32(STATUS_ACTIVE)
+    proto.writeListEnd()
+    proto.writeString("lin")
+    proto.writeListBegin(TType.I32, 0)
+    proto.writeListEnd()
+    proto.writeMapEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("badges", TType.MAP, 5)
+    proto.writeMapBegin(TType.I32, TType.STRUCT, 1)
+    proto.writeI32(STATUS_ACTIVE)
+    proto.writeStructBegin("Badge")
+    proto.writeFieldBegin("label", TType.STRING, 1)
+    proto.writeString("gold")
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("level", TType.I32, 2)
+    proto.writeI32(3)
+    proto.writeFieldEnd()
+    proto.writeFieldStop()
+    proto.writeStructEnd()
+    proto.writeMapEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("marker", TType.STRUCT, 6)
+    proto.writeStructBegin("Marker")
+    proto.writeFieldStop()
+    proto.writeStructEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("id", TType.UUID, 7)
+    proto.writeUuid(UUID_A)
+    proto.writeFieldEnd()
+    proto.writeFieldBegin("related", TType.LIST, 8)
+    proto.writeListBegin(TType.UUID, 2)
+    proto.writeUuid(UUID_B)
+    proto.writeUuid(UUID_A)
+    proto.writeListEnd()
+    proto.writeFieldEnd()
+    proto.writeFieldStop()
+    proto.writeStructEnd()
+
+
+def read_inventory(proto) -> dict[str, object]:
+    result: dict[str, object] = {}
+    proto.readStructBegin()
+    while True:
+        _, field_type, field_id = proto.readFieldBegin()
+        if field_type == TType.STOP:
+            break
+        if field_id == 1 and field_type == TType.LIST:
+            element_type, size = proto.readListBegin()
+            assert element_type == TType.I32
+            result["history"] = [proto.readI32() for _ in range(size)]
+            proto.readListEnd()
+        elif field_id == 2 and field_type == TType.SET:
+            element_type, size = proto.readSetBegin()
+            assert element_type == TType.I32
+            result["allowed"] = [proto.readI32() for _ in range(size)]
+            proto.readSetEnd()
+        elif field_id == 3 and field_type == TType.MAP:
+            key_type, value_type, size = proto.readMapBegin()
+            assert (key_type, value_type) == (TType.I32, TType.I32)
+            result["counts"] = {proto.readI32(): proto.readI32() for _ in range(size)}
+            proto.readMapEnd()
+        elif field_id == 4 and field_type == TType.MAP:
+            key_type, value_type, size = proto.readMapBegin()
+            assert (key_type, value_type) == (TType.STRING, TType.LIST)
+            by_owner: dict[str, list[int]] = {}
+            for _ in range(size):
+                owner = proto.readString()
+                element_type, count = proto.readListBegin()
+                assert element_type == TType.I32
+                by_owner[owner] = [proto.readI32() for _ in range(count)]
+                proto.readListEnd()
+            result["by_owner"] = by_owner
+            proto.readMapEnd()
+        elif field_id == 5 and field_type == TType.MAP:
+            key_type, value_type, size = proto.readMapBegin()
+            assert (key_type, value_type) == (TType.I32, TType.STRUCT)
+            badges: dict[int, tuple[str, int]] = {}
+            for _ in range(size):
+                key = proto.readI32()
+                label = None
+                level = None
+                proto.readStructBegin()
+                while True:
+                    _, inner_type, inner_id = proto.readFieldBegin()
+                    if inner_type == TType.STOP:
+                        break
+                    if inner_id == 1 and inner_type == TType.STRING:
+                        label = proto.readString()
+                    elif inner_id == 2 and inner_type == TType.I32:
+                        level = proto.readI32()
+                    else:
+                        proto.skip(inner_type)
+                    proto.readFieldEnd()
+                proto.readStructEnd()
+                badges[key] = (label, level)
+            result["badges"] = badges
+            proto.readMapEnd()
+        elif field_id == 6 and field_type == TType.STRUCT:
+            proto.readStructBegin()
+            _, inner_type, _ = proto.readFieldBegin()
+            assert inner_type == TType.STOP
+            proto.readStructEnd()
+            result["marker"] = True
+        elif field_id == 7 and field_type == TType.UUID:
+            result["id"] = proto.readUuid()
+        elif field_id == 8 and field_type == TType.LIST:
+            element_type, size = proto.readListBegin()
+            assert element_type == TType.UUID
+            result["related"] = [proto.readUuid() for _ in range(size)]
+            proto.readListEnd()
+        else:
+            proto.skip(field_type)
+        proto.readFieldEnd()
+    proto.readStructEnd()
+    return result
+
+
 def moon_bytes(payload: bytes) -> str:
     escaped = "".join(f"\\x{byte:02x}" for byte in payload)
     return f'b"{escaped}"'
@@ -283,6 +435,9 @@ def build_fixtures() -> dict[str, bytes]:
         )
         fixtures[f"python_{factory.name}_empty_containers"] = encode(
             factory, write_empty_containers
+        )
+        fixtures[f"python_{factory.name}_inventory"] = encode(
+            factory, write_inventory
         )
         fixtures[f"python_{factory.name}_application_exception_message"] = encode(
             factory, write_application_exception_message
@@ -309,6 +464,16 @@ def validate_with_python(fixtures: dict[str, bytes]) -> None:
         "flags": [I64_MIN, I64_MAX],
         "revision": I32_MAX,
     }
+    expected_inventory = {
+        "history": [STATUS_ACTIVE, STATUS_SUSPENDED, STATUS_ACTIVE],
+        "allowed": [STATUS_ACTIVE, STATUS_DELETED],
+        "counts": {STATUS_ACTIVE: 2, STATUS_SUSPENDED: 1},
+        "by_owner": {"ada": [STATUS_ACTIVE], "lin": []},
+        "badges": {STATUS_ACTIVE: ("gold", 3)},
+        "marker": True,
+        "id": UUID_A,
+        "related": [UUID_B, UUID_A],
+    }
     for factory in PROTOCOLS:
         prefix = f"python_{factory.name}"
         assert read_user(protocol_for(factory, fixtures[f"{prefix}_user"])) == expected_user
@@ -321,6 +486,9 @@ def validate_with_python(fixtures: dict[str, bytes]) -> None:
         assert read_empty_containers(
             protocol_for(factory, fixtures[f"{prefix}_empty_containers"])
         ) == (0, 0, 0)
+        assert read_inventory(
+            protocol_for(factory, fixtures[f"{prefix}_inventory"])
+        ) == expected_inventory
         assert read_application_exception_message(
             protocol_for(factory, fixtures[f"{prefix}_application_exception_message"])
         ) == ("missing", 41, TApplicationException.UNKNOWN_METHOD, "unknown method missing")

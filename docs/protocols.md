@@ -24,6 +24,35 @@ boolean field values are carried in the field type nibble. Small list/set sizes
 are packed into the collection header. RPC envelopes validate protocol ID
 `0x82` and version 1.
 
+## UUID wire format
+
+Apache Thrift 0.19 and later define `uuid` as its own type rather than a
+`binary` alias. MoonThrift follows that definition since 0.4.0:
+
+| Protocol | Type ID | Payload |
+|---|---|---|
+| Binary | 16 | exactly 16 raw bytes, no length prefix |
+| Compact | 13 | exactly 16 raw bytes, no length prefix |
+
+The 16 bytes are in RFC 4122 (big-endian) order, so
+`00112233-4455-6677-8899-aabbccddeeff` is written as `00 11 22 ... ee ff`.
+`Value::UuidValue(Bytes)` carries the payload and `WireType::Uuid` its type.
+Encoders raise `InvalidValue` unless the payload is exactly 16 bytes, decoders
+raise `UnexpectedEof` on truncated input, and uuid values work inside structs,
+lists, sets, and maps. `Value::require_uuid` also accepts a 16-byte
+`BinaryValue`, because MoonThrift 0.3.1 and earlier wrote uuid as
+length-prefixed binary; the reverse is not true, so a 0.3.1 peer rejects the new
+type ID as unknown. Generated MoonBit still exposes uuid fields as `Bytes`.
+
+The literal fixtures below come from Apache Thrift Python 0.24.0 for a struct
+whose field 1 is a uuid and whose field 2 is a one-element `list<uuid>`, and
+are asserted byte for byte in `protocol/uuid_test.mbt`:
+
+```text
+Binary:  10 00 01 <16 bytes> 0f 00 02 10 00 00 00 01 <16 bytes> 00
+Compact: 1d <16 bytes> 19 1d <16 bytes> 00
+```
+
 ## Defensive limits
 
 Both decoders accept labeled limits for nesting depth, container length, and

@@ -199,7 +199,8 @@ fn wire_type_name(
     Base(I32) => "I32"
     Base(I64) => "I64"
     Base(Double) => "Double"
-    Base(String) | Base(Binary) | Base(Uuid) => "Binary"
+    Base(String) | Base(Binary) => "Binary"
+    Base(Uuid) => "Uuid"
     Base(Void) => "Stop"
     List(_) => "List"
     Set(_) => "Set"
@@ -228,7 +229,8 @@ fn render_encode_value(
     Base(I64) => "I64Value(\{expression})"
     Base(Double) => "DoubleValue(\{expression})"
     Base(String) => "@protocol.string_value(\{expression})"
-    Base(Binary) | Base(Uuid) => "BinaryValue(\{expression})"
+    Base(Binary) => "BinaryValue(\{expression})"
+    Base(Uuid) => "UuidValue(\{expression})"
     Base(Void) => "StructValue([])"
     CppType(inner, _) => render_encode_value(schema, inner, expression)
     Named(name) =>
@@ -268,7 +270,8 @@ fn render_decode_value(
     Base(I64) => "\{expression}.require_i64()"
     Base(Double) => "\{expression}.require_double()"
     Base(String) => "\{expression}.require_string()"
-    Base(Binary) | Base(Uuid) => "\{expression}.require_binary()"
+    Base(Binary) => "\{expression}.require_binary()"
+    Base(Uuid) => "\{expression}.require_uuid()"
     Base(Void) => "()"
     CppType(inner, _) => render_decode_value(schema, inner, expression)
     Named(name) => {

@@ -13,6 +13,7 @@ fn compact_type(ty : WireType) -> Byte {
     Set => 10
     Map => 11
     Struct => 12
+    Uuid => 13
   }
 }
 
@@ -40,6 +41,7 @@ fn wire_type_from_compact(id : Byte) -> (WireType, Bool?) raise ProtocolError {
     10 => (Set, None)
     11 => (Map, None)
     12 => (Struct, None)
+    13 => (Uuid, None)
     value => raise InvalidType(value)
   }
 }
@@ -86,6 +88,10 @@ fn write_compact_value(
         buffer,
         UInt64::extend_uint(value.length().reinterpret_as_uint()),
       )
+      buffer.write_bytes(value)
+    }
+    UuidValue(value) => {
+      check_uuid_length(value)
       buffer.write_bytes(value)
     }
     StructValue(fields) => {
@@ -247,6 +253,16 @@ fn CompactReader::read_binary(
 }
 
 ///|
+fn CompactReader::read_uuid(self : CompactReader) -> Bytes raise ProtocolError {
+  if self.remaining() < 16 {
+    raise UnexpectedEof(offset=self.offset, needed=16)
+  }
+  let value = self.input[self.offset:self.offset + 16].to_owned()
+  self.offset += 16
+  value
+}
+
+///|
 fn CompactReader::read_value(
   self : CompactReader,
   ty : WireType,
@@ -277,6 +293,7 @@ fn CompactReader::read_value(
     I64 => I64Value(unzigzag(self.read_varuint()))
     Double => DoubleValue(self.read_double())
     Binary => BinaryValue(self.read_binary())
+    Uuid => UuidValue(self.read_uuid())
     Struct => {
       let fields : Array[FieldValue] = []
       let mut previous_id = 0

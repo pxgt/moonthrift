@@ -10,6 +10,12 @@ fn sample_inventory() -> @generated_containers.Inventory {
       Map::from_array([(ACTIVE, { label: "gold", level: Some(3), })]),
     ),
     marker: Some(@generated_containers.Marker::{ }),
+    id: Some(
+      b"\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff",
+    ),
+    related: Some([
+      b"\xff\xee\xdd\xcc\xbb\xaa\x99\x88\x77\x66\x55\x44\x33\x22\x11\x00", b"\x00\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc\xdd\xee\xff",
+    ]),
   }
 }
 

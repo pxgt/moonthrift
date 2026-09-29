@@ -1,5 +1,6 @@
 import {
   "Xpeng/moonthrift/examples/generated",
+  "Xpeng/moonthrift/examples/generated_containers",
   "Xpeng/moonthrift/protocol",
   "Xpeng/moonthrift/rpc",
 } for "test"
