@@ -247,3 +247,7 @@ git diff --exit-code
   did not compile: enums inside containers, enums as map keys, and empty
   structs. A new `examples/generated_containers` package compiles and tests
   the generated code on all four backends, and CI regenerates it.
+- 2026-09-30: Issue #46 lets the CLI run on the wasm and wasm-gc backends
+  (`check`, `inspect`, `generate`, `diff`, `compat`, and the demo), adds a CI
+  step that compares wasm-generated source byte for byte, and documents a
+  feature-support matrix in the README.
