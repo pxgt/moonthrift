@@ -262,3 +262,6 @@ git diff --exit-code
   the `Uuid` protocol additions, the generator fixes, and the wasm CLI;
   publication, registry build, fresh installation, tag, and Release evidence
   are verified separately from the source commit.
+- 2026-09-30: MoonThrift 0.4.0 was published (Mooncakes build success, annotated
+  tag `v0.4.0`, GitHub Release, fresh consumer check). Issue #52 documents
+  zero-clone CLI use via `moonx Xpeng/moonthrift/cmd/main@0.4.0`.

@@ -165,6 +165,19 @@ moon run cmd/main --target wasm -- generate examples/tutorial.thrift generated.m
 
 `generate` 在 native 和 wasm 下的输出逐字节一致。
 
+### 无需 clone 直接使用 CLI
+
+已发布的 0.4.0 可以用 `moonx` 直接运行（会下载预编译的 wasm 版本），
+不需要 clone 仓库，文件路径请使用绝对路径：
+
+```sh
+moonx Xpeng/moonthrift/cmd/main@0.4.0 check /绝对路径/to/your.thrift
+moonx Xpeng/moonthrift/cmd/main@0.4.0 generate /绝对路径/to/your.thrift /绝对路径/to/model.mbt
+```
+
+生成文件的第一行注释会记录传入的源文件路径，因此和仓库里以相对路径生成的
+夹具只有这一行不同。
+
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
 纳入四后端编译与往返测试的结果，防止生成器只“输出文本”却无法被 MoonBit
 使用。生成代码所在包需要导入协议包；包含普通 request/reply 服务的
