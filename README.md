@@ -4,6 +4,15 @@
 [![Mooncakes](https://img.shields.io/badge/mooncakes-Xpeng%2Fmoonthrift-purple)](https://mooncakes.io/docs/Xpeng/moonthrift)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
+**English summary.** MoonThrift is an Apache Thrift toolkit written in MoonBit.
+It parses and checks Thrift IDL (including multi-file includes), encodes and
+decodes the Binary and Compact protocols (verified byte for byte against Apache
+Thrift Python 0.24.0), generates typed MoonBit models with client/handler
+facades, and checks schema compatibility between versions. Everything except
+native file/TCP adapters runs on the wasm, wasm-gc, JavaScript and native
+backends. The command-line tool also runs on wasm. See the feature matrix below
+for what is and is not supported. Licensed under Apache-2.0.
+
 MoonThrift 是一个用 MoonBit 编写的 Apache Thrift 基础工具库。它把 Thrift
 IDL 解析、语义检查、协议编解码、代码生成和接口兼容性检查放在同一套可复用
 API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和数据迁移流程。
