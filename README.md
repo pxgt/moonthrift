@@ -42,6 +42,31 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 - 调用方提供源码加载器的多文件 workspace，支持相对 `include`、循环检测、
   限定类型与跨文件 service 继承检查；
 
+## 功能支持矩阵
+
+下表以当前 `main` 的代码和测试为准，没有实现的能力明确标出。
+
+| 能力 | 状态 | 说明 |
+|---|---|---|
+| IDL：include/namespace/const/typedef/enum/struct/union/exception/service/throws/oneway/注解 | ✅ | 保留行列位置 |
+| 多文件 include 工作区、限定类型、跨文件继承检查 | ✅ | 由调用方提供源码加载器 |
+| 语义检查（重复定义、字段 ID、union、oneway、循环） | ✅ | |
+| Binary Protocol | ✅ | 严格版本头；不接受旧式非严格消息头 |
+| Compact Protocol | ✅ | |
+| uuid 线格式 | ⚠️ | 目前按 binary 编码，与 Apache Thrift ≥0.19 的 UUID 类型不互通 |
+| JSON / SimpleJSON Protocol | ❌ | |
+| Framed 传输 | ✅ | 可移植编解码 + 增量解码 |
+| Buffered / HTTP / Header 传输 | ❌ | |
+| MoonBit 代码生成（结构体/union/异常/枚举/typedef/常量/容器/默认值/未知字段） | ✅ | |
+| 枚举放在 list/set/map 中、枚举作 Map 键、空结构体 | ✅ | 已由编译并运行的生成包测试覆盖 |
+| 结构体作为 Map 键 | ❌ | 生成代码无法编译 |
+| 类型化客户端/处理器（request/reply、oneway、声明异常、应用异常） | ✅ | 同步的字节交换回调 |
+| 继承服务（extends）的客户端/处理器 | ❌ | 会生成模型，不生成运行时门面 |
+| 异步网络客户端/服务端、TLS、连接池、多路复用 | ❌ | TCP 只有 native 教程 |
+| Schema 兼容性检查（backward/forward/full）+ JSON/Markdown/GitHub 报告 | ✅ | 支持目录和 Git 基线 |
+| CLI：check/inspect/generate/diff/compat | ✅ | native、wasm、wasm-gc |
+| 其他语言的代码生成 | ❌ | |
+
 ## 快速开始
 
 安装依赖：
@@ -130,6 +155,15 @@ python tools/compat_git.py --base-ref main --schema-dir examples \
 moon run examples/rpc_demo --target native
 ```
 
+CLI 也可以在 wasm 后端运行（不需要 C 编译器），例如：
+
+```sh
+moon run cmd/main --target wasm -- check examples/containers.thrift
+moon run cmd/main --target wasm -- generate examples/tutorial.thrift generated.mbt
+```
+
+`generate` 在 native 和 wasm 下的输出逐字节一致。
+
 [examples/generated/model.mbt](examples/generated/model.mbt) 是由示例 IDL 生成并
 纳入四后端编译与往返测试的结果，防止生成器只“输出文本”却无法被 MoonBit
 使用。生成代码所在包需要导入协议包；包含普通 request/reply 服务的
@@ -187,8 +221,16 @@ Mooncakes 包消费的完整路径，可运行
 `0.3.1` 已提供可移植的单次 RPC 处理、内存传输、类型化客户端与
 处理器、应用异常、无响应的 `ONEWAY` 调用和可增量解码的分帧传输。
 native TCP 回环示例展示如何把这些能力接到真实连接上，但它仅处理每个连接的一次
-请求，不是可复用的异步网络框架。继承服务运行时、长期运行的并发服务端、TLS、
-连接池、多路复用和其他语言生成器仍在范围之外。
+请求，不是可复用的异步网络框架。
+
+尚未实现（详见上面的功能支持矩阵）：
+
+- uuid 目前按 binary 编码，与 Apache Thrift ≥0.19 的 UUID 类型不互通；
+- JSON / SimpleJSON 协议，以及 Buffered、HTTP、Header 传输；
+- 结构体作为 Map 键（生成代码无法编译）；
+- 继承服务的运行时门面（只生成模型）；
+- 长期运行的并发服务端、TLS、连接池、多路复用；
+- 其他语言的代码生成器。
 
 ## 质量与开源说明
 

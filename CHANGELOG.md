@@ -5,6 +5,14 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- The CLI (`cmd/main`) now supports the `wasm` and `wasm-gc` backends in
+  addition to `native`, so it no longer needs a C compiler. `generate` output
+  is byte-identical across backends, and CI exercises the wasm CLI.
+- A feature-support matrix in the README that states what is and is not
+  implemented, and a refreshed "current boundaries" section.
+
 ### Fixed
 
 - Generated code no longer fails to compile for enums nested in `list`, `set`

@@ -29,6 +29,11 @@ moon run cmd/main --target native -- generate examples/tutorial.thrift /tmp/tuto
 moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
 moon run cmd/main --target native -- generate examples/oneway.thrift /tmp/oneway.generated.mbtx
 moon run cmd/main --target native -- generate examples/containers.thrift /tmp/containers.generated.mbtx
+moon run cmd/main --target wasm -- check examples/containers.thrift
+moon run cmd/main --target wasm -- generate examples/multifile/directory.thrift /tmp/directory.wasm.mbtx
+moon fmt /tmp/directory.wasm.mbtx
+cmp examples/generated_directory/model.mbt /tmp/directory.wasm.mbtx
+moon run cmd/main --target wasm -- diff examples/tutorial.thrift examples/tutorial-v2.thrift  # exit code 3 = breaking change
 moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/oneway.generated.mbtx /tmp/containers.generated.mbtx
 moon package --frozen
 python -m pip install -r interop/python/requirements.txt
