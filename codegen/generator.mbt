@@ -333,6 +333,7 @@ fn render_record(
       output.write_string(render_field(field))
     }
     output.write_string("} derive(Debug, Eq)\n\n")
+    render_derived_method_extends(output, type_name(name), hash=false)
   }
   render_record_codec(output, schema, name, fields)
 }
@@ -452,6 +453,7 @@ fn render_enum(
     output.write_string("  \{type_name(enum_member.name)}\n")
   }
   output.write_string("} derive(Debug, Eq)\n\n")
+  render_derived_method_extends(output, generated_name, hash=false)
   output.write_string(
     "///|\npub fn \{generated_name}::to_thrift_i32(self : \{generated_name}) -> Int {\n",
   )
@@ -517,6 +519,7 @@ fn render_union(
     )
   }
   output.write_string("} derive(Debug, Eq)\n\n")
+  render_derived_method_extends(output, generated_name, hash=false)
   output.write_string(
     "///|\npub fn \{generated_name}::to_thrift_value(self : \{generated_name}) -> @protocol.Value {\n  match self {\n    Empty => StructValue([])\n",
   )
@@ -602,6 +605,7 @@ fn render_function_models(
     )
   }
   output.write_string("} derive(Debug, Eq)\n\n")
+  render_derived_method_extends(output, "\{prefix}Result", hash=false)
   render_function_result_codec(output, schema, prefix, function)
 }
 
@@ -743,4 +747,25 @@ pub fn generate_moonbit(
     content = content.unsafe_substring(start=0, end=content.length() - 1)
   }
   { path, content, }
+}
+
+///|
+/// Emits hidden compatibility methods for derived traits so generated public
+/// types do not trigger MoonBit warning 0079 (implicit_impl_as_method).
+fn render_derived_method_extends(
+  output : StringBuilder,
+  generated_name : String,
+  hash~ : Bool,
+) -> Unit {
+  output.write_string(
+    "///|\n#deprecated(\"Use `Debug::to_repr` or `debug_inspect` instead\", skip_current_package=true)\n#doc(hidden)\npub extend \{generated_name} with Debug::{to_repr}\n\n",
+  )
+  output.write_string(
+    "///|\n#deprecated(\"Use `==` or `!=` instead\", skip_current_package=true)\n#doc(hidden)\npub extend \{generated_name} with Eq::{equal, not_equal}\n\n",
+  )
+  if hash {
+    output.write_string(
+      "///|\n#deprecated(\"Use `Hash::hash` instead\", skip_current_package=true)\n#doc(hidden)\npub extend \{generated_name} with Hash::{hash, hash_combine}\n\n",
+    )
+  }
 }

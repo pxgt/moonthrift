@@ -14,6 +14,16 @@ pub(all) enum Role {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Role with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Role with Eq::{equal, not_equal}
+
+///|
 pub fn Role::to_thrift_i32(self : Role) -> Int {
   match self {
     USER => 1
@@ -82,6 +92,16 @@ pub(all) struct User {
   flags : Array[Int64]?
   revision : Int
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend User with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend User with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.
@@ -247,6 +267,16 @@ pub(all) enum UserLookup {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserLookup with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserLookup with Eq::{equal, not_equal}
+
+///|
 pub fn UserLookup::to_thrift_value(self : UserLookup) -> @protocol.Value {
   match self {
     Empty => StructValue([])
@@ -319,6 +349,16 @@ pub(all) struct UserNotFound {
   id : UserId
   message : String
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserNotFound with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserNotFound with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.
@@ -406,6 +446,16 @@ pub(all) struct UserDirectoryGetUserArgs {
 } derive(Debug, Eq)
 
 ///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserArgs with Eq::{equal, not_equal}
+
+///|
 /// Converts this generated record to its schema-independent Thrift value.
 pub fn UserDirectoryGetUserArgs::to_thrift_value(
   self : UserDirectoryGetUserArgs,
@@ -481,6 +531,16 @@ pub(all) enum UserDirectoryGetUserResult {
   Success(User)
   Missing(UserNotFound)
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryGetUserResult with Eq::{equal, not_equal}
 
 ///|
 pub fn UserDirectoryGetUserResult::to_thrift_value(
@@ -627,6 +687,16 @@ pub fn UserDirectoryListUsersArgs::decode_compact(
 pub(all) enum UserDirectoryListUsersResult {
   Success(Array[User])
 } derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryListUsersResult with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryListUsersResult with Eq::{equal, not_equal}
 
 ///|
 pub fn UserDirectoryListUsersResult::to_thrift_value(
