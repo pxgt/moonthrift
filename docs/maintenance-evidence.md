@@ -1,13 +1,15 @@
 # Maintenance and release evidence
 
 Historical evidence verified on 2026-09-28. This ledger ties source commits
-to public CI, releases, and the registry. Phase 6 is prepared as `0.3.1` in
-[Issue #41](https://github.com/pxgt/moonthrift/issues/41). For its publication
-status and exact source commit, use the
-[v0.3.1 Release](https://github.com/pxgt/moonthrift/releases/tag/v0.3.1),
-[Mooncakes 0.3.1](https://mooncakes.io/docs/Xpeng/moonthrift@0.3.1), and
-dereference the annotated tag. A `moon.mod` version alone is not publication
-evidence.
+to public CI, releases, and the registry. The current source is prepared as
+`0.4.0` in [Issue #50](https://github.com/pxgt/moonthrift/issues/50); Phase 6
+was prepared as `0.3.1` in
+[Issue #41](https://github.com/pxgt/moonthrift/issues/41). For publication
+status and the exact source commit of either version, use the
+[v0.4.0 Release](https://github.com/pxgt/moonthrift/releases/tag/v0.4.0),
+[Mooncakes 0.4.0](https://mooncakes.io/docs/Xpeng/moonthrift@0.4.0) (or the
+matching `0.3.1` pages), and dereference the annotated tag. A `moon.mod`
+version alone is not publication evidence.
 
 ## Published releases
 
@@ -46,8 +48,8 @@ registry, and the last two commands run from the current repository's
 Phase 6 checkout on a host with the native compiler and Node.js available.
 For the historical source tests, use a **separate clone**
 detached at the tag and the commands in [verification.md](verification.md);
-do not switch a working checkout with uncommitted changes. For `0.3.1`, also
-test a fresh, separate consumer pinned to `Xpeng/moonthrift@0.3.1`. A
+do not switch a working checkout with uncommitted changes. For `0.4.0`, also
+test a fresh, separate consumer pinned to `Xpeng/moonthrift@0.4.0`. A
 successful registry lookup or tag alone does not establish that a new `main`
 commit was published.
 
@@ -78,7 +80,7 @@ the generator output); CI no longer exempts any warning. The broader
 
 ## Next release discipline
 
-Do not infer publication of `0.3.1` or a future `0.4.0` from the `main` tree.
+Do not infer publication of `0.4.0` or a future release from the `main` tree.
 A release
 requires a reviewed version/changelog change, green PR and exact main-commit
 CI, packaging, publication under the intended Mooncakes account, a successful

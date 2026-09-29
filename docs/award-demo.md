@@ -35,7 +35,7 @@ PASS: source workflow and published-package consumer
 2. **生成与可复现（20 秒）**：运行脚本前半段。CLI 检查两份文档和四个定义，生成类型、编解码器、客户端与处理器。临时生成文件与已提交的 [MoonBit 模型](../examples/generated_directory/model.mbt) 逐字一致。
 3. **实际调用（25 秒）**：展示四行 `Ada` 输出。一个生成的类型化客户端调用处理器，分别走 Binary/Compact 与内存/长度前缀帧。这里是**进程内字节交换**，不是声称已有完整网络服务器；独立 [TCP 教程](../examples/tcp_demo) 才是 native socket 适配示例。
 4. **演进与分发（20 秒）**：示范旧/新 schema 比较会拦下字段类型变化和被删除的定义。随后独立的 [消费工程](../examples/mooncakes_consumer/moon.mod) 从 Mooncakes 固定安装 `Xpeng/moonthrift@0.3.0`，调用已发布包的解析器及两种编解码器。
-5. **边界（10 秒）**：此演示的独立消费工程故意固定 `0.3.0`，检查 `0.3.1` 源码与上一版本的兼容性；若需验证最新发布包，应另建消费工程安装 `0.3.1`。TLS、连接池、其他语言生成器等在 [路线图](award-roadmap.md) 中明确延期。
+5. **边界（10 秒）**：此演示的独立消费工程故意固定 `0.3.0`，检查 `0.4.0` 源码与上一版本的兼容性；若需验证最新发布包，应另建消费工程安装 `0.4.0`。TLS、连接池、其他语言生成器等在 [路线图](award-roadmap.md) 中明确延期。
 
 ## 可供核对的证据
 

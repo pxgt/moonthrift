@@ -1,5 +1,21 @@
 # Release checklist
 
+## 0.4.0 publication gate
+
+The release is tracked in
+[Issue #50](https://github.com/pxgt/moonthrift/issues/50). Publish only after
+the release-preparation PR and exact merged `main` commit pass CI. Verify
+`moon whoami` reports `Xpeng` in the isolated publishing environment, then
+publish that unmodified commit. Confirm a successful Mooncakes build, test a
+fresh consumer pinned to `0.4.0` that parses a uuid field and round-trips a
+`UuidValue`, create an annotated tag on the publishing commit, and publish a
+GitHub Release citing the CI run and registry page. Record completed evidence
+in Issue #50 and the GitHub Release; this source file is a procedure, not a
+premature success claim.
+
+`0.4.0` changes the `uuid` wire format and adds enum variants to `WireType`
+and `Value`; call this out in the Release notes.
+
 ## 0.3.1 publication gate
 
 The Phase 6 maintenance release is tracked in

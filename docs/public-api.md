@@ -6,10 +6,11 @@ The authoritative inventories are the checked-in
 [codegen](../codegen/pkg.generated.mbti), and [RPC](../rpc/pkg.generated.mbti)
 interfaces. Run `moon ide doc '@moonthrift.compile_workspace'` (or another
 symbol) against your installed dependency to check the API of that version.
-The examples below use the `Xpeng/moonthrift@0.3.1` API. This maintenance
-release adds the Phase 6 tests, examples, and documentation without changing
-the public interfaces listed above. The independent regression consumer in
-this repository intentionally remains pinned to `0.3.0`.
+The examples below use the `Xpeng/moonthrift@0.4.0` API. Compared with 0.3.1,
+this release adds `WireType::Uuid`, `Value::UuidValue`, and
+`Value::require_uuid` to the protocol package; the other packages keep their
+public interfaces. The independent regression consumer in this repository
+intentionally remains pinned to `0.3.0`.
 
 ## Choose a package
 
@@ -20,7 +21,7 @@ this repository intentionally remains pinned to `0.3.0`.
 | `Xpeng/moonthrift/codegen` | `generate_moonbit`, `generate_workspace` | Produces a `GeneratedFile`; compile its `content` as a separate MoonBit package. |
 | `Xpeng/moonthrift/rpc` | `RpcProtocol`, `call_once`, `process_once`, `encode_frame`, `FrameDecoder` | A synchronous byte-exchange boundary; no portable socket runtime is implied. |
 
-Add the module dependency with `moon add Xpeng/moonthrift@0.3.1`. A consuming
+Add the module dependency with `moon add Xpeng/moonthrift@0.4.0`. A consuming
 package imports only the packages it calls in its `moon.pkg`:
 
 ```moonbit
