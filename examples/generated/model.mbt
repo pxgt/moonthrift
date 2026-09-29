@@ -11,7 +11,7 @@ pub(all) enum Role {
   USER
   /// Directory administrator.
   ADMIN
-} derive(Debug, Eq)
+} derive(Debug, Eq, Hash)
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -22,6 +22,11 @@ pub extend Role with Debug::{to_repr}
 #deprecated("Use `==` or `!=` instead", skip_current_package=true)
 #doc(hidden)
 pub extend Role with Eq::{equal, not_equal}
+
+///|
+#deprecated("Use `Hash::hash` instead", skip_current_package=true)
+#doc(hidden)
+pub extend Role with Hash::{hash, hash_combine}
 
 ///|
 pub fn Role::to_thrift_i32(self : Role) -> Int {
@@ -173,17 +178,7 @@ pub fn User::from_thrift_value(
     match field.id {
       1 => decoded_id = Some(field.value.require_i64())
       2 => decoded_name = Some(field.value.require_string())
-      3 =>
-        decoded_role = Some(
-          match Role::from_thrift_i32(field.value.require_i32()) {
-            Some(value) => value
-            None =>
-              raise InvalidEnum(
-                type_name="Role",
-                value=field.value.require_i32(),
-              )
-          },
-        )
+      3 => decoded_role = Some(Role::from_thrift_value(field.value))
       4 =>
         decoded_aliases = Some(
           field.value.require_list(Binary).map(item => item.require_string()),
@@ -623,7 +618,17 @@ pub fn UserDirectoryGetUserResult::decode_compact(
 ///|
 /// Typed directory operations.
 /// Generated from Thrift function arguments `UserDirectoryListUsersArgs`.
-pub(all) struct UserDirectoryListUsersArgs {}
+pub(all) struct UserDirectoryListUsersArgs {} derive(Debug, Eq)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryListUsersArgs with Debug::{to_repr}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend UserDirectoryListUsersArgs with Eq::{equal, not_equal}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.

@@ -61,7 +61,7 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(Self, @protocol
 pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes raise @protocol.ProtocolError
 
 pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {
-}
+} derive(Eq, @debug.Debug)
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError

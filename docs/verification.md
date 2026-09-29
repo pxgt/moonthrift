@@ -28,7 +28,8 @@ moon run cmd/main --target native -- diff examples/tutorial.thrift examples/tuto
 moon run cmd/main --target native -- generate examples/tutorial.thrift /tmp/tutorial.generated.mbtx
 moon run cmd/main --target native -- generate examples/multifile/api.thrift /tmp/multifile.generated.mbtx
 moon run cmd/main --target native -- generate examples/oneway.thrift /tmp/oneway.generated.mbtx
-moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/oneway.generated.mbtx
+moon run cmd/main --target native -- generate examples/containers.thrift /tmp/containers.generated.mbtx
+moon fmt /tmp/tutorial.generated.mbtx /tmp/multifile.generated.mbtx /tmp/oneway.generated.mbtx /tmp/containers.generated.mbtx
 moon package --frozen
 python -m pip install -r interop/python/requirements.txt
 python interop/python/reference.py --check
@@ -51,9 +52,10 @@ the same blocks for generated public types
 any warning. The migration changes API declaration mechanics, not
 Binary/Compact wire behavior, and leaves every `.mbti` unchanged.
 
-Compare the three formatted generated files with
+Compare the formatted generated files with
 `examples/generated/model.mbt`, `examples/generated_workspace/model.mbt`,
-and `examples/generated_oneway/model.mbt`. All generated packages are part of
+`examples/generated_oneway/model.mbt`, and
+`examples/generated_containers/model.mbt`. All generated packages are part of
 the regular check/test graph. Their tests
 execute Binary and Compact round trips on all stable backends, including
 nested containers, cross-file types, service results, defaults, unknown fields,

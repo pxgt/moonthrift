@@ -243,3 +243,7 @@ git diff --exit-code
   migrated with hidden deprecated `pub extend` declarations (`deprecated.mbt`
   per package and generator output), public interfaces are unchanged, and CI
   no longer exempts any warning.
+- 2026-09-30: Issue #44 fixes three generator defects that produced code that
+  did not compile: enums inside containers, enums as map keys, and empty
+  structs. A new `examples/generated_containers` package compiles and tests
+  the generated code on all four backends, and CI regenerates it.

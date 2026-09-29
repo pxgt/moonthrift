@@ -27,6 +27,8 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
   以及 service 的参数/结果模型；
 - 为生成模型提供类型安全的 `to_thrift_value` / `from_thrift_value` 与
   Binary/Compact 便捷方法，支持嵌套容器、默认值、未知字段和 required 校验；
+  枚举可以放在 list/set/map 中、枚举可以作为 Map 的键，空结构体
+  （`struct Empty {}`）也能生成可编译的代码；
 - 与 Apache Thrift Python `0.24.0` 进行 Binary/Compact 双向字节级互操作验证，
   覆盖整数边界、Unicode、空/嵌套容器、异常和未知字段；
 - 将 `///` 和 `/** ... */` IDL 文档保留为生成 MoonBit API 的文档注释；

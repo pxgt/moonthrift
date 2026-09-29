@@ -354,7 +354,25 @@ pub fn ExamplesMultifileCommonTypesUser::decode_compact(
 
 ///|
 /// Generated from Thrift function arguments `ExamplesMultifileCommonTypesBaseDirectoryPingArgs`.
-pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {}
+pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {} derive (
+  Debug,
+  Eq,
+)
+
+///|
+#deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingArgs with Debug::{
+  to_repr,
+}
+
+///|
+#deprecated("Use `==` or `!=` instead", skip_current_package=true)
+#doc(hidden)
+pub extend ExamplesMultifileCommonTypesBaseDirectoryPingArgs with Eq::{
+  equal,
+  not_equal,
+}
 
 ///|
 /// Converts this generated record to its schema-independent Thrift value.

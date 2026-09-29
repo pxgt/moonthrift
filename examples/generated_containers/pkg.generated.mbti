@@ -1,0 +1,65 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "Xpeng/moonthrift/examples/generated_containers"
+
+import {
+  "Xpeng/moonthrift/protocol",
+  "moonbitlang/core/debug",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub(all) struct Badge {
+  label : String
+  level : Int?
+} derive(Eq, @debug.Debug)
+pub fn Badge::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Badge::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Badge::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Badge::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Badge::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn Badge::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) struct Inventory {
+  history : Array[Status]
+  allowed : Array[Status]?
+  counts : Map[Status, Int]?
+  by_owner : Map[String, Array[Status]]?
+  badges : Map[Status, Badge]?
+  marker : Marker?
+} derive(Eq, @debug.Debug)
+pub fn Inventory::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Inventory::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Inventory::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Inventory::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Inventory::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn Inventory::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) struct Marker {
+} derive(Eq, @debug.Debug)
+pub fn Marker::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Marker::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Marker::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Marker::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Marker::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn Marker::to_thrift_value(Self) -> @protocol.Value
+
+pub(all) enum Status {
+  ACTIVE
+  SUSPENDED
+  DELETED
+} derive(Eq, Hash, @debug.Debug)
+pub fn Status::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Status::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
+pub fn Status::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Status::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
+pub fn Status::from_thrift_i32(Int) -> Self?
+pub fn Status::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
+pub fn Status::to_thrift_i32(Self) -> Int
+pub fn Status::to_thrift_value(Self) -> @protocol.Value
+
+// Type aliases
+
+// Traits

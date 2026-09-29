@@ -5,6 +5,16 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Fixed
+
+- Generated code no longer fails to compile for enums nested in `list`, `set`
+  or `map` values (decoded through the generated `Enum::from_thrift_value`),
+  enums used as `map` keys (generated enums now also derive `Hash`), and empty
+  structs (which now derive `Debug` and `Eq`, so records, lists and services
+  containing them compile). The new `examples/containers.thrift` and
+  `examples/generated_containers` package cover all three cases, and CI
+  regenerates and compares it byte for byte.
+
 ### Changed
 
 - Migrated all 111 `[0079]` (`implicit_impl_as_method`) warnings reported by
