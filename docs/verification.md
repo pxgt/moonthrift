@@ -1,6 +1,6 @@
 # Verification
 
-The `0.3.0` release is verified with the
+The `0.3.x` source and release workflow is verified with the
 2026-09-20 stable MoonBit toolchain:
 
 ```text
@@ -146,7 +146,7 @@ moon test idl_fuzz_test.mbt --target all --deny-warn --warn-list +73-79
 
 The [public API guide](public-api.md) maps stable entry points to their
 generated interfaces. [Maintenance evidence](maintenance-evidence.md) maps
-published tags and the unreleased Phase 6 commits to exact CI runs.
+published tags and the Phase 6 commits to exact CI runs.
 For a short judge-facing smoke demonstration of the complete workflow,
 run `python3 tools/award_demo.py` as described in
 [award-demo.md](award-demo.md). CI runs the same command.
