@@ -42,7 +42,9 @@ raise `UnexpectedEof` on truncated input, and uuid values work inside structs,
 lists, sets, and maps. `Value::require_uuid` also accepts a 16-byte
 `BinaryValue`, because MoonThrift 0.3.1 and earlier wrote uuid as
 length-prefixed binary; the reverse is not true, so a 0.3.1 peer rejects the new
-type ID as unknown. Generated MoonBit still exposes uuid fields as `Bytes`.
+type ID as unknown. This fallback covers standalone uuid fields only: a
+container written by 0.3.1 (such as `list<uuid>`) declares `Binary` as its
+element type, so `require_list(Uuid)` and the generated decoders reject it. Generated MoonBit still exposes uuid fields as `Bytes`.
 
 The literal fixtures below come from Apache Thrift Python 0.24.0 for a struct
 whose field 1 is a uuid and whose field 2 is a one-element `list<uuid>`, and

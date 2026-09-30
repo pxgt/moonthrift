@@ -62,7 +62,7 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 | 语义检查（重复定义、字段 ID、union、oneway、循环） | ✅ | |
 | Binary Protocol | ✅ | 严格版本头；不接受旧式非严格消息头 |
 | Compact Protocol | ✅ | |
-| uuid 线格式 | ✅ | 0.4.0；Binary 类型号 16 / Compact 类型号 13，16 字节原始值，与 Apache Thrift Python 0.24.0 互通；可兼容读取 ≤0.3.1 写出的 16 字节 binary |
+| uuid 线格式 | ✅ | 0.4.0；Binary 类型号 16 / Compact 类型号 13，16 字节原始值，与 Apache Thrift Python 0.24.0 互通；单个 uuid 字段可兼容读取 ≤0.3.1 写出的 16 字节 binary，容器（如 `list<uuid>`）中的旧格式不兼容 |
 | uuid 常量/默认值 | ❌ | 暂不支持：生成的常量是 36 字符的文本而不是 16 字节，可选字段的默认值也不会生效；uuid 字段本身请通过值传递 |
 | JSON / SimpleJSON Protocol | ❌ | |
 | Framed 传输 | ✅ | 可移植编解码 + 增量解码 |
@@ -215,7 +215,7 @@ assert_eq(decoded, user)
 | `Xpeng/moonthrift/protocol` | 动态值、Binary/Compact codec、RPC message |
 | `Xpeng/moonthrift/codegen` | MoonBit 源码生成器 |
 | `Xpeng/moonthrift/rpc` | 可移植的消息处理与内存 RPC 传输 |
-| `cmd/main` | native 文件与命令行适配层 |
+| `cmd/main` | 文件与命令行适配层（native、wasm、wasm-gc） |
 
 详细数据流、功能边界和维护方向见
 [docs/architecture.md](docs/architecture.md)，协议实现与安全限制见

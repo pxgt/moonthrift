@@ -10,6 +10,9 @@ the project uses semantic versioning.
 - README starts with a short English summary, and the maintenance evidence
   ledger lists the `0.3.1` and `0.4.0` source commits, CI runs, and public
   artifacts.
+- Clarified that reading uuid written by 0.3.1 and earlier works only for
+  standalone fields, not for uuid elements inside containers, and that the
+  CLI package runs on native, wasm, and wasm-gc.
 - README shows how to run the published CLI with `moonx` without cloning the
   repository (verified with `check` and `generate` on 0.4.0).
 
@@ -37,7 +40,9 @@ the project uses semantic versioning.
   `InvalidType`, even when the field was only being skipped. Exchanging `uuid`
   fields with a MoonThrift <= 0.3.1 peer is therefore not symmetric: the old
   peer rejects the new type ID as an unknown type, while the new version can still read the old format
-  because `Value::require_uuid` also accepts a 16-byte `BinaryValue`. Generated
+  for standalone uuid fields because `Value::require_uuid` also accepts a
+  16-byte `BinaryValue`; uuid elements inside containers written by 0.3.1
+  (for example `list<uuid>`) are not readable. Generated
   code decodes uuid through `require_uuid` and exposes uuid fields as `Bytes`,
   as before. `WireType` and `Value` gained a variant, so exhaustive `match`
   expressions over them need a new arm.
