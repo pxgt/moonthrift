@@ -267,3 +267,5 @@ git diff --exit-code
   zero-clone CLI use via `moonx Xpeng/moonthrift/cmd/main@0.4.0`.
 - 2026-09-30: Issue #54 adds an English README summary and the 0.3.1 and 0.4.0
   release evidence rows to the maintenance ledger.
+- 2026-09-30: Issue #56 clarifies that reading uuid written by 0.3.1 covers
+  standalone fields only, and that the CLI package runs on native and wasm.
