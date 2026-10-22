@@ -59,7 +59,7 @@ pub fn WireType::from_binary_id(id : Byte) -> WireType raise ProtocolError {
 ///|
 /// One field in a dynamically represented Thrift struct.
 pub(all) struct FieldValue {
-  id : Int
+  id : Int32
   value : Value
 } derive(Debug, Eq)
 
@@ -67,9 +67,9 @@ pub(all) struct FieldValue {
 /// A schema-independent value preserving all wire type information.
 pub(all) enum Value {
   BoolValue(Bool)
-  ByteValue(Int)
-  I16Value(Int)
-  I32Value(Int)
+  ByteValue(Int32)
+  I16Value(Int32)
+  I32Value(Int32)
   I64Value(Int64)
   DoubleValue(Double)
   BinaryValue(Bytes)
@@ -94,7 +94,7 @@ pub(all) enum MessageType {
 } derive(Debug, Eq)
 
 ///|
-pub fn MessageType::id(self : MessageType) -> Int {
+pub fn MessageType::id(self : MessageType) -> Int32 {
   match self {
     Call => 1
     Reply => 2
@@ -104,7 +104,7 @@ pub fn MessageType::id(self : MessageType) -> Int {
 }
 
 ///|
-pub fn MessageType::from_id(id : Int) -> MessageType raise ProtocolError {
+pub fn MessageType::from_id(id : Int32) -> MessageType raise ProtocolError {
   match id {
     1 => Call
     2 => Reply
@@ -119,7 +119,7 @@ pub fn MessageType::from_id(id : Int) -> MessageType raise ProtocolError {
 pub(all) struct Message {
   name : String
   kind : MessageType
-  sequence_id : Int
+  sequence_id : Int32
   body : Value
 } derive(Debug, Eq)
 
@@ -147,7 +147,7 @@ pub fn Value::wire_type(self : Value) -> WireType {
 /// Unknown fields remain available to callers but generated decoders can
 /// deliberately ignore them, which preserves Thrift's forward-compatibility
 /// behavior.
-pub fn find_field(fields : ArrayView[FieldValue], id : Int) -> Value? {
+pub fn find_field(fields : ArrayView[FieldValue], id : Int32) -> Value? {
   for field in fields {
     if field.id == id {
       return Some(field.value)
@@ -179,7 +179,7 @@ pub fn Value::require_byte(self : Value) -> Byte raise ProtocolError {
 }
 
 ///|
-pub fn Value::require_i16(self : Value) -> Int raise ProtocolError {
+pub fn Value::require_i16(self : Value) -> Int32 raise ProtocolError {
   match self {
     I16Value(value) => value
     value => raise TypeMismatch(expected=I16, actual=value.wire_type())
@@ -187,7 +187,7 @@ pub fn Value::require_i16(self : Value) -> Int raise ProtocolError {
 }
 
 ///|
-pub fn Value::require_i32(self : Value) -> Int raise ProtocolError {
+pub fn Value::require_i32(self : Value) -> Int32 raise ProtocolError {
   match self {
     I32Value(value) => value
     value => raise TypeMismatch(expected=I32, actual=value.wire_type())
@@ -315,20 +315,20 @@ pub fn Value::require_map(
 /// Errors are bounded and deterministic so malformed untrusted payloads do not
 /// become panics or unbounded allocations.
 pub(all) suberror ProtocolError {
-  UnexpectedEof(offset~ : Int, needed~ : Int)
+  UnexpectedEof(offset~ : Int32, needed~ : Int32)
   InvalidType(Byte)
   TypeMismatch(expected~ : WireType, actual~ : WireType)
-  NegativeSize(Int)
-  LimitExceeded(kind~ : String, limit~ : Int, actual~ : Int)
-  TrailingData(offset~ : Int, remaining~ : Int)
+  NegativeSize(Int32)
+  LimitExceeded(kind~ : String, limit~ : Int32, actual~ : Int32)
+  TrailingData(offset~ : Int32, remaining~ : Int32)
   InvalidCompact(String)
   InvalidMessage(String)
-  ApplicationException(message~ : String, type_code~ : Int)
+  ApplicationException(message~ : String, type_code~ : Int32)
   InvalidValue(String)
-  InvalidEnum(type_name~ : String, value~ : Int)
+  InvalidEnum(type_name~ : String, value~ : Int32)
   MissingRequiredField(
     type_name~ : String,
-    field_id~ : Int,
+    field_id~ : Int32,
     field_name~ : String
   )
 } derive(Debug, Eq)

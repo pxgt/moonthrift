@@ -1,21 +1,21 @@
 ///|
 priv struct BinaryReader {
   input : Bytes
-  mut offset : Int
-  max_depth : Int
-  max_container_size : Int
-  max_binary_size : Int
+  mut offset : Int32
+  max_depth : Int32
+  max_container_size : Int32
+  max_binary_size : Int32
 }
 
 ///|
-fn BinaryReader::remaining(self : BinaryReader) -> Int {
+fn BinaryReader::remaining(self : BinaryReader) -> Int32 {
   self.input.length() - self.offset
 }
 
 ///|
 fn BinaryReader::require(
   self : BinaryReader,
-  count : Int,
+  count : Int32,
 ) -> Unit raise ProtocolError {
   if count < 0 || self.remaining() < count {
     raise UnexpectedEof(offset=self.offset, needed=count)
@@ -31,7 +31,7 @@ fn BinaryReader::read_byte(self : BinaryReader) -> Byte raise ProtocolError {
 }
 
 ///|
-fn BinaryReader::read_i16(self : BinaryReader) -> Int raise ProtocolError {
+fn BinaryReader::read_i16(self : BinaryReader) -> Int32 raise ProtocolError {
   self.require(2)
   let raw = (self.input[self.offset].to_int() << 8) |
     self.input[self.offset + 1].to_int()
@@ -44,9 +44,9 @@ fn BinaryReader::read_i16(self : BinaryReader) -> Int raise ProtocolError {
 }
 
 ///|
-fn BinaryReader::read_i32(self : BinaryReader) -> Int raise ProtocolError {
+fn BinaryReader::read_i32(self : BinaryReader) -> Int32 raise ProtocolError {
   self.require(4)
-  let raw : UInt = (self.input[self.offset].to_uint() << 24) |
+  let raw : UInt32 = (self.input[self.offset].to_uint() << 24) |
     (self.input[self.offset + 1].to_uint() << 16) |
     (self.input[self.offset + 2].to_uint() << 8) |
     self.input[self.offset + 3].to_uint()
@@ -96,7 +96,7 @@ fn BinaryReader::read_uuid(self : BinaryReader) -> Bytes raise ProtocolError {
 ///|
 fn BinaryReader::check_container(
   self : BinaryReader,
-  size : Int,
+  size : Int32,
 ) -> Unit raise ProtocolError {
   if size < 0 {
     raise NegativeSize(size)
@@ -114,7 +114,7 @@ fn BinaryReader::check_container(
 fn BinaryReader::read_value(
   self : BinaryReader,
   ty : WireType,
-  depth : Int,
+  depth : Int32,
 ) -> Value raise ProtocolError {
   if depth > self.max_depth {
     raise LimitExceeded(kind="depth", limit=self.max_depth, actual=depth)
@@ -252,9 +252,9 @@ pub fn encode_binary(value : Value) -> Bytes raise ProtocolError {
 pub fn decode_binary(
   input : Bytes,
   ty : WireType,
-  max_depth? : Int = 64,
-  max_container_size? : Int = 1000000,
-  max_binary_size? : Int = 16777216,
+  max_depth~ : Int32 = 64,
+  max_container_size~ : Int32 = 1000000,
+  max_binary_size~ : Int32 = 16777216,
 ) -> Value raise ProtocolError {
   let reader : BinaryReader = {
     input,

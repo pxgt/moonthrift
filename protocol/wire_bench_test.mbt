@@ -1,6 +1,6 @@
 ///|
 // Keep the value shape stable: a mix of primitive, binary, and container fields.
-fn protocol_benchmark_fixture(fields : Int) -> @protocol.Value {
+fn protocol_benchmark_fixture(fields : Int32) -> @protocol.Value {
   let values : Array[@protocol.FieldValue] = []
   for index in 0..<fields {
     let value : @protocol.Value = match index % 4 {

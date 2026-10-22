@@ -2,11 +2,11 @@
 // Deterministic mutations of valid documents reach lexer, parser, and
 // semantic paths without relying on an external fuzzing runtime.
 struct IdlTestRng {
-  mut state : UInt
+  mut state : UInt32
 }
 
 ///|
-fn IdlTestRng::choose(self : IdlTestRng, upper : Int) -> Int {
+fn IdlTestRng::choose(self : IdlTestRng, upper : Int32) -> Int32 {
   self.state = self.state * 1664525U + 1013904223U
   (self.state % upper.reinterpret_as_uint()).reinterpret_as_int()
 }

@@ -40,7 +40,7 @@ test "generated typed client and handler route methods on both protocols" {
   }
   let protocols : Array[@rpc.RpcProtocol] = [Binary, Compact]
   for wire in protocols {
-    let sequences : Array[Int] = []
+    let sequences : Array[Int32] = []
     let client = @generated.UserDirectoryClient::new(wire, bytes => {
       let request = wire.decode(bytes)
       sequences.push(request.sequence_id)

@@ -736,7 +736,7 @@ fn render_definition(
 /// Generates portable MoonBit declarations for a parsed schema.
 pub fn generate_moonbit(
   schema : @moonthrift.Schema,
-  path? : String = "generated.mbt",
+  path~ : String = "generated.mbt",
 ) -> GeneratedFile {
   let output = StringBuilder()
   output.write_string(

@@ -68,7 +68,7 @@ async fn call_get_user(
   addr : @socket.Addr,
   wire : @rpc.RpcProtocol,
   id : Int64,
-  sequence_id : Int,
+  sequence_id : Int32,
 ) -> String {
   let conn = @socket.Tcp::connect(addr)
   defer conn.close()

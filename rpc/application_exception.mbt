@@ -3,7 +3,7 @@
 /// codes are retained so a newer peer can still be diagnosed.
 pub(all) struct ApplicationException {
   message : String
-  type_code : Int
+  type_code : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -38,7 +38,7 @@ pub fn ApplicationException::from_thrift_value(
 /// Builds an EXCEPTION response with the request's method and sequence ID.
 pub fn application_exception_reply(
   request : @protocol.Message,
-  type_code : Int,
+  type_code : Int32,
   message : String,
 ) -> @protocol.Message {
   {

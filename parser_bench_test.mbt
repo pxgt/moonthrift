@@ -1,7 +1,7 @@
 ///|
 // Construct the input before timing so this measures lexing and parsing,
 // not fixture generation or filesystem I/O.
-fn parser_benchmark_fixture(records : Int) -> String {
+fn parser_benchmark_fixture(records : Int32) -> String {
   let source = StringBuilder()
   source.write_string("namespace mbt bench\ntypedef i64 Key\n")
   for index in 0..<records {

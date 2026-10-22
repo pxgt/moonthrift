@@ -16,7 +16,7 @@ fn diagnostic(
   code : String,
   message : String,
   span : Span,
-  severity? : Severity = Error,
+  severity~ : Severity = Error,
 ) -> Diagnostic {
   { code, severity, message, span, }
 }
@@ -51,7 +51,7 @@ fn validate_type(
   names : ArrayView[String],
   span : Span,
   diagnostics : Array[Diagnostic],
-  allow_void? : Bool = false,
+  allow_void~ : Bool = false,
 ) -> Unit {
   match ty {
     Base(Void) if !allow_void =>
@@ -76,7 +76,7 @@ fn validate_field_set(
   fields : ArrayView[Field],
   names : ArrayView[String],
   diagnostics : Array[Diagnostic],
-  union? : Bool = false,
+  union~ : Bool = false,
 ) -> Unit {
   for index, field in fields {
     validate_type(field.ty, names, field.span, diagnostics)
@@ -265,7 +265,7 @@ pub fn check_schema(schema : Schema) -> Array[Diagnostic] {
 /// Parses and validates a document in one call.
 pub fn compile_idl(
   input : String,
-  source? : String = "<memory>",
+  source~ : String = "<memory>",
 ) -> (Schema, Array[Diagnostic]) raise IdlError {
   let schema = parse_idl(input, source~)
   (schema, check_schema(schema))

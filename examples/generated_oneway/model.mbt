@@ -5,7 +5,7 @@
 ///|
 /// Generated from Thrift function arguments `EventsEmitArgs`.
 pub(all) struct EventsEmitArgs {
-  value : Int
+  value : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -34,7 +34,7 @@ pub fn EventsEmitArgs::from_thrift_value(
   value : @protocol.Value,
 ) -> EventsEmitArgs raise @protocol.ProtocolError {
   let fields = value.require_struct()
-  let mut decoded_value : Int? = None
+  let mut decoded_value : Int32? = None
   for field in fields {
     match field.id {
       1 => decoded_value = Some(field.value.require_i32())
@@ -154,7 +154,7 @@ pub fn EventsEmitResult::decode_compact(
 ///|
 /// Generated from Thrift function arguments `EventsPingArgs`.
 pub(all) struct EventsPingArgs {
-  value : Int
+  value : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -183,7 +183,7 @@ pub fn EventsPingArgs::from_thrift_value(
   value : @protocol.Value,
 ) -> EventsPingArgs raise @protocol.ProtocolError {
   let fields = value.require_struct()
-  let mut decoded_value : Int? = None
+  let mut decoded_value : Int32? = None
   for field in fields {
     match field.id {
       1 => decoded_value = Some(field.value.require_i32())
@@ -233,7 +233,7 @@ pub fn EventsPingArgs::decode_compact(
 
 ///|
 pub(all) enum EventsPingResult {
-  Success(Int)
+  Success(Int32)
 } derive(Debug, Eq)
 
 ///|
@@ -314,7 +314,7 @@ pub fn EventsPingResult::decode_compact(
 pub struct EventsClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes? raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 
 ///|

@@ -12,7 +12,7 @@ pub fn encode_binary_message(message : Message) -> Bytes raise ProtocolError {
     raise TypeMismatch(expected=Struct, actual=message.body.wire_type())
   }
   let buffer = Buffer()
-  let version_and_type : UInt = 0x80010000U |
+  let version_and_type : UInt32 = 0x80010000U |
     message.kind.id().reinterpret_as_uint()
   buffer.write_uint_be(version_and_type)
   let name = @utf8.encode(message.name)
@@ -35,9 +35,9 @@ fn write_compact_or_binary_body(
 /// Decodes a strict-version binary message and rejects trailing bytes.
 pub fn decode_binary_message(
   input : Bytes,
-  max_depth? : Int = 64,
-  max_container_size? : Int = 1000000,
-  max_binary_size? : Int = 16777216,
+  max_depth~ : Int32 = 64,
+  max_container_size~ : Int32 = 1000000,
+  max_binary_size~ : Int32 = 16777216,
 ) -> Message raise ProtocolError {
   let reader : BinaryReader = {
     input,
@@ -87,9 +87,9 @@ pub fn encode_compact_message(message : Message) -> Bytes raise ProtocolError {
 /// Decodes a compact protocol message and validates protocol/version bytes.
 pub fn decode_compact_message(
   input : Bytes,
-  max_depth? : Int = 64,
-  max_container_size? : Int = 1000000,
-  max_binary_size? : Int = 16777216,
+  max_depth~ : Int32 = 64,
+  max_container_size~ : Int32 = 1000000,
+  max_binary_size~ : Int32 = 16777216,
 ) -> Message raise ProtocolError {
   let reader : CompactReader = {
     input,

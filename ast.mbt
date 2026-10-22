@@ -53,7 +53,7 @@ pub(all) struct Annotation {
 ///|
 /// A field in a struct, union, exception, function, or throws clause.
 pub(all) struct Field {
-  id : Int
+  id : Int32
   requiredness : Requiredness
   ty : TypeRef
   name : String
@@ -72,7 +72,7 @@ pub(all) enum Header {
 ///|
 pub(all) struct EnumMember {
   name : String
-  value : Int
+  value : Int32
   annotations : Array[Annotation]
   span : Span
 } derive(Debug, Eq)

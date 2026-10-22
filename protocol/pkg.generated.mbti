@@ -6,13 +6,13 @@ import {
 }
 
 // Values
-pub fn decode_binary(Bytes, WireType, max_depth? : Int, max_container_size? : Int, max_binary_size? : Int) -> Value raise ProtocolError
+pub fn decode_binary(Bytes, WireType, max_depth? : Int32, max_container_size? : Int32, max_binary_size? : Int32) -> Value raise ProtocolError
 
-pub fn decode_binary_message(Bytes, max_depth? : Int, max_container_size? : Int, max_binary_size? : Int) -> Message raise ProtocolError
+pub fn decode_binary_message(Bytes, max_depth? : Int32, max_container_size? : Int32, max_binary_size? : Int32) -> Message raise ProtocolError
 
-pub fn decode_compact(Bytes, WireType, max_depth? : Int, max_container_size? : Int, max_binary_size? : Int) -> Value raise ProtocolError
+pub fn decode_compact(Bytes, WireType, max_depth? : Int32, max_container_size? : Int32, max_binary_size? : Int32) -> Value raise ProtocolError
 
-pub fn decode_compact_message(Bytes, max_depth? : Int, max_container_size? : Int, max_binary_size? : Int) -> Message raise ProtocolError
+pub fn decode_compact_message(Bytes, max_depth? : Int32, max_container_size? : Int32, max_binary_size? : Int32) -> Message raise ProtocolError
 
 pub fn encode_binary(Value) -> Bytes raise ProtocolError
 
@@ -22,36 +22,36 @@ pub fn encode_compact(Value) -> Bytes raise ProtocolError
 
 pub fn encode_compact_message(Message) -> Bytes raise ProtocolError
 
-pub fn find_field(ArrayView[FieldValue], Int) -> Value?
+pub fn find_field(ArrayView[FieldValue], Int32) -> Value?
 
 pub fn string_value(String) -> Value
 
 // Errors
 pub(all) suberror ProtocolError {
-  UnexpectedEof(offset~ : Int, needed~ : Int)
+  UnexpectedEof(offset~ : Int32, needed~ : Int32)
   InvalidType(Byte)
   TypeMismatch(expected~ : WireType, actual~ : WireType)
-  NegativeSize(Int)
-  LimitExceeded(kind~ : String, limit~ : Int, actual~ : Int)
-  TrailingData(offset~ : Int, remaining~ : Int)
+  NegativeSize(Int32)
+  LimitExceeded(kind~ : String, limit~ : Int32, actual~ : Int32)
+  TrailingData(offset~ : Int32, remaining~ : Int32)
   InvalidCompact(String)
   InvalidMessage(String)
-  ApplicationException(message~ : String, type_code~ : Int)
+  ApplicationException(message~ : String, type_code~ : Int32)
   InvalidValue(String)
-  InvalidEnum(type_name~ : String, value~ : Int)
-  MissingRequiredField(type_name~ : String, field_id~ : Int, field_name~ : String)
+  InvalidEnum(type_name~ : String, value~ : Int32)
+  MissingRequiredField(type_name~ : String, field_id~ : Int32, field_name~ : String)
 } derive(Eq, @debug.Debug)
 
 // Types and methods
 pub(all) struct FieldValue {
-  id : Int
+  id : Int32
   value : Value
 } derive(Eq, @debug.Debug)
 
 pub(all) struct Message {
   name : String
   kind : MessageType
-  sequence_id : Int
+  sequence_id : Int32
   body : Value
 } derive(Eq, @debug.Debug)
 
@@ -61,14 +61,14 @@ pub(all) enum MessageType {
   Exception
   Oneway
 } derive(Eq, @debug.Debug)
-pub fn MessageType::from_id(Int) -> Self raise ProtocolError
-pub fn MessageType::id(Self) -> Int
+pub fn MessageType::from_id(Int32) -> Self raise ProtocolError
+pub fn MessageType::id(Self) -> Int32
 
 pub(all) enum Value {
   BoolValue(Bool)
-  ByteValue(Int)
-  I16Value(Int)
-  I32Value(Int)
+  ByteValue(Int32)
+  I16Value(Int32)
+  I32Value(Int32)
   I64Value(Int64)
   DoubleValue(Double)
   BinaryValue(Bytes)
@@ -82,8 +82,8 @@ pub fn Value::require_binary(Self) -> Bytes raise ProtocolError
 pub fn Value::require_bool(Self) -> Bool raise ProtocolError
 pub fn Value::require_byte(Self) -> Byte raise ProtocolError
 pub fn Value::require_double(Self) -> Double raise ProtocolError
-pub fn Value::require_i16(Self) -> Int raise ProtocolError
-pub fn Value::require_i32(Self) -> Int raise ProtocolError
+pub fn Value::require_i16(Self) -> Int32 raise ProtocolError
+pub fn Value::require_i32(Self) -> Int32 raise ProtocolError
 pub fn Value::require_i64(Self) -> Int64 raise ProtocolError
 pub fn Value::require_list(Self, WireType) -> Array[Self] raise ProtocolError
 pub fn Value::require_map(Self, WireType, WireType) -> Array[(Self, Self)] raise ProtocolError
