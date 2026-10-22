@@ -48,7 +48,7 @@ jobs:
 
       - name: Build deb, rpm, Arch and Alpine packages
         id: pack
-        uses: pxgt/linuxpkg@v0.4.0
+        uses: pxgt/linuxpkg@v0.5.0
         with:
           config: linuxpkg.build.json
           out: dist
@@ -58,7 +58,7 @@ jobs:
 
       - name: Check the packages
         run: |
-          curl -fsSL -o linuxpkg.tar.gz "https://github.com/pxgt/linuxpkg/releases/download/v0.4.0/linuxpkg-0.4.0-linux-$(uname -m).tar.gz"
+          curl -fsSL -o linuxpkg.tar.gz "https://github.com/pxgt/linuxpkg/releases/download/v0.5.0/linuxpkg-0.5.0-linux-$(uname -m).tar.gz"
           tar -xzf linuxpkg.tar.gz linuxpkg
           for f in dist/*; do ./linuxpkg verify "$f"; done
 
