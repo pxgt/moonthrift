@@ -1,0 +1,15 @@
+{
+  "name": "moonthrift",
+  "version": "0.4.0",
+  "release": "1",
+  "arch": "amd64",
+  "maintainer": "pxgt <133531533+pxgt@users.noreply.github.com>",
+  "description": "Apache Thrift IDL tooling and binary protocol support for MoonBit",
+  "homepage": "https://github.com/pxgt/moonthrift",
+  "license": "Apache-2.0",
+  "contents": [
+    { "src": "_build/native/release/build/cmd/main/main.exe", "dst": "/usr/bin/moonthrift", "mode": "0755" },
+    { "src": "README.md", "dst": "/usr/share/doc/moonthrift/README.md" },
+    { "src": "LICENSE", "dst": "/usr/share/doc/moonthrift/copyright" }
+  ]
+}

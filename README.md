@@ -207,6 +207,19 @@ let decoded = User::decode_compact(encoded)
 assert_eq(decoded, user)
 ```
 
+## Linux 安装包
+
+命令行程序 `moonthrift` 有 deb、rpm、Arch、Alpine 四种安装包，由 [linuxpkg](https://github.com/pxgt/linuxpkg)（同样用 MoonBit 写成）打包，工作流见 [`.github/workflows/linux-packages.yml`](.github/workflows/linux-packages.yml)。带签名的软件源在 linuxpkg 的公开站点上，例如 Debian / Ubuntu：
+
+```sh
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://pxgt.github.io/linuxpkg/linuxpkg.asc | sudo tee /etc/apt/keyrings/linuxpkg.asc >/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/linuxpkg.asc] https://pxgt.github.io/linuxpkg/apt ./" | sudo tee /etc/apt/sources.list.d/linuxpkg.list
+sudo apt update && sudo apt install moonthrift
+```
+
+Fedora、Arch、Alpine 的命令见 <https://pxgt.github.io/linuxpkg/#install>。
+
 ## 包结构
 
 | 包 | 用途 |

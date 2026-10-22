@@ -1,0 +1,99 @@
+name: Linux packages
+
+# Builds the moonthrift command line (static, native) and packs it into deb, rpm, Arch and
+# Alpine packages with https://github.com/pxgt/linuxpkg, which is itself written in MoonBit.
+# The packages are not signed here; the signed repositories (apt, dnf, pacman, apk) are at
+# https://pxgt.github.io/linuxpkg/ . A published release gets the files attached; "Run workflow"
+# only keeps them as artifacts.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: packages (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-22.04, arch: amd64 }
+          - { os: ubuntu-24.04-arm, arch: arm64 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v5
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Build a static native binary
+        run: |
+          moon update
+          # Static linking is only for these packages, so it is not committed to cmd/main/moon.pkg.
+          printf '\noptions(\n  link: { "native": { "cc-link-flags": "-static" } },\n)\n' >> cmd/main/moon.pkg
+          moon build --target native --release
+          file _build/native/release/build/cmd/main/main.exe
+
+      - name: Fit linuxpkg.json to this build
+        run: |
+          version="$(sed -n 's/^version *= *"\(.*\)"/\1/p' moon.mod | head -n 1)"
+          jq --arg v "$version" --arg a "${{ matrix.arch }}" '.version = $v | .arch = $a' linuxpkg.json > linuxpkg.build.json
+          cat linuxpkg.build.json
+
+      - name: Build deb, rpm, Arch and Alpine packages
+        id: pack
+        uses: pxgt/linuxpkg@v0.4.0
+        with:
+          config: linuxpkg.build.json
+          out: dist
+
+      - name: Put the architecture into the Alpine file name
+        run: for f in dist/*.apk; do mv "$f" "${f%.apk}.${{ matrix.arch }}.apk"; done
+
+      - name: Check the packages
+        run: |
+          curl -fsSL -o linuxpkg.tar.gz "https://github.com/pxgt/linuxpkg/releases/download/v0.4.0/linuxpkg-0.4.0-linux-$(uname -m).tar.gz"
+          tar -xzf linuxpkg.tar.gz linuxpkg
+          for f in dist/*; do ./linuxpkg verify "$f"; done
+
+      - name: Keep the packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: packages-${{ matrix.arch }}
+          path: dist/*
+
+  release:
+    name: SHA256SUMS and upload
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the packages
+        uses: actions/download-artifact@v5
+        with:
+          pattern: packages-*
+          path: dist
+          merge-multiple: true
+
+      - name: Write SHA256SUMS
+        run: |
+          cd dist
+          sha256sum * | sort -k2 > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Keep SHA256SUMS
+        uses: actions/upload-artifact@v4
+        with:
+          name: SHA256SUMS
+          path: dist/SHA256SUMS
+
+      - name: Attach everything to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" dist/* --repo "${{ github.repository }}"

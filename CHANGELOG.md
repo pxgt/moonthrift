@@ -5,6 +5,12 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Added
+
+- `.github/workflows/linux-packages.yml` builds a static native `moonthrift` and packs deb, rpm, Arch and Alpine
+  packages with the linuxpkg GitHub Action (`linuxpkg.json` was made by `linuxpkg init --moon`); a published release gets
+  the files attached, a manual run keeps them as artifacts. README has a short "Linux 安装包" section.
+
 ### Documentation
 
 - README starts with a short English summary, and the maintenance evidence
