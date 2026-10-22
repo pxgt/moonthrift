@@ -2,8 +2,8 @@
 test "generated mixed service sends oneway without a response on both codecs" {
   let protocols : Array[@rpc.RpcProtocol] = [Binary, Compact]
   for wire in protocols {
-    let observed : Array[Int] = []
-    let sequences : Array[Int] = []
+    let observed : Array[Int32] = []
+    let sequences : Array[Int32] = []
     let handler : @generated_oneway.EventsHandler = {
       emit: args => observed.push(args.value),
       ping: args => Success(args.value + 1),

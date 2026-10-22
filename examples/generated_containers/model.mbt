@@ -24,7 +24,7 @@ pub extend Status with Eq::{equal, not_equal}
 pub extend Status with Hash::{hash, hash_combine}
 
 ///|
-pub fn Status::to_thrift_i32(self : Status) -> Int {
+pub fn Status::to_thrift_i32(self : Status) -> Int32 {
   match self {
     ACTIVE => 1
     SUSPENDED => 2
@@ -33,7 +33,7 @@ pub fn Status::to_thrift_i32(self : Status) -> Int {
 }
 
 ///|
-pub fn Status::from_thrift_i32(value : Int) -> Status? {
+pub fn Status::from_thrift_i32(value : Int32) -> Status? {
   match value {
     1 => Some(ACTIVE)
     2 => Some(SUSPENDED)
@@ -91,7 +91,7 @@ pub fn Status::decode_compact(
 /// Generated from Thrift struct `Badge`.
 pub(all) struct Badge {
   label : String
-  level : Int?
+  level : Int32?
 } derive(Debug, Eq)
 
 ///|
@@ -123,7 +123,7 @@ pub fn Badge::from_thrift_value(
 ) -> Badge raise @protocol.ProtocolError {
   let fields = value.require_struct()
   let mut decoded_label : String? = None
-  let mut decoded_level : Int? = None
+  let mut decoded_level : Int32? = None
   for field in fields {
     match field.id {
       1 => decoded_label = Some(field.value.require_string())
@@ -245,7 +245,7 @@ pub fn Marker::decode_compact(
 pub(all) struct Inventory {
   history : Array[Status]
   allowed : Array[Status]?
-  counts : Map[Status, Int]?
+  counts : Map[Status, Int32]?
   by_owner : Map[String, Array[Status]]?
   badges : Map[Status, Badge]?
   marker : Marker?
@@ -369,7 +369,7 @@ pub fn Inventory::from_thrift_value(
   let fields = value.require_struct()
   let mut decoded_history : Array[Status]? = None
   let mut decoded_allowed : Array[Status]? = None
-  let mut decoded_counts : Map[Status, Int]? = None
+  let mut decoded_counts : Map[Status, Int32]? = None
   let mut decoded_by_owner : Map[String, Array[Status]]? = None
   let mut decoded_badges : Map[Status, Badge]? = None
   let mut decoded_marker : Marker? = None

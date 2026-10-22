@@ -64,8 +64,8 @@ pub fn compare_schemas_with_policy(
   before : Schema,
   after : Schema,
   policy : CompatibilityPolicy,
-  source? : String = "",
-  suppressed? : Array[String] = [],
+  source~ : String = "",
+  suppressed~ : Array[String] = [],
 ) -> Array[CompatibilityFinding] {
   let findings : Array[CompatibilityFinding] = []
   if policy is Backward || policy is Full {

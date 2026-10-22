@@ -15,7 +15,7 @@ import {
 pub struct DirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 pub fn DirectoryClient::get_user(Self, DirectoryGetUserArgs) -> DirectoryGetUserResult raise @protocol.ProtocolError
 pub fn DirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
@@ -49,7 +49,7 @@ pub fn DirectoryHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes rais
 pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
 pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::ping(Self, ExamplesMultifileCommonTypesBaseDirectoryPingArgs) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError

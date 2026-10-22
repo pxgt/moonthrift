@@ -1,10 +1,10 @@
 ///|
 /// Apache Thrift's standard framed-transport maximum in bytes.
-pub let default_max_frame_size : Int = 16384000
+pub let default_max_frame_size : Int32 = 16384000
 
 ///|
 fn validate_frame_limit(
-  max_frame_size : Int,
+  max_frame_size : Int32,
 ) -> Unit raise @protocol.ProtocolError {
   if max_frame_size < 0 || max_frame_size > default_max_frame_size {
     raise InvalidValue("frame limit must be between 0 and 16384000 bytes")
@@ -17,9 +17,9 @@ fn frame_length(
   second : Byte,
   third : Byte,
   fourth : Byte,
-  max_frame_size : Int,
-) -> Int raise @protocol.ProtocolError {
-  let raw : UInt = (first.to_uint() << 24) |
+  max_frame_size : Int32,
+) -> Int32 raise @protocol.ProtocolError {
+  let raw : UInt32 = (first.to_uint() << 24) |
     (second.to_uint() << 16) |
     (third.to_uint() << 8) |
     fourth.to_uint()
@@ -38,7 +38,7 @@ fn frame_length(
 /// Empty frames are valid; an RPC message inside a frame is never empty.
 pub fn encode_frame(
   payload : Bytes,
-  max_frame_size? : Int = default_max_frame_size,
+  max_frame_size~ : Int32 = default_max_frame_size,
 ) -> Bytes raise @protocol.ProtocolError {
   validate_frame_limit(max_frame_size)
   if payload.length() > max_frame_size {
@@ -59,7 +59,7 @@ pub fn encode_frame(
 /// rejected; use `FrameDecoder` when reading an arbitrary byte stream.
 pub fn decode_frame(
   frame : Bytes,
-  max_frame_size? : Int = default_max_frame_size,
+  max_frame_size~ : Int32 = default_max_frame_size,
 ) -> Bytes raise @protocol.ProtocolError {
   validate_frame_limit(max_frame_size)
   if frame.length() < 4 {
@@ -86,16 +86,16 @@ pub fn decode_frame(
 /// Incrementally decodes a stream of framed messages. It accepts arbitrary
 /// chunk boundaries and can return multiple complete payloads per chunk.
 pub struct FrameDecoder {
-  max_frame_size : Int
+  max_frame_size : Int32
   header : Array[Byte]
   mut body : @buffer.Buffer
-  mut expected : Int
-  mut received : Int
+  mut expected : Int32
+  mut received : Int32
 }
 
 ///|
 pub fn FrameDecoder::new(
-  max_frame_size? : Int = default_max_frame_size,
+  max_frame_size~ : Int32 = default_max_frame_size,
 ) -> FrameDecoder raise @protocol.ProtocolError {
   validate_frame_limit(max_frame_size)
   { max_frame_size, header: [], body: Buffer(), expected: -1, received: 0, }

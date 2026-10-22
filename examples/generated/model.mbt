@@ -29,7 +29,7 @@ pub extend Role with Eq::{equal, not_equal}
 pub extend Role with Hash::{hash, hash_combine}
 
 ///|
-pub fn Role::to_thrift_i32(self : Role) -> Int {
+pub fn Role::to_thrift_i32(self : Role) -> Int32 {
   match self {
     USER => 1
     ADMIN => 2
@@ -37,7 +37,7 @@ pub fn Role::to_thrift_i32(self : Role) -> Int {
 }
 
 ///|
-pub fn Role::from_thrift_i32(value : Int) -> Role? {
+pub fn Role::from_thrift_i32(value : Int32) -> Role? {
   match value {
     1 => Some(USER)
     2 => Some(ADMIN)
@@ -93,9 +93,9 @@ pub(all) struct User {
   name : String
   role : Role?
   aliases : Array[String]?
-  scores : Map[String, Int]?
+  scores : Map[String, Int32]?
   flags : Array[Int64]?
-  revision : Int
+  revision : Int32
 } derive(Debug, Eq)
 
 ///|
@@ -171,9 +171,9 @@ pub fn User::from_thrift_value(
   let mut decoded_name : String? = None
   let mut decoded_role : Role? = None
   let mut decoded_aliases : Array[String]? = None
-  let mut decoded_scores : Map[String, Int]? = None
+  let mut decoded_scores : Map[String, Int32]? = None
   let mut decoded_flags : Array[Int64]? = None
-  let mut decoded_revision : Int? = None
+  let mut decoded_revision : Int32? = None
   for field in fields {
     match field.id {
       1 => decoded_id = Some(field.value.require_i64())
@@ -792,7 +792,7 @@ pub fn UserDirectoryListUsersResult::decode_compact(
 pub struct UserDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 
 ///|

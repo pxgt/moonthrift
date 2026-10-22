@@ -186,7 +186,7 @@ fn validate_qualified_reference(
   aliases : Map[String, String],
   documents : ArrayView[Schema],
   diagnostics : Array[Diagnostic],
-  service? : Bool = false,
+  service~ : Bool = false,
 ) -> Unit {
   guard name.split_once(".") is Some((alias_view, symbol_view)) else { return }
   let include_name = alias_view.to_owned()

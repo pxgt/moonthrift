@@ -34,7 +34,7 @@ test "enum containers and empty records round-trip through Binary and Compact" {
 
 ///|
 test "enum values are usable as map keys" {
-  let counts : Map[@generated_containers.Status, Int] = Map::from_array([
+  let counts : Map[@generated_containers.Status, Int32] = Map::from_array([
     (ACTIVE, 1),
   ])
   counts[DELETED] = 4

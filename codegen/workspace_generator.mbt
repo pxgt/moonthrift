@@ -249,7 +249,7 @@ fn workspace_definition(
 /// prefix, while root definitions keep their original generated names.
 pub fn generate_workspace(
   workspace : @moonthrift.SchemaWorkspace,
-  path? : String = "generated.mbt",
+  path~ : String = "generated.mbt",
 ) -> GeneratedFile {
   let definitions : Array[@moonthrift.Definition] = []
   for schema in workspace.documents {
