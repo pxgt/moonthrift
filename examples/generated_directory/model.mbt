@@ -179,7 +179,7 @@ pub fn DirectoryGetUserResult::decode_compact(
 pub struct DirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 
 ///|
@@ -519,7 +519,7 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(
 pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 
 ///|

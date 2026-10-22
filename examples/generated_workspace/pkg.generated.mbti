@@ -15,7 +15,7 @@ import {
 pub struct ExamplesMultifileCommonTypesBaseDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
 pub fn ExamplesMultifileCommonTypesBaseDirectoryClient::ping(Self, ExamplesMultifileCommonTypesBaseDirectoryPingArgs) -> ExamplesMultifileCommonTypesBaseDirectoryPingResult raise @protocol.ProtocolError

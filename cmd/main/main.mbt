@@ -130,7 +130,7 @@ fn collect_thrift_files(
   root : String,
   relative : String,
   files : Map[String, String],
-  depth : Int,
+  depth : Int32,
 ) -> Unit raise {
   if depth > 32 {
     raise Failure("schema directory depth exceeds 32: \{root}")

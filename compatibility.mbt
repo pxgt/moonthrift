@@ -36,7 +36,7 @@ fn find_definition(schema : Schema, name : String) -> Definition? {
 }
 
 ///|
-fn find_field(fields : ArrayView[Field], id : Int) -> Field? {
+fn find_field(fields : ArrayView[Field], id : Int32) -> Field? {
   for field in fields {
     if field.id == id {
       return Some(field)
@@ -46,7 +46,10 @@ fn find_field(fields : ArrayView[Field], id : Int) -> Field? {
 }
 
 ///|
-fn find_enum_value(members : ArrayView[EnumMember], value : Int) -> EnumMember? {
+fn find_enum_value(
+  members : ArrayView[EnumMember],
+  value : Int32,
+) -> EnumMember? {
   for enum_member in members {
     if enum_member.value == value {
       return Some(enum_member)

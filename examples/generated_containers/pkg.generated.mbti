@@ -13,7 +13,7 @@ import {
 // Types and methods
 pub(all) struct Badge {
   label : String
-  level : Int?
+  level : Int32?
 } derive(Eq, @debug.Debug)
 pub fn Badge::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Badge::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
@@ -25,7 +25,7 @@ pub fn Badge::to_thrift_value(Self) -> @protocol.Value
 pub(all) struct Inventory {
   history : Array[Status]
   allowed : Array[Status]?
-  counts : Map[Status, Int]?
+  counts : Map[Status, Int32]?
   by_owner : Map[String, Array[Status]]?
   badges : Map[Status, Badge]?
   marker : Marker?
@@ -57,9 +57,9 @@ pub fn Status::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Status::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Status::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Status::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
-pub fn Status::from_thrift_i32(Int) -> Self?
+pub fn Status::from_thrift_i32(Int32) -> Self?
 pub fn Status::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
-pub fn Status::to_thrift_i32(Self) -> Int
+pub fn Status::to_thrift_i32(Self) -> Int32
 pub fn Status::to_thrift_value(Self) -> @protocol.Value
 
 // Type aliases

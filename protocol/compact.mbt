@@ -163,14 +163,14 @@ fn write_compact_value(
 ///|
 priv struct CompactReader {
   input : Bytes
-  mut offset : Int
-  max_depth : Int
-  max_container_size : Int
-  max_binary_size : Int
+  mut offset : Int32
+  max_depth : Int32
+  max_container_size : Int32
+  max_binary_size : Int32
 }
 
 ///|
-fn CompactReader::remaining(self : CompactReader) -> Int {
+fn CompactReader::remaining(self : CompactReader) -> Int32 {
   self.input.length() - self.offset
 }
 
@@ -200,7 +200,7 @@ fn CompactReader::read_varuint(
 }
 
 ///|
-fn CompactReader::read_size(self : CompactReader) -> Int raise ProtocolError {
+fn CompactReader::read_size(self : CompactReader) -> Int32 raise ProtocolError {
   let size = self.read_varuint()
   if size > self.max_container_size.to_int64().reinterpret_as_uint64() {
     raise LimitExceeded(
@@ -266,7 +266,7 @@ fn CompactReader::read_uuid(self : CompactReader) -> Bytes raise ProtocolError {
 fn CompactReader::read_value(
   self : CompactReader,
   ty : WireType,
-  depth : Int,
+  depth : Int32,
   bool_value? : Bool,
 ) -> Value raise ProtocolError {
   if depth > self.max_depth {
@@ -378,9 +378,9 @@ pub fn encode_compact(value : Value) -> Bytes raise ProtocolError {
 pub fn decode_compact(
   input : Bytes,
   ty : WireType,
-  max_depth? : Int = 64,
-  max_container_size? : Int = 1000000,
-  max_binary_size? : Int = 16777216,
+  max_depth~ : Int32 = 64,
+  max_container_size~ : Int32 = 1000000,
+  max_binary_size~ : Int32 = 16777216,
 ) -> Value raise ProtocolError {
   let reader : CompactReader = {
     input,

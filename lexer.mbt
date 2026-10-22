@@ -2,13 +2,18 @@
 priv struct Lexer {
   input : String
   source : String
-  mut offset : Int
-  mut line : Int
-  mut column : Int
+  mut offset : Int32
+  mut line : Int32
+  mut column : Int32
 }
 
 ///|
-fn Lexer::span(self : Lexer, start : Int, line : Int, column : Int) -> Span {
+fn Lexer::span(
+  self : Lexer,
+  start : Int32,
+  line : Int32,
+  column : Int32,
+) -> Span {
   { source: self.source, start, end: self.offset, line, column, }
 }
 
@@ -18,7 +23,7 @@ fn Lexer::current(self : Lexer) -> Char? {
 }
 
 ///|
-fn Lexer::peek(self : Lexer, distance : Int) -> Char? {
+fn Lexer::peek(self : Lexer, distance : Int32) -> Char? {
   self.input.get_char(self.offset + distance)
 }
 
@@ -320,7 +325,7 @@ fn Lexer::next_token(self : Lexer) -> Token raise IdlError {
 /// Tokenizes one Thrift IDL document without accessing the file system.
 pub fn lex(
   input : String,
-  source? : String = "<memory>",
+  source~ : String = "<memory>",
 ) -> Array[Token] raise IdlError {
   let lexer = { input, source, offset: 0, line: 1, column: 1, }
   let tokens : Array[Token] = []

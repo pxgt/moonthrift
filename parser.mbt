@@ -1,7 +1,7 @@
 ///|
 priv struct Parser {
   tokens : Array[Token]
-  mut index : Int
+  mut index : Int32
 }
 
 ///|
@@ -448,7 +448,7 @@ fn Parser::parse_definition(
 /// Parses a complete Apache Thrift IDL document.
 pub fn parse_idl(
   input : String,
-  source? : String = "<memory>",
+  source~ : String = "<memory>",
 ) -> Schema raise IdlError {
   let parser = { tokens: lex(input, source~), index: 0, }
   let headers : Array[Header] = []

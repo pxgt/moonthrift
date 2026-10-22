@@ -122,13 +122,13 @@ pub fn Diagnostic::to_text(Self) -> String
 
 pub(all) struct EnumMember {
   name : String
-  value : Int
+  value : Int32
   annotations : Array[Annotation]
   span : Span
 } derive(Eq, @debug.Debug)
 
 pub(all) struct Field {
-  id : Int
+  id : Int32
   requiredness : Requiredness
   ty : TypeRef
   name : String
@@ -186,10 +186,10 @@ pub(all) enum Severity {
 
 pub(all) struct Span {
   source : String
-  start : Int
-  end : Int
-  line : Int
-  column : Int
+  start : Int32
+  end : Int32
+  line : Int32
+  column : Int32
 } derive(Eq, ToJson, @debug.Debug)
 pub fn Span::synthetic(source? : String) -> Self
 

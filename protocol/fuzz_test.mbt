@@ -1,22 +1,22 @@
 ///|
 // Fixed-seed generator: a failing case is reproducible on every backend.
 struct WireTestRng {
-  mut state : UInt
+  mut state : UInt32
 }
 
 ///|
-fn WireTestRng::next(self : WireTestRng) -> UInt {
+fn WireTestRng::next(self : WireTestRng) -> UInt32 {
   self.state = self.state * 1664525U + 1013904223U
   self.state
 }
 
 ///|
-fn WireTestRng::choose(self : WireTestRng, upper : Int) -> Int {
+fn WireTestRng::choose(self : WireTestRng, upper : Int32) -> Int32 {
   (self.next() % upper.reinterpret_as_uint()).reinterpret_as_int()
 }
 
 ///|
-fn WireTestRng::bytes(self : WireTestRng, maximum : Int) -> Bytes {
+fn WireTestRng::bytes(self : WireTestRng, maximum : Int32) -> Bytes {
   let items : Array[Byte] = []
   for _ in 0..<self.choose(maximum + 1) {
     items.push(self.next().to_byte())
@@ -34,7 +34,7 @@ fn WireTestRng::uuid_bytes(self : WireTestRng) -> Bytes {
 }
 
 ///|
-fn generated_value(rng : WireTestRng, depth : Int) -> @protocol.Value {
+fn generated_value(rng : WireTestRng, depth : Int32) -> @protocol.Value {
   let variant = rng.choose(if depth == 0 { 8 } else { 13 })
   match variant {
     0 => BoolValue(rng.choose(2) == 1)

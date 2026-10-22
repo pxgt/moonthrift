@@ -20,9 +20,9 @@ pub fn Role::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Role::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Role::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Role::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
-pub fn Role::from_thrift_i32(Int) -> Self?
+pub fn Role::from_thrift_i32(Int32) -> Self?
 pub fn Role::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
-pub fn Role::to_thrift_i32(Self) -> Int
+pub fn Role::to_thrift_i32(Self) -> Int32
 pub fn Role::to_thrift_value(Self) -> @protocol.Value
 
 pub(all) struct User {
@@ -30,9 +30,9 @@ pub(all) struct User {
   name : String
   role : Role?
   aliases : Array[String]?
-  scores : Map[String, Int]?
+  scores : Map[String, Int32]?
   flags : Array[Int64]?
-  revision : Int
+  revision : Int32
 } derive(Eq, @debug.Debug)
 pub fn User::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn User::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
@@ -44,7 +44,7 @@ pub fn User::to_thrift_value(Self) -> @protocol.Value
 pub struct UserDirectoryClient {
   wire : @rpc.RpcProtocol
   exchange : (Bytes) -> Bytes raise @protocol.ProtocolError
-  mut next_sequence_id : Int
+  mut next_sequence_id : Int32
 }
 pub fn UserDirectoryClient::get_user(Self, UserDirectoryGetUserArgs) -> UserDirectoryGetUserResult raise @protocol.ProtocolError
 pub fn UserDirectoryClient::list_users(Self, UserDirectoryListUsersArgs) -> UserDirectoryListUsersResult raise @protocol.ProtocolError

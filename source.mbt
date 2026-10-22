@@ -2,15 +2,15 @@
 /// A half-open source range in a Thrift document.
 pub(all) struct Span {
   source : String
-  start : Int
-  end : Int
-  line : Int
-  column : Int
+  start : Int32
+  end : Int32
+  line : Int32
+  column : Int32
 } derive(Debug, Eq, ToJson)
 
 ///|
 /// Creates a synthetic span for programmatically constructed declarations.
-pub fn Span::synthetic(source? : String = "<generated>") -> Span {
+pub fn Span::synthetic(source~ : String = "<generated>") -> Span {
   { source, start: 0, end: 0, line: 1, column: 1, }
 }
 
