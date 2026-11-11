@@ -188,10 +188,12 @@ test "generator handles enums in containers, enum map keys, and empty structs" {
     #|}
     #|
   let generated = @codegen.generate_moonbit(@moonthrift.parse_idl(idl))
-  assert_true(generated.content.contains("} derive(Debug, Eq, Hash)"))
+  assert_true(
+    generated.content.contains("#derive(Debug, Eq, Hash)\npub(all) enum Status"),
+  )
   assert_true(generated.content.contains("Status::from_thrift_value("))
   assert_true(
-    generated.content.contains("pub(all) struct Marker {} derive(Debug, Eq)"),
+    generated.content.contains("#derive(Debug, Eq)\npub(all) struct Marker {}"),
   )
   assert_true(generated.content.contains("pub extend Status with Hash::"))
   assert_true(generated.content.contains("pub extend Marker with Eq::"))

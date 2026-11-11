@@ -1,12 +1,13 @@
 ///|
 /// A half-open source range in a Thrift document.
+#derive(Debug, Eq, ToJson)
 pub(all) struct Span {
   source : String
   start : Int32
   end : Int32
   line : Int32
   column : Int32
-} derive(Debug, Eq, ToJson)
+}
 
 ///|
 /// Creates a synthetic span for programmatically constructed declarations.
@@ -16,22 +17,25 @@ pub fn Span::synthetic(source~ : String = "<generated>") -> Span {
 
 ///|
 /// Severity of a schema diagnostic.
+#derive(Debug, Eq, ToJson)
 pub(all) enum Severity {
   Error
   Warning
-} derive(Debug, Eq, ToJson)
+}
 
 ///|
 /// A stable, source-aware diagnostic produced by parsing or validation.
+#derive(Debug, Eq, ToJson)
 pub(all) struct Diagnostic {
   code : String
   severity : Severity
   message : String
   span : Span
-} derive(Debug, Eq, ToJson)
+}
 
 ///|
 /// A fatal lexical or syntactic error.
+#derive(Debug, Eq)
 pub(all) suberror IdlError {
   UnexpectedCharacter(Char, Span)
   UnterminatedString(Span)
@@ -40,4 +44,4 @@ pub(all) suberror IdlError {
   InvalidInteger(String, Span)
   UnexpectedToken(String, Span)
   UnexpectedEnd(Span)
-} derive(Debug, Eq)
+}

@@ -20,9 +20,10 @@ pub struct DirectoryClient {
 pub fn DirectoryClient::get_user(Self, DirectoryGetUserArgs) -> DirectoryGetUserResult raise @protocol.ProtocolError
 pub fn DirectoryClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes raise @protocol.ProtocolError) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) struct DirectoryGetUserArgs {
   id : Int64
-} derive(Eq, @debug.Debug)
+}
 pub fn DirectoryGetUserArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn DirectoryGetUserArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn DirectoryGetUserArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -30,9 +31,10 @@ pub fn DirectoryGetUserArgs::encode_compact(Self) -> Bytes raise @protocol.Proto
 pub fn DirectoryGetUserArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn DirectoryGetUserArgs::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) enum DirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
-} derive(Eq, @debug.Debug)
+}
 pub fn DirectoryGetUserResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn DirectoryGetUserResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn DirectoryGetUserResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -60,8 +62,9 @@ pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryHandler {
 pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::process(Self, @protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes raise @protocol.ProtocolError
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {
-} derive(Eq, @debug.Debug)
+}
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -69,9 +72,10 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::encode_compact(Self) -
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
-} derive(Eq, @debug.Debug)
+}
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -79,10 +83,11 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::encode_compact(Self)
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesBaseDirectoryPingResult::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) struct ExamplesMultifileCommonTypesUser {
   id : Int64
   display_name : String?
-} derive(Eq, @debug.Debug)
+}
 pub fn ExamplesMultifileCommonTypesUser::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesUser::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn ExamplesMultifileCommonTypesUser::encode_binary(Self) -> Bytes raise @protocol.ProtocolError

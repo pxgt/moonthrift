@@ -1,10 +1,11 @@
 ///|
 /// Selects the existing Thrift message codec without coupling RPC dispatch
 /// to a filesystem, socket, scheduler, or target-specific I/O library.
+#derive(Debug, Eq)
 pub(all) enum RpcProtocol {
   Binary
   Compact
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn RpcProtocol::encode(

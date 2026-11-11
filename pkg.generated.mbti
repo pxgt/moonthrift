@@ -3,6 +3,7 @@ package "Xpeng/moonthrift"
 
 import {
   "moonbitlang/core/debug",
+  "moonbitlang/core/json",
 }
 
 // Values
@@ -29,6 +30,7 @@ pub fn parse_idl(String, source? : String) -> Schema raise IdlError
 pub fn render_compatibility_report(ArrayView[CompatibilityFinding], CompatibilityPolicy, CompatibilityFormat) -> String
 
 // Errors
+#derive(Eq, @debug.Debug)
 pub(all) suberror IdlError {
   UnexpectedCharacter(Char, Span)
   UnterminatedString(Span)
@@ -37,14 +39,16 @@ pub(all) suberror IdlError {
   InvalidInteger(String, Span)
   UnexpectedToken(String, Span)
   UnexpectedEnd(Span)
-} derive(Eq, @debug.Debug)
+}
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Annotation {
   key : String
   value : String?
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum BaseType {
   Bool
   Byte
@@ -56,40 +60,46 @@ pub(all) enum BaseType {
   Binary
   Uuid
   Void
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) enum ChangeKind {
   Compatible
   Warning
   Breaking
-} derive(Eq, ToJson, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum CompatibilityDirection {
   BackwardDirection
   ForwardDirection
-} derive(Eq, @debug.Debug)
+}
 pub fn CompatibilityDirection::name(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) struct CompatibilityFinding {
   source : String
   direction : CompatibilityDirection
   change : SchemaChange
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum CompatibilityFormat {
   Text
   JsonFormat
   Markdown
   GithubAnnotations
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum CompatibilityPolicy {
   Backward
   Forward
   Full
-} derive(Eq, @debug.Debug)
+}
 pub fn CompatibilityPolicy::name(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum ConstValue {
   BoolValue(Bool)
   IntegerValue(Int64)
@@ -98,8 +108,9 @@ pub(all) enum ConstValue {
   IdentifierValue(String)
   ListValue(Array[ConstValue])
   MapValue(Array[(ConstValue, ConstValue)])
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Definition {
   Const(name~ : String, ty~ : TypeRef, value~ : ConstValue, annotations~ : Array[Annotation], span~ : Span)
   Typedef(name~ : String, target~ : TypeRef, annotations~ : Array[Annotation], span~ : Span)
@@ -108,25 +119,28 @@ pub(all) enum Definition {
   Union(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
   Exception(name~ : String, fields~ : Array[Field], annotations~ : Array[Annotation], span~ : Span)
   Service(name~ : String, extends~ : String?, functions~ : Array[FunctionDef], annotations~ : Array[Annotation], span~ : Span)
-} derive(Eq, @debug.Debug)
+}
 pub fn Definition::kind(Self) -> String
 pub fn Definition::name(Self) -> String
 
+#derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) struct Diagnostic {
   code : String
   severity : Severity
   message : String
   span : Span
-} derive(Eq, ToJson, @debug.Debug)
+}
 pub fn Diagnostic::to_text(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) struct EnumMember {
   name : String
   value : Int32
   annotations : Array[Annotation]
   span : Span
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Field {
   id : Int32
   requiredness : Requiredness
@@ -135,8 +149,9 @@ pub(all) struct Field {
   default_value : ConstValue?
   annotations : Array[Annotation]
   span : Span
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) struct FunctionDef {
   name : String
   return_type : TypeRef
@@ -145,60 +160,69 @@ pub(all) struct FunctionDef {
   oneway : Bool
   annotations : Array[Annotation]
   span : Span
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Header {
   Include(path~ : String, span~ : Span)
   Namespace(language~ : String, name~ : String, span~ : Span)
   CppInclude(path~ : String, span~ : Span)
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum Requiredness {
   Default
   Required
   Optional
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Schema {
   source : String
   headers : Array[Header]
   definitions : Array[Definition]
-} derive(Eq, @debug.Debug)
+}
 pub fn Schema::to_outline(Self) -> String
 
+#derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) struct SchemaChange {
   code : String
   kind : ChangeKind
   path : String
   message : String
-} derive(Eq, ToJson, @debug.Debug)
+}
 pub fn SchemaChange::to_text(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) struct SchemaWorkspace {
   root : String
   documents : Array[Schema]
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) enum Severity {
   Error
   Warning
-} derive(Eq, ToJson, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug, @json.ToJson)
 pub(all) struct Span {
   source : String
   start : Int32
   end : Int32
   line : Int32
   column : Int32
-} derive(Eq, ToJson, @debug.Debug)
+}
 pub fn Span::synthetic(source? : String) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Token {
   kind : TokenKind
   span : Span
-} derive(Eq, @debug.Debug)
+}
 pub fn Token::describe(Self) -> String
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TokenKind {
   Identifier(String)
   StringLiteral(String)
@@ -207,8 +231,9 @@ pub(all) enum TokenKind {
   DocComment(String)
   Symbol(Char)
   End
-} derive(Eq, @debug.Debug)
+}
 
+#derive(Eq, @debug.Debug)
 pub(all) enum TypeRef {
   Base(BaseType)
   Named(String)
@@ -216,7 +241,7 @@ pub(all) enum TypeRef {
   Set(TypeRef)
   Map(TypeRef, TypeRef)
   CppType(TypeRef, String)
-} derive(Eq, @debug.Debug)
+}
 
 // Type aliases
 pub type SourceLoader = (String) -> String?

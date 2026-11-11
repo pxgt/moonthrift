@@ -9,10 +9,11 @@ pub type SourceLoader = (String) -> String?
 /// A recursively loaded set of Thrift documents rooted at one entry schema.
 /// Documents are ordered deterministically with the root first, followed by
 /// includes in source order. Each normalized path is loaded at most once.
+#derive(Debug, Eq)
 pub(all) struct SchemaWorkspace {
   root : String
   documents : Array[Schema]
-} derive(Debug, Eq)
+}
 
 ///|
 fn normalize_schema_path(path : String) -> String {

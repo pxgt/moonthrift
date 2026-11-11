@@ -1,5 +1,6 @@
 ///|
 /// Thrift wire type IDs shared by the binary and compact protocols.
+#derive(Debug, Eq)
 pub(all) enum WireType {
   Stop
   Bool
@@ -15,7 +16,7 @@ pub(all) enum WireType {
   List
   /// Apache Thrift 0.19+ `uuid`: 16 raw bytes, Binary type 16, Compact type 13.
   Uuid
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn WireType::binary_id(self : WireType) -> Byte {
@@ -58,13 +59,15 @@ pub fn WireType::from_binary_id(id : Byte) -> WireType raise ProtocolError {
 
 ///|
 /// One field in a dynamically represented Thrift struct.
+#derive(Debug, Eq)
 pub(all) struct FieldValue {
   id : Int32
   value : Value
-} derive(Debug, Eq)
+}
 
 ///|
 /// A schema-independent value preserving all wire type information.
+#derive(Debug, Eq)
 pub(all) enum Value {
   BoolValue(Bool)
   ByteValue(Int32)
@@ -83,15 +86,16 @@ pub(all) enum Value {
   )
   SetValue(element_type~ : WireType, values~ : Array[Value])
   ListValue(element_type~ : WireType, values~ : Array[Value])
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum MessageType {
   Call
   Reply
   Exception
   Oneway
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn MessageType::id(self : MessageType) -> Int32 {
@@ -116,12 +120,13 @@ pub fn MessageType::from_id(id : Int32) -> MessageType raise ProtocolError {
 
 ///|
 /// A complete Thrift RPC message independent of any transport.
+#derive(Debug, Eq)
 pub(all) struct Message {
   name : String
   kind : MessageType
   sequence_id : Int32
   body : Value
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn Value::wire_type(self : Value) -> WireType {
@@ -314,6 +319,7 @@ pub fn Value::require_map(
 ///|
 /// Errors are bounded and deterministic so malformed untrusted payloads do not
 /// become panics or unbounded allocations.
+#derive(Debug, Eq)
 pub(all) suberror ProtocolError {
   UnexpectedEof(offset~ : Int32, needed~ : Int32)
   InvalidType(Byte)
@@ -331,4 +337,4 @@ pub(all) suberror ProtocolError {
     field_id~ : Int32,
     field_name~ : String
   )
-} derive(Debug, Eq)
+}

@@ -21,9 +21,10 @@ pub fn EventsClient::emit(Self, EventsEmitArgs) -> Unit raise @protocol.Protocol
 pub fn EventsClient::new(@rpc.RpcProtocol, (Bytes) -> Bytes? raise @protocol.ProtocolError) -> Self
 pub fn EventsClient::ping(Self, EventsPingArgs) -> EventsPingResult raise @protocol.ProtocolError
 
+#derive(Eq, @debug.Debug)
 pub(all) struct EventsEmitArgs {
   value : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn EventsEmitArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsEmitArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsEmitArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -31,9 +32,10 @@ pub fn EventsEmitArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolErr
 pub fn EventsEmitArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn EventsEmitArgs::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EventsEmitResult {
   Success
-} derive(Eq, @debug.Debug)
+}
 pub fn EventsEmitResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsEmitResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsEmitResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -48,9 +50,10 @@ pub(all) struct EventsHandler {
 pub fn EventsHandler::process(Self, @protocol.Message) -> @protocol.Message? raise @protocol.ProtocolError
 pub fn EventsHandler::serve_once(Self, @rpc.RpcProtocol, Bytes) -> Bytes? raise @protocol.ProtocolError
 
+#derive(Eq, @debug.Debug)
 pub(all) struct EventsPingArgs {
   value : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn EventsPingArgs::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsPingArgs::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsPingArgs::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -58,9 +61,10 @@ pub fn EventsPingArgs::encode_compact(Self) -> Bytes raise @protocol.ProtocolErr
 pub fn EventsPingArgs::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn EventsPingArgs::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) enum EventsPingResult {
   Success(Int32)
-} derive(Eq, @debug.Debug)
+}
 pub fn EventsPingResult::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsPingResult::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn EventsPingResult::encode_binary(Self) -> Bytes raise @protocol.ProtocolError

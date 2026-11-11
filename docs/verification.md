@@ -1,5 +1,62 @@
 # Verification
 
+## Maintenance check: 2026-11-11
+
+Starting source: default branch `main`, commit
+`126891e391d8595b4c058378e32f1d0f34473642` (package version 0.4.0).
+This is a source maintenance check, not a new Mooncakes release.
+
+The official [stable download](https://www.moonbitlang.com/download/) was
+checked on 2026-11-11. Actual `moon version --all` output:
+
+```text
+moon 0.1.20261104 (940aa18 2026-11-04) ~/.moon/bin/moon
+moonc v0.10.20+65efd5b93 (2026-11-05) ~/.moon/bin/moonc
+moonrun 0.1.20261104 (940aa18 2026-11-04) ~/.moon/bin/moonrun
+
+Feature flags enabled: rr_moon_mod,rr_moon_pkg
+```
+
+Host: Ubuntu 22.04.5 x86_64 under WSL2; Node.js 22.23.4, GCC and Python 3.10.
+The Python reference runtime is Apache Thrift 0.24.0. macOS, Windows native,
+and arm64 were not executed in this check. Windows native TCP builds require
+the MSVC environment described below; WSL is the verified local alternative.
+
+Strict checking initially rejected trailing `derive(...)` declarations.
+Source and generated interfaces now use `#derive(...)`. The generator itself
+also emits the current syntax for records (including empty records), enums,
+unions and service results; its regression assertions were updated. Interface
+review found declaration formatting/qualification changes, with exported
+function signatures, fields and variants retained.
+
+The existing `moonbitlang/x@0.5.5` and `moonbitlang/async@0.22.0` dependencies
+remain usable and are retained. GCC reports two warnings in the upstream
+async C runtime (the `posix_spawn_file_actions_addchdir_np` declaration and an
+ignored `write` result); native builds and tests still pass. No MoonBit warning
+is suppressed.
+
+Four-backend check/build/test passed: 103 tests each on wasm, wasm-gc and
+JavaScript, plus 104 on native (413 total). The release benchmark builds,
+API documentation, in-memory RPC and multi-file service demos also passed.
+Core line coverage was 2147/2410 (89.09%), above the existing 85% gate;
+all 18 Apache Thrift Python fixtures were rebuilt and verified.
+The native TCP tutorial, native/wasm CLI examples, compatibility CLI and Git
+baseline smoke tests, five generated-model comparisons, and frozen source
+package also passed. Expected breaking-schema examples returned exit code 3.
+The independent consumer intentionally keeps using Mooncakes 0.3.0 as a
+backward-compatibility check; it does not test installation of these local
+unpublished fixes.
+
+CI retains its full check/build/test/example/interop gates, now selects
+Node.js 22 explicitly and also runs weekly against stable. Local results do
+not imply a GitHub Actions run for an unpushed branch. The separate Linux
+distribution workflow and historical packages need their own source/license
+review; passing `moon package` is not evidence about those binary packages.
+See the [distribution follow-up](distribution-review-2026-11.md) for the
+concrete existing artifacts and unresolved checks.
+
+## Historical release verification
+
 The `0.3.x` source and release workflow is verified with the
 2026-09-20 stable MoonBit toolchain:
 

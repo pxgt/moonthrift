@@ -4,9 +4,10 @@
 
 ///|
 /// Generated from Thrift function arguments `DirectoryGetUserArgs`.
+#derive(Debug, Eq)
 pub(all) struct DirectoryGetUserArgs {
   id : ExamplesMultifileCommonTypesUserId
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -87,9 +88,10 @@ pub fn DirectoryGetUserArgs::decode_compact(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum DirectoryGetUserResult {
   Success(ExamplesMultifileCommonTypesUser)
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -265,10 +267,11 @@ pub type ExamplesMultifileCommonTypesUserId = Int64
 
 ///|
 /// Generated from Thrift struct `ExamplesMultifileCommonTypesUser`.
+#derive(Debug, Eq)
 pub(all) struct ExamplesMultifileCommonTypesUser {
   id : ExamplesMultifileCommonTypesUserId
   display_name : String?
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -359,10 +362,8 @@ pub fn ExamplesMultifileCommonTypesUser::decode_compact(
 
 ///|
 /// Generated from Thrift function arguments `ExamplesMultifileCommonTypesBaseDirectoryPingArgs`.
-pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {} derive (
-  Debug,
-  Eq,
-)
+#derive(Debug, Eq)
+pub(all) struct ExamplesMultifileCommonTypesBaseDirectoryPingArgs {}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -437,9 +438,10 @@ pub fn ExamplesMultifileCommonTypesBaseDirectoryPingArgs::decode_compact(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum ExamplesMultifileCommonTypesBaseDirectoryPingResult {
   Success
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
