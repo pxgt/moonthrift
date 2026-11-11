@@ -6,12 +6,13 @@ pub type UserId = Int64
 
 ///|
 /// Access role assigned to a user.
+#derive(Debug, Eq, Hash)
 pub(all) enum Role {
   /// Standard directory member.
   USER
   /// Directory administrator.
   ADMIN
-} derive(Debug, Eq, Hash)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -86,6 +87,7 @@ pub fn Role::decode_compact(
 ///|
 /// A user record transported by the tutorial service.
 /// Generated from Thrift struct `User`.
+#derive(Debug, Eq)
 pub(all) struct User {
   /// Stable user identifier.
   id : UserId
@@ -96,7 +98,7 @@ pub(all) struct User {
   scores : Map[String, Int32]?
   flags : Array[Int64]?
   revision : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -255,11 +257,12 @@ pub fn User::decode_compact(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum UserLookup {
   Empty
   Id(UserId)
   Name(String)
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -340,10 +343,11 @@ pub fn UserLookup::decode_compact(
 
 ///|
 /// Generated from Thrift exception `UserNotFound`.
+#derive(Debug, Eq)
 pub(all) struct UserNotFound {
   id : UserId
   message : String
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -436,9 +440,10 @@ pub fn UserNotFound::decode_compact(
 ///
 /// Fetch one user or return a declared missing-user exception.
 /// Generated from Thrift function arguments `UserDirectoryGetUserArgs`.
+#derive(Debug, Eq)
 pub(all) struct UserDirectoryGetUserArgs {
   id : UserId
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -522,10 +527,11 @@ pub fn UserDirectoryGetUserArgs::decode_compact(
 /// Typed directory operations.
 ///
 /// Fetch one user or return a declared missing-user exception.
+#derive(Debug, Eq)
 pub(all) enum UserDirectoryGetUserResult {
   Success(User)
   Missing(UserNotFound)
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -618,7 +624,8 @@ pub fn UserDirectoryGetUserResult::decode_compact(
 ///|
 /// Typed directory operations.
 /// Generated from Thrift function arguments `UserDirectoryListUsersArgs`.
-pub(all) struct UserDirectoryListUsersArgs {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct UserDirectoryListUsersArgs {}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -689,9 +696,10 @@ pub fn UserDirectoryListUsersArgs::decode_compact(
 
 ///|
 /// Typed directory operations.
+#derive(Debug, Eq)
 pub(all) enum UserDirectoryListUsersResult {
   Success(Array[User])
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)

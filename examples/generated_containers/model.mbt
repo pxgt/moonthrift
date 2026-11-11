@@ -2,11 +2,12 @@
 
 ///|
 /// Lifecycle state of an account.
+#derive(Debug, Eq, Hash)
 pub(all) enum Status {
   ACTIVE
   SUSPENDED
   DELETED
-} derive(Debug, Eq, Hash)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -89,10 +90,11 @@ pub fn Status::decode_compact(
 ///|
 /// A small record used as a map value.
 /// Generated from Thrift struct `Badge`.
+#derive(Debug, Eq)
 pub(all) struct Badge {
   label : String
   level : Int32?
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -176,7 +178,8 @@ pub fn Badge::decode_compact(
 ///|
 /// An empty record, common as a request or response placeholder.
 /// Generated from Thrift struct `Marker`.
-pub(all) struct Marker {} derive(Debug, Eq)
+#derive(Debug, Eq)
+pub(all) struct Marker {}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -242,6 +245,7 @@ pub fn Marker::decode_compact(
 ///|
 /// Exercises enums in lists, sets, map keys, map values, and nested containers.
 /// Generated from Thrift struct `Inventory`.
+#derive(Debug, Eq)
 pub(all) struct Inventory {
   history : Array[Status]
   allowed : Array[Status]?
@@ -251,7 +255,7 @@ pub(all) struct Inventory {
   marker : Marker?
   id : Bytes?
   related : Array[Bytes]?
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)

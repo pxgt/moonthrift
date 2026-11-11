@@ -1,34 +1,38 @@
 ///|
 /// Backward checks the old schema against the new schema; forward checks the
 /// reverse direction; full requires both directions to pass.
+#derive(Debug, Eq)
 pub(all) enum CompatibilityPolicy {
   Backward
   Forward
   Full
-} derive(Debug, Eq)
+}
 
 ///|
 /// Direction in which a schema pair was compared.
+#derive(Debug, Eq)
 pub(all) enum CompatibilityDirection {
   BackwardDirection
   ForwardDirection
-} derive(Debug, Eq)
+}
 
 ///|
 /// A schema-evolution finding with its source file and comparison direction.
+#derive(Debug, Eq)
 pub(all) struct CompatibilityFinding {
   source : String
   direction : CompatibilityDirection
   change : SchemaChange
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum CompatibilityFormat {
   Text
   JsonFormat
   Markdown
   GithubAnnotations
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn CompatibilityPolicy::name(self : CompatibilityPolicy) -> String {

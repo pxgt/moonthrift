@@ -1,9 +1,10 @@
 ///|
 /// One generated source artifact.
+#derive(Debug, Eq)
 pub(all) struct GeneratedFile {
   path : String
   content : String
-} derive(Debug, Eq)
+}
 
 ///|
 fn is_keyword(name : String) -> Bool {
@@ -326,16 +327,15 @@ fn render_record(
     None => ()
   }
   output.write_string("/// Generated from Thrift \{kind} `\{name}`.\n")
+  output.write_string("#derive(Debug, Eq)\n")
   if fields.length() == 0 {
-    output.write_string(
-      "pub(all) struct \{type_name(name)} {} derive(Debug, Eq)\n\n",
-    )
+    output.write_string("pub(all) struct \{type_name(name)} {}\n\n")
   } else {
     output.write_string("pub(all) struct \{type_name(name)} {\n")
     for field in fields {
       output.write_string(render_field(field))
     }
-    output.write_string("} derive(Debug, Eq)\n\n")
+    output.write_string("}\n\n")
   }
   render_derived_method_extends(output, type_name(name), hash=false)
   render_record_codec(output, schema, name, fields)
@@ -447,7 +447,9 @@ fn render_enum(
     Some(text) => render_doc_comment(output, text)
     None => ()
   }
-  output.write_string("pub(all) enum \{generated_name} {\n")
+  output.write_string(
+    "#derive(Debug, Eq, Hash)\npub(all) enum \{generated_name} {\n",
+  )
   for enum_member in members {
     match documentation(enum_member.annotations) {
       Some(text) => render_member_doc_comment(output, text)
@@ -455,7 +457,7 @@ fn render_enum(
     }
     output.write_string("  \{type_name(enum_member.name)}\n")
   }
-  output.write_string("} derive(Debug, Eq, Hash)\n\n")
+  output.write_string("}\n\n")
   render_derived_method_extends(output, generated_name, hash=true)
   output.write_string(
     "///|\npub fn \{generated_name}::to_thrift_i32(self : \{generated_name}) -> Int {\n",
@@ -511,7 +513,9 @@ fn render_union(
     Some(text) => render_doc_comment(output, text)
     None => ()
   }
-  output.write_string("pub(all) enum \{generated_name} {\n  Empty\n")
+  output.write_string(
+    "#derive(Debug, Eq)\npub(all) enum \{generated_name} {\n  Empty\n",
+  )
   for field in fields {
     match documentation(field.annotations) {
       Some(text) => render_member_doc_comment(output, text)
@@ -521,7 +525,7 @@ fn render_union(
       "  \{type_name(field.name)}(\{render_type(field.ty)})\n",
     )
   }
-  output.write_string("} derive(Debug, Eq)\n\n")
+  output.write_string("}\n\n")
   render_derived_method_extends(output, generated_name, hash=false)
   output.write_string(
     "///|\npub fn \{generated_name}::to_thrift_value(self : \{generated_name}) -> @protocol.Value {\n  match self {\n    Empty => StructValue([])\n",
@@ -596,7 +600,7 @@ fn render_function_models(
     Some(text) => render_doc_comment(output, text)
     None => ()
   }
-  output.write_string("pub(all) enum \{prefix}Result {\n")
+  output.write_string("#derive(Debug, Eq)\npub(all) enum \{prefix}Result {\n")
   if function.return_type is Base(Void) {
     output.write_string("  Success\n")
   } else {
@@ -607,7 +611,7 @@ fn render_function_models(
       "  \{type_name(field.name)}(\{render_type(field.ty)})\n",
     )
   }
-  output.write_string("} derive(Debug, Eq)\n\n")
+  output.write_string("}\n\n")
   render_derived_method_extends(output, "\{prefix}Result", hash=false)
   render_function_result_codec(output, schema, prefix, function)
 }

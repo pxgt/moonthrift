@@ -1,10 +1,11 @@
 ///|
 /// Standard Apache Thrift application exception payload. Unknown numeric
 /// codes are retained so a newer peer can still be diagnosed.
+#derive(Debug, Eq)
 pub(all) struct ApplicationException {
   message : String
   type_code : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 /// Serializes the two standard fields of TApplicationException.

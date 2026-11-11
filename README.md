@@ -79,6 +79,13 @@ API 中，可用于构建 RPC 运行时、协议调试工具、Schema 仓库和�
 
 ## 快速开始
 
+当前维护源码于 2026-11-11 使用官方 stable 工具链验证：
+`moon 0.1.20261104`、`moonc v0.10.20+65efd5b93`。
+验证平台为 Ubuntu 22.04 x86_64（WSL2），JS 测试使用 Node.js 22，native 使用 GCC。
+Windows native TCP 示例所用 async 依赖需要 MSVC，也可在 WSL 中验证；
+本次未验证其他宿主平台。详细结果见 [验证记录](docs/verification.md)。
+本次生成器和语法适配尚未发布到 Mooncakes，以下 `0.4.0` 安装入口仍是此前发布版。
+
 安装依赖：
 
 ```sh

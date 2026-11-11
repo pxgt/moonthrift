@@ -1,19 +1,21 @@
 ///|
 /// Compatibility classification for schema evolution.
+#derive(Debug, Eq, ToJson)
 pub(all) enum ChangeKind {
   Compatible
   Warning
   Breaking
-} derive(Debug, Eq, ToJson)
+}
 
 ///|
 /// One stable schema-evolution finding.
+#derive(Debug, Eq, ToJson)
 pub(all) struct SchemaChange {
   code : String
   kind : ChangeKind
   path : String
   message : String
-} derive(Debug, Eq, ToJson)
+}
 
 ///|
 fn change(

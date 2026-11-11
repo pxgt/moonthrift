@@ -1,5 +1,6 @@
 ///|
 /// Primitive types defined by the Thrift IDL.
+#derive(Debug, Eq)
 pub(all) enum BaseType {
   Bool
   Byte
@@ -11,10 +12,11 @@ pub(all) enum BaseType {
   Binary
   Uuid
   Void
-} derive(Debug, Eq)
+}
 
 ///|
 /// A primitive, named, or container type reference.
+#derive(Debug, Eq)
 pub(all) enum TypeRef {
   Base(BaseType)
   Named(String)
@@ -22,10 +24,11 @@ pub(all) enum TypeRef {
   Set(TypeRef)
   Map(TypeRef, TypeRef)
   CppType(TypeRef, String)
-} derive(Debug, Eq)
+}
 
 ///|
 /// A constant expression accepted by Thrift IDL.
+#derive(Debug, Eq)
 pub(all) enum ConstValue {
   BoolValue(Bool)
   IntegerValue(Int64)
@@ -34,24 +37,27 @@ pub(all) enum ConstValue {
   IdentifierValue(String)
   ListValue(Array[ConstValue])
   MapValue(Array[(ConstValue, ConstValue)])
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum Requiredness {
   Default
   Required
   Optional
-} derive(Debug, Eq)
+}
 
 ///|
 /// One key/value annotation attached to an IDL item.
+#derive(Debug, Eq)
 pub(all) struct Annotation {
   key : String
   value : String?
-} derive(Debug, Eq)
+}
 
 ///|
 /// A field in a struct, union, exception, function, or throws clause.
+#derive(Debug, Eq)
 pub(all) struct Field {
   id : Int32
   requiredness : Requiredness
@@ -60,24 +66,27 @@ pub(all) struct Field {
   default_value : ConstValue?
   annotations : Array[Annotation]
   span : Span
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum Header {
   Include(path~ : String, span~ : Span)
   Namespace(language~ : String, name~ : String, span~ : Span)
   CppInclude(path~ : String, span~ : Span)
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct EnumMember {
   name : String
   value : Int32
   annotations : Array[Annotation]
   span : Span
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) struct FunctionDef {
   name : String
   return_type : TypeRef
@@ -86,9 +95,10 @@ pub(all) struct FunctionDef {
   oneway : Bool
   annotations : Array[Annotation]
   span : Span
-} derive(Debug, Eq)
+}
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum Definition {
   Const(
     name~ : String,
@@ -134,16 +144,17 @@ pub(all) enum Definition {
     annotations~ : Array[Annotation],
     span~ : Span
   )
-} derive(Debug, Eq)
+}
 
 ///|
 /// A parsed Thrift file. Semantic diagnostics are produced separately by
 /// `check_schema` so tools can still inspect a syntactically valid AST.
+#derive(Debug, Eq)
 pub(all) struct Schema {
   source : String
   headers : Array[Header]
   definitions : Array[Definition]
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn Definition::name(self : Definition) -> String {

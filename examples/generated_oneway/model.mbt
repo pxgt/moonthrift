@@ -4,9 +4,10 @@
 
 ///|
 /// Generated from Thrift function arguments `EventsEmitArgs`.
+#derive(Debug, Eq)
 pub(all) struct EventsEmitArgs {
   value : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -83,9 +84,10 @@ pub fn EventsEmitArgs::decode_compact(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum EventsEmitResult {
   Success
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -153,9 +155,10 @@ pub fn EventsEmitResult::decode_compact(
 
 ///|
 /// Generated from Thrift function arguments `EventsPingArgs`.
+#derive(Debug, Eq)
 pub(all) struct EventsPingArgs {
   value : Int32
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)
@@ -232,9 +235,10 @@ pub fn EventsPingArgs::decode_compact(
 }
 
 ///|
+#derive(Debug, Eq)
 pub(all) enum EventsPingResult {
   Success(Int32)
-} derive(Debug, Eq)
+}
 
 ///|
 #deprecated("Use `Debug::to_repr` or `debug_inspect` instead", skip_current_package=true)

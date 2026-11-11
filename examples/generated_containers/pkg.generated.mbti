@@ -11,10 +11,11 @@ import {
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct Badge {
   label : String
   level : Int32?
-} derive(Eq, @debug.Debug)
+}
 pub fn Badge::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Badge::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Badge::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -22,6 +23,7 @@ pub fn Badge::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Badge::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn Badge::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Inventory {
   history : Array[Status]
   allowed : Array[Status]?
@@ -31,7 +33,7 @@ pub(all) struct Inventory {
   marker : Marker?
   id : Bytes?
   related : Array[Bytes]?
-} derive(Eq, @debug.Debug)
+}
 pub fn Inventory::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Inventory::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Inventory::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -39,8 +41,9 @@ pub fn Inventory::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Inventory::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn Inventory::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, @debug.Debug)
 pub(all) struct Marker {
-} derive(Eq, @debug.Debug)
+}
 pub fn Marker::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Marker::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Marker::encode_binary(Self) -> Bytes raise @protocol.ProtocolError
@@ -48,11 +51,12 @@ pub fn Marker::encode_compact(Self) -> Bytes raise @protocol.ProtocolError
 pub fn Marker::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn Marker::to_thrift_value(Self) -> @protocol.Value
 
+#derive(Eq, Hash, @debug.Debug)
 pub(all) enum Status {
   ACTIVE
   SUSPENDED
   DELETED
-} derive(Eq, Hash, @debug.Debug)
+}
 pub fn Status::decode_binary(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Status::decode_compact(Bytes) -> Self raise @protocol.ProtocolError
 pub fn Status::encode_binary(Self) -> Bytes raise @protocol.ProtocolError

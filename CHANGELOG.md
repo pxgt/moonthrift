@@ -5,6 +5,14 @@ the project uses semantic versioning.
 
 ## [Unreleased]
 
+### Compatibility maintenance (2026-11-11)
+
+- Migrate source, generated fixtures, and the code generator to `#derive`
+  syntax for stable `moonc v0.10.20+65efd5b93`; retain wire behavior and
+  public API signatures.
+- Refresh generated interfaces and verify the existing dependency versions.
+- Run the compatibility workflow weekly and select Node.js 22 explicitly.
+
 ### Added
 
 - `.github/workflows/linux-packages.yml` builds a static native `moonthrift` and packs deb, rpm, Arch and Alpine

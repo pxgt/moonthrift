@@ -31,10 +31,11 @@ pub fn send_oneway(RpcProtocol, @protocol.Message, (Bytes) -> Bytes? raise @prot
 // Errors
 
 // Types and methods
+#derive(Eq, @debug.Debug)
 pub(all) struct ApplicationException {
   message : String
   type_code : Int32
-} derive(Eq, @debug.Debug)
+}
 pub fn ApplicationException::from_thrift_value(@protocol.Value) -> Self raise @protocol.ProtocolError
 pub fn ApplicationException::to_thrift_value(Self) -> @protocol.Value
 
@@ -56,10 +57,11 @@ pub struct MemoryTransport {
 pub fn MemoryTransport::call(Self, @protocol.Message) -> @protocol.Message raise @protocol.ProtocolError
 pub fn MemoryTransport::new(RpcProtocol, (@protocol.Message) -> @protocol.Message raise @protocol.ProtocolError) -> Self
 
+#derive(Eq, @debug.Debug)
 pub(all) enum RpcProtocol {
   Binary
   Compact
-} derive(Eq, @debug.Debug)
+}
 pub fn RpcProtocol::decode(Self, Bytes) -> @protocol.Message raise @protocol.ProtocolError
 pub fn RpcProtocol::encode(Self, @protocol.Message) -> Bytes raise @protocol.ProtocolError
 

@@ -1,5 +1,6 @@
 ///|
 /// Token kinds emitted by the Thrift IDL lexer.
+#derive(Debug, Eq)
 pub(all) enum TokenKind {
   Identifier(String)
   StringLiteral(String)
@@ -8,14 +9,15 @@ pub(all) enum TokenKind {
   DocComment(String)
   Symbol(Char)
   End
-} derive(Debug, Eq)
+}
 
 ///|
 /// One lexical token and its source location.
+#derive(Debug, Eq)
 pub(all) struct Token {
   kind : TokenKind
   span : Span
-} derive(Debug, Eq)
+}
 
 ///|
 pub fn Token::describe(self : Token) -> String {
