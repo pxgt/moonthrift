@@ -30,7 +30,7 @@ jobs:
         run: moon version --all
 
       - name: Set up JavaScript test runtime
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: '22'
 
@@ -161,7 +161,7 @@ jobs:
         run: moon version --all
 
       - name: Set up JavaScript test runtime
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: '22'
 
